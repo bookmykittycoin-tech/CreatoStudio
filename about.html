@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Creato Studios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #ffffff; margin: 0; }
+        .serif-italic { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; }
+        
+        /* 1. DARK GRID BACKGROUND (MATCHING SCREENSHOT) */
+        .hero-grid-bg {
+            background-color: #020205;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 45px 45px;
+        }
+
+        /* Multicolor Glow Effects */
+        .glow { position: absolute; filter: blur(100px); border-radius: 50%; opacity: 0.35; z-index: 1; }
+        .glow-green { width: 350px; height: 350px; background: radial-gradient(circle, #22c55e, transparent); top: 15%; left: -8%; }
+        .glow-purple { width: 400px; height: 400px; background: radial-gradient(circle, #7c3aed, transparent); top: -10%; right: 15%; }
+        .glow-yellow { width: 300px; height: 300px; background: radial-gradient(circle, #eab308, transparent); bottom: 10%; right: -5%; }
+
+        /* Footer Grid */
+        .footer-grid-bg {
+            background-color: #020205;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 45px 45px;
+        }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+
+.serif-italic { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; }
+    
+    /* Image Stack Positioning */
+    .intro-image-container {
+        position: relative;
+        width: 100%;
+        max-width: 550px;
+        height: 550px;
+    }
+
+    /* Light Purple Background Box */
+    .bg-box {
+        position: absolute;
+        top: 40px;
+        left: 0;
+        width: 380px;
+        height: 450px;
+        background-color: #f5f3ff; /* Light indigo/purple tint */
+        border-radius: 40px;
+        z-index: 0;
+    }
+
+    /* Vertical Rectangular Image */
+    .img-vertical {
+        position: absolute;
+        top: 0;
+        left: 40px;
+        width: 300px;
+        height: 400px;
+        border-radius: 30px;
+        object-fit: cover;
+        z-index: 1;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    /* Floating Location Pin */
+    .pin-box {
+        position: absolute;
+        top: 40px;
+        right: 110px;
+        width: 85px;
+        height: 85px;
+        background: #ffffff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+        z-index: 4;
+        animation: float-slow 4s ease-in-out infinite;
+    }
+
+    /* Circular Overlapping Portrait */
+    .img-portrait-circle {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 310px;
+        height: 310px;
+        border-radius: 50%;
+        border: 12px solid #ffffff; /* Thick white border from image */
+        object-fit: cover;
+        z-index: 3;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+
+    @keyframes float-slow {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+    }
+
+    /* Subtle background circle pattern matching the image bottom-right */
+    .bg-circle-pattern {
+        background-image: radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.03) 0%, transparent 400px);
+    }
+    
+    /* Decorative faint grid lines for the card background numbers */
+    .number-bg {
+        color: #f8fafc; /* Very light slate/gray */
+        font-size: 8rem;
+        line-height: 1;
+        font-weight: 900;
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        user-select: none;
+        z-index: 0;
+    }
+
+    .card-content {
+        position: relative;
+        z-index: 10;
+    }
+
+    .serif-italic { font-family: 'Playfair Display', serif; font-style: italic; }
+    /* The exact soft purple glow from your image */
+    .profile-glow {
+        box-shadow: 0 0 40px rgba(124, 58, 237, 0.4);
+    }
+    /* Smooth card transition */
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* footer */
+    .serif-italic { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; }
+    
+    /* Exact Dark Grid Background from the screenshot */
+    .footer-dark-grid {
+        background-color: #020205; /* Deep black */
+        background-image: 
+            linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 45px 45px; /* Grid size matching the image */
+    }
+
+    /* Floating Star Animation */
+    @keyframes starFloat {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    .animate-star { animation: starFloat 4s ease-in-out infinite; }
+
+    /* Avatar Overlap Styling */
+    .avatar-stack img {
+        border: 2px solid #020205;
+        margin-left: -12px;
+    }    
+
+    </style>
+</head>
+<body>
+<!-- Hero section -->
+    <section class="relative hero-grid-bg pt-10 pb-40 px-6 lg:px-20 overflow-hidden">
+        <div class="glow glow-green"></div>
+        <div class="glow glow-purple"></div>
+        <div class="glow glow-yellow"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            <nav class="flex items-center justify-between mb-32">
+                <div class="relative h-12 w-48 flex items-center">
+        <a href="index.html" class="absolute left-0 top-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity">
+            <img src="image/image.png" alt="Creato Studios Logo" class="h-32 w-auto object-contain max-w-none">
+        </a>
+    </div>
+                <ul class="hidden md:flex items-center gap-10 text-white text-sm font-semibold">
+                    <li><a href="index.html" class="hover:text-gray-300 transition">Home</a></li>
+                    <li class="relative"><a href="about.html" class="pb-1 border-b-2 border-white">About Us</a></li>
+                    
+                    <li><a href="contact.html" class="hover:text-gray-300 transition">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="text-center">
+                <h1 class="text-7xl font-extrabold text-white mb-8 tracking-tight">
+                    About <span class="text-[#7c3aed] serif-italic">Company</span>
+                </h1>
+                <div class="flex items-center justify-center gap-3 text-sm font-bold">
+                    <span class="text-white">Home</span>
+                    <span class="text-white/40"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></span>
+                    <span class="text-[#bef264] border-b-2 border-[#bef264] pb-1 cursor-pointer">About Company</span>
+                </div>
+            </div>
+        </div>
+    </section>
+<!-- Empowering Brands,Amplifying InfluenceCreating Impact! -->
+  <section class="bg-white py-24 px-6 md:px-16 overflow-hidden font-sans">
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+        
+        <div class="w-full lg:w-1/2 flex justify-center lg:justify-start">
+            <div class="intro-image-container">
+                <div class="bg-box"></div>
+                
+                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000" class="img-vertical" alt="Influencer">
+                
+                <div class="pin-box">
+                    <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" class="w-10 h-10" alt="pin">
+                </div>
+
+                <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1000" class="img-portrait-circle" alt="Team Member">
+            </div>
+        </div>
+
+        <div class="w-full lg:w-1/2">
+            <p class="text-gray-500 font-bold text-sm mb-4">
+                Welcome to Creato Studios
+            </p>
+            
+            <h2 class="text-5xl md:text-6xl font-extrabold text-gray-900 leading-[1.1] mb-8 tracking-tight">
+                Empowering Brands, <br> Amplifying Influence <br>
+                <span class="text-[#7c3aed] serif-italic">Creating Impact!</span>
+            </h2>
+
+            <p class="text-gray-500 text-lg leading-relaxed mb-10 max-w-xl">
+                We bridge the gap between brands and influencers, crafting powerful collaborations that drive engagement, growth, and impact. With strategy, creativity, and data, we turn influencer marketing into measurable success.
+            </p>
+
+            <ul class="space-y-5 mb-12">
+                <li class="flex items-start gap-4">
+                    <span class="bg-[#7c3aed] text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] flex-shrink-0 mt-1">✓</span>
+                    <span class="text-gray-600 font-medium">Connecting brands with the right influencers for authentic engagement and lasting impact</span>
+                </li>
+                <li class="flex items-start gap-4">
+                    <span class="bg-[#7c3aed] text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] flex-shrink-0 mt-1">✓</span>
+                    <span class="text-gray-600 font-medium">Crafting compelling stories that resonate with audiences and drive brand awareness</span>
+                </li>
+                <li class="flex items-start gap-4">
+                    <span class="bg-[#7c3aed] text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] flex-shrink-0 mt-1">✓</span>
+                    <span class="text-gray-600 font-medium">Tracking performance and optimising campaigns for maximum reach and ROI</span>
+                </li>
+            </ul>
+
+            <button class="bg-[#7c3aed] hover:bg-[#6d28d9] text-white px-10 py-4 rounded-xl font-bold text-lg transition-all flex items-center gap-2 shadow-lg shadow-purple-200">
+                Let's Create The Magic 
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</section>
+<section class="py-24 bg-white relative overflow-hidden bg-circle-pattern">
+    <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <div class="bg-white p-10 rounded-[30px] border border-gray-50 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden group hover:shadow-xl transition-all duration-300">
+                <span class="number-bg group-hover:text-indigo-50 transition-colors">01</span>
+                <div class="card-content">
+                    <div class="text-[#7c3aed] mb-6">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-extrabold text-gray-900 mb-4 leading-snug">Influencer<br>Collaborations</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Connect with top creators to amplify brand reach and engagement effectively.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white p-10 rounded-[30px] border border-gray-50 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden group hover:shadow-xl transition-all duration-300">
+                <span class="number-bg">02</span>
+                <div class="card-content">
+                    <div class="text-[#7c3aed] mb-6">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-extrabold text-gray-900 mb-4 leading-snug">UGC Content<br>Production</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Create authentic, high-quality content that resonates with your audience.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white p-10 rounded-[30px] border border-gray-50 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden group hover:shadow-xl transition-all duration-300">
+                <span class="number-bg">03</span>
+                <div class="card-content">
+                    <div class="text-[#7c3aed] mb-6">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-extrabold text-gray-900 mb-4 leading-snug">Podcast<br>Production</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Develop compelling podcasts to boost brand authority and audience connection.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white p-10 rounded-[30px] border border-gray-50 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden group hover:shadow-xl transition-all duration-300">
+                <span class="number-bg">04</span>
+                <div class="card-content">
+                    <div class="text-[#7c3aed] mb-6">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-extrabold text-gray-900 mb-4 leading-snug">Celebrity<br>Endorsements</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Leverage star power to enhance credibility, trust, and brand recognition.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+  
+<section class="py-24 bg-white font-sans overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 lg:px-20">
+        <div class="flex flex-col lg:flex-row items-center gap-16">
+            
+            <div class="lg:w-1/3">
+                <h2 class="text-5xl font-extrabold text-slate-900 leading-tight mb-4">
+                    Trusted by Brands,<br> Loved by Clients
+                </h2>
+                <h3 class="text-4xl text-[#7c3aed] serif-italic mb-8">
+                    Hear Their Stories
+                </h3>
+                <p class="text-gray-500 text-sm leading-relaxed mb-10 max-w-xs">
+                    Discover how our influencer marketing solutions have transformed brands. See what our happy clients have to say about their success!
+                </p>
+                
+                <div class="flex gap-4">
+                    <button onclick="prevTestimonial()" class="w-12 h-12 rounded-full bg-[#f5f3ff] flex items-center justify-center text-[#7c3aed] hover:bg-[#7c3aed] hover:text-white transition shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <button onclick="nextTestimonial()" class="w-12 h-12 rounded-full bg-[#f5f3ff] flex items-center justify-center text-[#7c3aed] hover:bg-[#7c3aed] hover:text-white transition shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="lg:w-2/3 w-full" id="testimonial-card-container">
+                <div id="testimonial-card" class="bg-white rounded-[20px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] p-12 relative border border-gray-50 fade-in">
+                    
+                    <div class="absolute top-10 right-10 w-16 h-16 bg-[#7c3aed] rounded-full flex items-center justify-center shadow-lg shadow-purple-200">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C20.1216 16 21.017 15.1046 21.017 14V9C21.017 7.89543 20.1216 7 19.017 7H16.017C14.9124 7 14.017 7.89543 14.017 9V14M3 21L3 18C3 16.8954 3.89543 16 5 16H8C9.10457 16 10 15.1046 10 14V9C10 7.89543 9.10457 7 8 7H5C3.89543 7 3 7.89543 3 9V14"/></svg>
+                    </div>
+
+                    <div class="w-20 h-20 rounded-full border-2 border-purple-200 mb-10 overflow-hidden profile-glow">
+                        <img id="client-image" src="image/Aditya.jpg" class="w-full h-full object-cover" alt="Client">
+                    </div>
+
+                    <p id="client-text" class="text-gray-800 text-lg md:text-xl font-medium leading-relaxed mb-10">
+                        "On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the waste moment so blinded by desire cannot"
+                    </p>
+
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                        <div>
+                            <h4 id="client-name" class="text-[#7c3aed] font-bold text-lg mb-1">Aditya Jain</h4>
+                            <p id="client-title" class="text-gray-400 text-sm">Director Contra Packaging</p>
+                        </div>
+                        
+                        <div class="flex gap-1 text-orange-400 text-xl">
+                            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- footer -->
+ <footer class="relative mt-60">
+    
+    <div class="absolute top-0 left-0 right-0 -translate-y-1/2 z-30 px-6">
+        <div class="max-w-6xl mx-auto bg-[#7c3aed] rounded-[45px] p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl relative overflow-hidden">
+            <div class="absolute inset-0 opacity-20" style="background: radial-gradient(circle at center, white 0%, transparent 75%);"></div>
+            
+            <div class="relative z-10">
+                <p class="text-white text-xs font-bold uppercase tracking-[0.3em] mb-4">Join The Revolution</p>
+                <h2 class="text-white text-4xl md:text-5xl font-extrabold leading-[1.1]">
+                    Turn Influencer Power <br> into Your Brand’s <span class="serif-italic">Success!</span>
+                </h2>
+            </div>
+
+            <div class="relative z-10 flex flex-col items-center md:items-end gap-6 text-center md:text-right">
+                <p class="text-white/90 text-sm max-w-[300px] font-medium">
+                    Start your brand's journey with strategic influencer collaborations for maximum impact.
+                </p>
+                <button class="border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-[#7c3aed] transition-all flex items-center gap-2">
+                    Let's Create The Magic <span>→</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-dark-grid pt-64 pb-12 px-6 md:px-20 relative">
+        
+        <div class="absolute left-10 lg:left-24 top-1/2 -translate-y-1/2 hidden md:block animate-star">
+            <img src="https://img.icons8.com/emoji/96/star-emoji.png" class="w-24 h-24" alt="Star">
+        </div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            
+            <div class="flex flex-col md:flex-row justify-between items-center mb-20 gap-8">
+               <div class="relative h-12 w-48 flex items-center">
+        <a href="index.html" class="absolute left-0 top-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity">
+            <img src="image/image.png" alt="Creato Studios Logo" class="h-50 w-auto object-contain max-w-none">
+        </a>
+    </div>
+
+                <div class="flex items-center gap-5">
+                    <span class="text-white font-bold text-sm tracking-wide">1000+ Creators on <span class="italic font-serif opacity-80">board</span></span>
+                    <div class="flex avatar-stack pl-3">
+                        <img src="image/image_17.jpg" class="w-10 h-10 rounded-full" alt="c1">
+                        <img src="image/hero1.jpg" class="w-10 h-10 rounded-full" alt="c2">
+                        <img src="image/hero2.jpg" class="w-10 h-10 rounded-full" alt="c3">
+                        <img src="image/hero3.png" class="w-10 h-10 rounded-full" alt="c4">
+                        <img src="image/image_2.jpg" class="w-10 h-10 rounded-full" alt="c5">
+                        <img src="image/image_10.jpg" class="w-10 h-10 rounded-full" alt="c6">
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mb-24 border-t border-white/5 pt-16">
+                <div>
+                    <h4 class="text-white font-bold text-xl mb-6">About</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
+                        We craft impactful influencer campaigns, UGC, podcasts, and celebrity partnerships to elevate your brand.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold text-xl mb-6">Contact Us</h4>
+                    <ul class="text-gray-400 text-sm space-y-4">
+                        <li class="hover:text-white transition cursor-pointer">+91 7838855855</li>
+                        <li class="hover:text-white transition cursor-pointer">support@creatostudios.com</li>
+                        <li class="leading-relaxed">
+                            A-27D, 5th Floor, Sector 16, Near Sector 16 Metro Station (Exit 4), Noida 201301, U.P.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-[13px] text-gray-500">
+                <p>Copyright @2025, <span class="text-[#7c3aed] font-bold">Creato Studios</span> All Rights Reserved</p>
+                <div class="flex items-center gap-1">
+                    Crafted with <span class="text-red-500">❤️</span> by kanishka
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<script>
+    // Slider Data
+    const testimonials = [
+        {
+            name: "Aditya Jain",
+            title: "Director Contra Packaging",
+            text: "\"On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the waste moment so blinded by desire cannot\"",
+            image: "image/Aditya.jpg"
+        },
+        {
+            name: "Mrs. Sargun Bedi",
+            title: "Lucidmind",
+            text:"\"Lucid Mind is a psychology and mental wellness platform offering professional counseling, therapy, and emotional well-being support.\"",
+            image: "image/sargun.jpeg"
+        }
+    ];
+
+    let currentIndex = 0;
+
+    function updateCard() {
+        const card = document.getElementById('testimonial-card');
+        const name = document.getElementById('client-name');
+        const title = document.getElementById('client-title');
+        const text = document.getElementById('client-text');
+        const image = document.getElementById('client-image');
+
+        // Reset animation
+        card.classList.remove('fade-in');
+        void card.offsetWidth; // trigger reflow
+        card.classList.add('fade-in');
+
+        // Update content
+        name.innerText = testimonials[currentIndex].name;
+        title.innerText = testimonials[currentIndex].title;
+        text.innerText = testimonials[currentIndex].text;
+        image.src = testimonials[currentIndex].image;
+    }
+
+    function nextTestimonial() {
+        currentIndex = (currentIndex + 1) % testimonials.length;
+        updateCard();
+    }
+
+    function prevTestimonial() {
+        currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+        updateCard();
+    }
+</script>
+
+</body>
+</html>

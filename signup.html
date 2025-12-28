@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Join Us - Book My Kitty</title>
+  <style>
+    .input {
+      width: 100%;
+      background: #0f0f10;
+      border: 1px solid #2b2b2b;
+      padding: 12px;
+      border-radius: 10px;
+      color: #fff;
+    }
+    .otp-btn {
+      background: white;
+      color: black;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .muted { color: #9ca3af; }
+  </style>
+</head>
+<body class="bg-black text-white min-h-screen flex items-center justify-center p-6">
+
+<!--
+  Full signup page:
+   - Email OTP verification (OTP JWT stored temporarily in localStorage)
+   - OTP cleared on reload (security)
+   - Phone field present (validated like Zod pattern)
+   - Referral auto-fill from ?ref= or ?referral= or ?r=
+   - Frontend validation aligned with provided Zod schema
+-->
+
+<script>
+  // IMPORTANT: Clear any stored OTP token immediately on page load (ensures reload resets OTP)
+  // This MUST run as early as possible so that initFromLocal sees nothing.
+  try { localStorage.removeItem("otp_token"); } catch(e) { /* ignore */ }
+</script>
+
+<main class="w-full max-w-2xl p-6 bg-[#111] rounded-3xl border border-white/10 shadow-xl">
+
+  <h1 class="text-4xl font-black text-center mb-2">Create Account</h1>
+  <p class="text-gray-400 text-center mb-6">Join Our Growing Influencer Community</p>
+
+  <form id="signupForm" class="grid grid-cols-1 md:grid-cols-2 gap-6" novalidate>
+
+    <!-- NAME -->
+    <div>
+      <label class="text-xs muted">Full Name</label>
+      <input id="name" type="text" required class="input" />
+    </div>
+
+    <!-- EMAIL + OTP -->
+    <div>
+      <label class="text-xs muted">Email</label>
+      <div class="flex gap-2">
+        <input id="email" type="email" required class="input flex-1" />
+        <button type="button" id="sendOtpBtn" class="otp-btn">Send OTP</button>
+      </div>
+      <p id="emailHelper" class="text-xs muted mt-2">We'll send a 6-digit OTP to this email. OTP resets on page reload.</p>
+    </div>
+
+    <!-- PHONE -->
+    <div>
+      <label class="text-xs muted">Phone Number</label>
+      <input id="phone" type="tel" placeholder="9876543210 or +919876543210" required class="input" />
+      <p class="text-xs muted mt-2">Indian numbers only. Format: 9876543210 or +919876543210</p>
+    </div>
+
+    <!-- REFERRAL -->
+    <div>
+      <label class="text-xs muted">Referral Code</label>
+      <input id="referralCode" type="text" class="input" placeholder="Optional" />
+    </div>
+
+    <!-- ADDRESS -->
+    <div class="md:col-span-2">
+      <label class="text-xs muted">Address</label>
+      <input id="address" type="text" required class="input" />
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="md:col-span-2">
+      <label class="text-xs muted">Password</label>
+      <input id="password" type="password" required class="input" />
+      <p class="text-xs muted mt-2">At least 6 characters.</p>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="md:col-span-2">
+      <button id="signupBtn" type="submit" class="w-full bg-white text-black font-bold py-3 rounded-xl">
+        Create Account
+      </button>
+    </div>
+
+  </form>
+</main>
+
+<!-- EMAIL OTP MODAL (centered) -->
+<div id="otpModal" class="fixed inset-0 bg-black/70 hidden z-50">
+  <div class="h-full w-full flex items-center justify-center">
+    <div class="bg-[#111] p-6 rounded-xl w-full max-w-sm border border-white/10">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold">Verify Email</h3>
+        <button id="closeModalBtn" class="text-gray-400 hover:text-white">✕</button>
+      </div>
+
+      <p id="otpModalMsg" class="text-sm muted mb-3">Enter the 6-digit OTP sent to your email.</p>
+
+      <input id="otpInput" type="text" maxlength="6"
+        class="input text-center tracking-widest mb-3" placeholder="123456" />
+
+      <button id="verifyOtpBtn" class="w-full bg-white text-black py-2 rounded mb-3">
+        Verify OTP
+      </button>
+
+      <div class="flex items-center justify-between text-xs muted">
+        <button id="resendBtn" class="underline">Resend OTP</button>
+        <div id="countdown"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // CONFIG
+  const BASE_URL = "https://creatostudiosbackend.vercel.app"; // change if needed
+
+  // STATE
+  let otpToken = null;            // token returned by verify-email-otp
+  let isOtpVerified = false;      // frontend boolean
+  let sendingOtp = false;
+  let resendCooldown = 0;
+  let resendInterval = null;
+
+  // DOM refs
+  const nameEl = document.getElementById("name");
+  const emailEl = document.getElementById("email");
+  const phoneEl = document.getElementById("phone");
+  const addressEl = document.getElementById("address");
+  const passwordEl = document.getElementById("password");
+  const referralEl = document.getElementById("referralCode");
+  const sendOtpBtn = document.getElementById("sendOtpBtn");
+  const otpModal = document.getElementById("otpModal");
+  const otpInput = document.getElementById("otpInput");
+  const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+  const closeModalBtn = document.getElementById("closeModalBtn");
+  const resendBtn = document.getElementById("resendBtn");
+  const countdownEl = document.getElementById("countdown");
+  const signupForm = document.getElementById("signupForm");
+  const signupBtn = document.getElementById("signupBtn");
+
+  // Phone regex (matches your zod): accepts 10-digit or +91XXXXXXXXXX
+  const phoneRegex = /^(?:\+91)?[6-9]\d{9}$/;
+
+  // Auto-fill referral from URL params (?ref=CODE or ?referral=CODE or ?r=CODE)
+  (function autoReferral() {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref") || params.get("referral") || params.get("r");
+    if (ref) {
+      referralEl.value = ref;
+      referralEl.readOnly = true;
+      referralEl.classList.add("opacity-80");
+    }
+  })();
+
+  // Helper functions
+  function openOtpModal() {
+    otpInput.value = "";
+    otpModal.classList.remove("hidden");
+    setTimeout(() => otpInput.focus(), 80);
+  }
+  function closeOtpModal() {
+    otpModal.classList.add("hidden");
+  }
+  function startResendCooldown(seconds = 30) {
+    resendCooldown = seconds;
+    updateCooldownUI();
+    if (resendInterval) clearInterval(resendInterval);
+    resendInterval = setInterval(() => {
+      resendCooldown--;
+      updateCooldownUI();
+      if (resendCooldown <= 0) {
+        clearInterval(resendInterval);
+        resendInterval = null;
+      }
+    }, 1000);
+  }
+  function updateCooldownUI() {
+    if (resendCooldown > 0) {
+      resendBtn.classList.add("pointer-events-none", "opacity-50");
+      countdownEl.textContent = `Resend in ${resendCooldown}s`;
+    } else {
+      resendBtn.classList.remove("pointer-events-none", "opacity-50");
+      countdownEl.textContent = "";
+    }
+  }
+
+  // FRONTEND validation matching provided Zod schema
+  function validateInputs() {
+    const name = (nameEl.value || "").trim();
+    const email = (emailEl.value || "").trim();
+    const password = passwordEl.value || "";
+    const phone = (phoneEl.value || "").trim();
+    const address = (addressEl.value || "").trim();
+    const referral = (referralEl.value || "").trim();
+
+    if (name.length < 2) return { ok: false, message: "Name is required (min 2 chars)" };
+    if (!/^\S+@\S+\.\S+$/.test(email)) return { ok: false, message: "Valid email is required" };
+    if (password.length < 6) return { ok: false, message: "Password must be at least 6 characters" };
+    if (!phoneRegex.test(phone)) return { ok: false, message: "Invalid Indian phone number" };
+    if (address.length < 5) return { ok: false, message: "Address is required (min 5 chars)" };
+    if (referral !== "" && !(referral.length >= 4 && referral.length <= 20)) {
+      return { ok: false, message: "Invalid referral code" };
+    }
+    return { ok: true };
+  }
+
+  // Send Email OTP
+  async function sendEmailOtp() {
+    if (sendingOtp) return;
+    const email = (emailEl.value || "").trim();
+    if (!email) return alert("Please enter your email before sending OTP.");
+    if (!/^\S+@\S+\.\S+$/.test(email)) return alert("Enter a valid email address.");
+
+    // If an OTP was previously verified, but user reload cleared it, we ensure state reset (should already be cleared)
+    isOtpVerified = false;
+    otpToken = null;
+    try { localStorage.removeItem("otp_token"); } catch(e) {}
+
+    sendingOtp = true;
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.textContent = "Sending...";
+
+    try {
+      const res = await fetch(`${BASE_URL}/v1/auth/send-email-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await res.json().catch(() => ({ success: false, message: "Invalid server response" }));
+
+      if (!res.ok) throw new Error(data.message || "Failed to send OTP");
+
+      // show modal for entering OTP
+      openOtpModal();
+      startResendCooldown(30);
+    } catch (err) {
+      alert(err.message || "Failed to send OTP");
+      console.error("sendEmailOtp:", err);
+    } finally {
+      sendingOtp = false;
+      sendOtpBtn.disabled = false;
+      if (!isOtpVerified) sendOtpBtn.textContent = "Send OTP";
+    }
+  }
+
+  // Verify Email OTP
+  async function verifyEmailOtp() {
+    const code = (otpInput.value || "").trim();
+    const email = (emailEl.value || "").trim();
+
+    if (!code) return alert("Please enter the OTP.");
+
+    verifyOtpBtn.disabled = true;
+    verifyOtpBtn.textContent = "Verifying...";
+
+    try {
+      const res = await fetch(`${BASE_URL}/v1/auth/verify-email-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code })
+      });
+
+      const data = await res.json().catch(() => ({ success: false, message: "Invalid server response" }));
+
+      if (!res.ok) throw new Error(data.message || "OTP verification failed");
+      if (!data.token) throw new Error("OTP token not returned by server");
+
+      // success
+      otpToken = data.token;
+      isOtpVerified = true;
+      try { localStorage.setItem("otp_token", otpToken); } catch(e) {}
+
+      // UI: mark verified & lock email
+      sendOtpBtn.innerHTML = "✓ Verified";
+      sendOtpBtn.classList.add("bg-green-500");
+      sendOtpBtn.disabled = true;
+      emailEl.readOnly = true;
+
+      closeOtpModal();
+      alert("Email verified successfully.");
+    } catch (err) {
+      alert(err.message || "OTP verification failed");
+      console.error("verifyEmailOtp:", err);
+    } finally {
+      verifyOtpBtn.disabled = false;
+      verifyOtpBtn.textContent = "Verify OTP";
+    }
+  }
+
+  // Resend
+  async function handleResend() {
+    if (resendCooldown > 0) return;
+    await sendEmailOtp();
+  }
+
+  // Signup
+  async function handleSignup(e) {
+    e.preventDefault();
+
+    // frontend validation
+    const valid = validateInputs();
+    if (!valid.ok) return alert(valid.message);
+
+    // require OTP verified (frontend check) and token present
+    const stored = otpToken || (() => { try { return localStorage.getItem("otp_token"); } catch(e){return null;} })();
+    if (!isOtpVerified || !stored) return alert("Please verify your email before signing up.");
+
+    signupBtn.disabled = true;
+    signupBtn.textContent = "Creating...";
+
+    // build payload
+    const payload = {
+      name: nameEl.value.trim(),
+      email: emailEl.value.trim(),
+      password: passwordEl.value,
+      phone: phoneEl.value.trim(),
+      address: addressEl.value.trim(),
+      referralCode: (referralEl.value || "").trim() || null
+    };
+
+    try {
+      const res = await fetch(`${BASE_URL}/v1/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${stored}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json().catch(async () => {
+        const txt = await res.text(); throw new Error(txt || "Invalid server response");
+      });
+
+      if (!res.ok) throw new Error(data.message || "Signup failed");
+
+      // store auth token if returned
+      if (data.token) {
+        try { localStorage.setItem("Bearer", data.token); } catch(e) {}
+      }
+
+      // cleanup - ensure OTP cleared and unusable after signup
+      try { localStorage.removeItem("otp_token"); } catch(e) {}
+      otpToken = null;
+      isOtpVerified = false;
+
+      alert(data.message || "Signup successful");
+      window.location.href = "Dashboard.html";
+    } catch (err) {
+      alert(err.message || "Signup failed");
+      console.error("signup:", err);
+    } finally {
+      signupBtn.disabled = false;
+      signupBtn.textContent = "Create Account";
+    }
+  }
+
+  // Event bindings
+  sendOtpBtn.addEventListener("click", sendEmailOtp);
+  verifyOtpBtn.addEventListener("click", verifyEmailOtp);
+  closeModalBtn.addEventListener("click", closeOtpModal);
+  resendBtn.addEventListener("click", handleResend);
+  signupForm.addEventListener("submit", handleSignup);
+
+  // OTP input digits only
+  otpInput.addEventListener("input", () => {
+    otpInput.value = otpInput.value.replace(/\D/g, "").slice(0, 6);
+  });
+
+  // On load: ensure OTP is reset (defense in depth) and UI shows not verified
+  (function init() {
+    try { localStorage.removeItem("otp_token"); } catch(e) {}
+    otpToken = null;
+    isOtpVerified = false;
+    // Reset UI state
+    sendOtpBtn.innerHTML = "Send OTP";
+    sendOtpBtn.disabled = false;
+    sendOtpBtn.classList.remove("bg-green-500");
+    emailEl.readOnly = false;
+    // If referral was present, referral field is already filled by autoReferral()
+  })();
+
+</script>
+</body>
+</html>

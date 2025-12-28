@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creato Studios - Redesign</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:italic,wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #020205; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .serif-italic { font-family: 'Playfair Display', serif; font-style: italic; }
+
+        /* Header Dropdown Logic */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            margin-top: 15px;
+            overflow: hidden;
+            z-index: 1000;
+        }
+        .group:hover .dropdown-menu { display: block; }
+
+        /* Background Grid */
+        .hero-bg {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            min-height: 100vh;
+        }
+
+        /* Card Positioning & Animation */
+        .glass-card {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+/* DYNAMIC BACKGROUND KEYFRAMES */
+    @keyframes move-color {
+        0% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(150px, -50px) scale(1.2); }
+        66% { transform: translate(-100px, 150px) scale(0.8); }
+        100% { transform: translate(0, 0) scale(1); }
+    }
+
+    .aura-container {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        overflow: hidden;
+        background: #020205; /* Solid black base */
+    }
+
+    /* Floating Color Blobs */
+    .aura-blob {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        filter: blur(120px);
+        opacity: 0.35;
+        animation: move-color 25s infinite alternate ease-in-out;
+    }
+
+    .aura-purple { background: radial-gradient(circle, #7c3aed, transparent); top: -10%; left: -10%; }
+    .aura-blue { background: radial-gradient(circle, #2563eb, transparent); bottom: -10%; right: -5%; animation-delay: -5s; }
+    .aura-pink { background: radial-gradient(circle, #db2777, transparent); top: 20%; right: 15%; animation-duration: 18s; }
+
+    /* Glass Effect for Tags */
+    .glass-feature {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .glass-feature:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(167, 139, 250, 0.5);
+        transform: translateY(-8px) scale(1.02);
+    }
+
+/* Exact Typography from the Image */
+    .font-serif-italic {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+    }
+
+    /* Precise Image Stack Positioning */
+    .image-composition {
+        position: relative;
+        width: 100%;
+        max-width: 550px;
+        height: 500px;
+    }
+
+    /* The Light Purple Background Box */
+    .bg-shape {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 380px;
+        height: 420px;
+        background-color: #f3f0ff; /* Exact light purple tint */
+        border-radius: 24px;
+        z-index: 0;
+    }
+
+    /* The Main Vertical Image */
+    .img-main {
+        position: absolute;
+        top: 0;
+        left: 30px;
+        width: 280px;
+        height: 400px;
+        border-radius: 20px;
+        object-fit: cover;
+        z-index: 1;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    /* The Floating Circular Portrait */
+    .img-portrait {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
+        border: 12px solid #ffffff; /* Thick white border from image */
+        object-fit: cover;
+        z-index: 3;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    /* The 3D Location Pin */
+    .pin-icon {
+        position: absolute;
+        top: 70px;
+        right: 120px;
+        width: 90px;
+        height: 90px;
+        background: #ffffff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 4;
+        box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);
+    }
+
+    /* Subtle Float Animation */
+    @keyframes float-slow {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+    }
+    .animate-float-slow { animation: float-slow 5s ease-in-out infinite; }
+
+.serif-italic { font-family: 'Playfair Display', serif; font-style: italic; }
+    
+    /* Background Grid Pattern for Section 2 */
+    .grid-bg {
+        background-image: linear-gradient(#e5e7eb 1px, transparent 1px), linear-gradient(90deg, #e5e7eb 1px, transparent 1px);
+        background-size: 40px 40px;
+    }
+
+    .serif-italic { font-family: 'Playfair Display', serif; font-style: italic; }
+    /* Hide scrollbar but keep functionality */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .serif-italic { font-family: 'Playfair Display', serif; font-style: italic; }
+    /* Hide scrollbar functionality */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+
+   .serif-italic { font-family: 'Playfair Display', serif; font-style: italic; }
+    /* The exact soft purple glow from your image */
+    .profile-glow {
+        box-shadow: 0 0 40px rgba(124, 58, 237, 0.4);
+    }
+    /* Smooth card transition */
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+.serif-italic { font-family: 'Playfair Display', serif; font-style: italic; }
+    
+    /* Smooth transition for opening/closing */
+    .faq-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.4s ease-in-out;
+        opacity: 0;
+    }
+    
+    /* When active, content becomes visible. Height is set by JS */
+    .faq-item.active .faq-content {
+        opacity: 1;
+        padding-top: 16px;
+    }
+
+    /* Rotation for the arrow */
+    .faq-item.active .faq-icon {
+        transform: rotate(90deg);
+    }
+
+/* footer */
+
+    </style>
+</head>
+<body>
+
+<header class="fixed top-0 w-full z-[200] px-16 py-8 flex justify-between items-center bg-black/20 backdrop-blur-sm">
+    <div class="relative h-12 w-48 flex items-center">
+        <a href="index.html" class="absolute left-0 top-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity">
+            <img src="image/image.png" alt="Creato Studios Logo" class="h-32 w-auto object-contain max-w-none">
+        </a>
+    </div>
+
+    <nav class="flex items-center gap-10 font-semibold text-[15px]">
+        <a href="#" class="border-b-2 border-white pb-1 text-white">Home</a>
+ <a href="about.html" class="text-gray-400 hover:text-white transition">About</a>
+ <!--<a href="#" class="text-gray-400 hover:text-white transition">Working Process</a>-->
+ <!--       <a href="#" class="text-gray-400 hover:text-white transition">Campaigns</a>-->
+        <a href="contact.html" class="text-gray-400 hover:text-white transition">Contact</a>
+    </nav>
+
+  <div class="flex items-center gap-8">
+    <a href="signin.html" class="text-white font-semibold text-[15px] hover:opacity-70 transition">
+        Sign In
+    </a>
+    
+    <a href="signup.html" class="bg-white text-black px-8 py-2.5 rounded-full font-bold text-[13px] uppercase tracking-wider hover:bg-gray-200 transition shadow-lg">
+        Collab Now   »
+    </a>
+</div>
+</header>
+
+    <main class="hero-bg relative flex items-center px-16 pt-20">
+        <div class="w-1/2 z-10">
+            <h1 class="text-7xl font-bold leading-tight mb-8">
+                Your Gateway to <br> Influencer <br>
+                <span class="text-purple-500 serif-italic">Marketing Excellence</span>
+            </h1>
+            <button class="bg-white text-black px-12 py-4 rounded-xl font-bold text-lg shadow-xl hover:scale-105 transition">
+                Let's Create The Magic
+            </button>
+        </div>
+
+        <div class="w-1/2 relative h-[700px]">
+            
+            <div class="absolute top-[5%] left-[15%] z-50 bg-white p-4 rounded-2xl shadow-2xl text-black w-56 animate-float">
+                <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">Influencer Collaboration</p>
+                <div class="bg-blue-600 text-white py-2 text-center rounded-lg relative">
+                    Video Production
+                    <!-- <img src="https://cdn-icons-png.flaticon.com/512/2037/2037530.png" class="w-10 h-10 absolute -bottom-6 -right-4" alt="Pointer"> -->
+                </div>
+            </div>
+
+            <div class="glass-card w-72 h-[400px] left-[30%] top-[25%] z-40 animate-float shadow-2xl border-white/20" style="animation-delay: 1s;">
+                <div class="p-6">
+                    <h3 class="font-bold text-xl">Abhishek Malhan</h3>
+                    <div class="w-48 h-48 mx-auto mt-6 rounded-full border-4 border-white overflow-hidden relative">
+                        <img src="image/hero3.png" class="w-full h-full object-cover">
+                        <div class="absolute top-1/2 -right-2 bg-blue-700 px-3 py-1 rounded-full border-2 border-white text-[10px] font-bold">3k+ ❤️</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card w-64 h-80 left-[65%] top-[10%] z-20 animate-float" style="animation-delay: 2s;">
+                <div class="p-5 flex justify-between items-start">
+                    <h3 class="font-bold">Ritvi Shah</h3>
+                    <div class="bg-red-500 px-3 py-1 rounded-full border-2 border-white text-[10px] font-bold shadow-lg">4m+ ❤️</div>
+                </div>
+                <div class="w-40 h-40 mx-auto rounded-full border-4 border-white/10 overflow-hidden">
+                    <img src="image/hero1.jpg" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <div class="glass-card w-64 h-80 left-[5%] top-[50%] z-10 animate-float">
+                <div class="p-5">
+                    <h3 class="font-bold">Kritika Khurana</h3>
+                </div>
+                <div class="w-40 h-40 mx-auto rounded-full border-4 border-white/10 overflow-hidden">
+                    <img src="image/hero2.jpg" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+<section class="bg-white py-24 text-center">
+    <div class="container mx-auto px-6">
+        <p class="text-gray-500 font-medium mb-4 text-lg">
+            Professionals & teams choose Creato Studios
+        </p>
+        
+        <h2 class="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-16">
+            Authenticity fuels influence,<br> 
+            and influence makes brands <span class="text-purple-600 serif-italic">unstoppable forces</span>
+        </h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-12 max-w-6xl mx-auto">
+            <div class="flex flex-col items-center">
+                <span class="text-6xl font-extrabold text-gray-900 mb-2 tracking-tighter">50+</span>
+                <p class="text-gray-500 font-medium">Successful Project</p>
+            </div>
+            
+            <div class="flex flex-col items-center">
+                <span class="text-6xl font-extrabold text-gray-900 mb-2 tracking-tighter">20+</span>
+                <p class="text-gray-500 font-medium">Experienced Team</p>
+            </div>
+            
+            <div class="flex flex-col items-center">
+                <span class="text-6xl font-extrabold text-gray-900 mb-2 tracking-tighter">1000+</span>
+                <p class="text-gray-500 font-medium">Coffees Over Completion</p>
+            </div>
+            
+            <div class="flex flex-col items-center">
+                <span class="text-6xl font-extrabold text-gray-900 mb-2 tracking-tighter">1000+</span>
+                <p class="text-gray-500 font-medium">Creators</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="w-full h-12 bg-purple-600 transform -skew-y-1 origin-left -mt-6"></div>
+
+<!-- What We Provide -->
+<section class="relative py-32 px-16 overflow-hidden">
+    <div class="aura-container">
+        <div class="aura-blob aura-purple"></div>
+        <div class="aura-blob aura-blue"></div>
+        <div class="aura-blob aura-pink"></div>
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 30px 30px;"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-20 relative z-10">
+        
+        <div class="lg:w-1/2">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-500 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(124,58,237,0.5)]">
+                    <span class="text-white text-sm">★</span>
+                </div>
+                <span class="font-bold uppercase tracking-[0.4em] text-xs text-purple-300">What We Provide</span>
+            </div>
+
+            <h2 class="text-6xl md:text-7xl font-bold leading-[1.05] mb-8 tracking-tighter">
+                Explore Powerful <br> Social Features <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 serif-italic">For Elite Brands</span>
+            </h2>
+
+            <p class="text-gray-400 text-xl leading-relaxed mb-10 max-w-xl opacity-80">
+                Stop following trends and start setting them. We provide the infrastructure for high-velocity creator growth.
+            </p>
+
+            <div class="grid grid-cols-2 gap-5 max-w-md">
+                <div class="glass-feature py-5 px-8 rounded-[24px] flex items-center gap-4 font-bold text-white cursor-pointer group">
+                    <div class="bg-purple-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] group-hover:rotate-[360deg] transition-transform duration-500">✓</div>
+                    Creators
+                </div>
+                <div class="glass-feature py-5 px-8 rounded-[24px] flex items-center gap-4 font-bold text-white cursor-pointer group">
+                    <div class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] group-hover:rotate-[360deg] transition-transform duration-500">✓</div>
+                    Artists
+                </div>
+                <div class="glass-feature py-5 px-8 rounded-[24px] flex items-center gap-4 font-bold text-white cursor-pointer group">
+                    <div class="bg-pink-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] group-hover:rotate-[360deg] transition-transform duration-500">✓</div>
+                    Influencers
+                </div>
+                <div class="glass-feature py-5 px-8 rounded-[24px] flex items-center gap-4 font-bold text-white cursor-pointer group">
+                    <div class="bg-indigo-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] group-hover:rotate-[360deg] transition-transform duration-500">✓</div>
+                    Celebrities
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:w-1/2 relative flex justify-center items-center">
+            <div class="w-[550px] h-[380px] rounded-[48px] overflow-hidden border border-white/20 shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-0">
+                <img src="image/image_27.jpg" class="w-full h-full object-cover" alt="Collaboration">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#020205] via-transparent to-transparent opacity-80"></div>
+                
+                <div class="absolute inset-0 flex items-end p-10">
+                    <div class="flex gap-4 text-3xl">
+                        <span class="animate-bounce" style="animation-delay: 0.1s">❤️</span>
+                        <span class="animate-bounce" style="animation-delay: 0.3s">🔥</span>
+                        <span class="animate-bounce" style="animation-delay: 0.5s">✨</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute -bottom-16 -left-12 w-80 h-80 rounded-full border-[12px] border-[#020205] overflow-hidden z-20 shadow-[0_20px_60px_rgba(124,58,237,0.4)] animate-float">
+                <img src="image/image_4.jpg" class="w-full h-full object-cover" alt="Profile">
+            </div>
+            
+            <div class="absolute top-8 -right-8 glass-feature px-6 py-3 rounded-2xl animate-float" style="animation-delay: 1.5s;">
+                <div class="flex items-center gap-3">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span class="text-[10px] font-mono tracking-widest text-purple-200">SYSTEM_ONLINE_24/7</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Powerful Content Marketing, Driven by Creators -->
+<section class="bg-white py-24 px-8 md:px-16 overflow-hidden">
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
+        
+        <div class="w-full lg:w-1/2 flex justify-center lg:justify-start">
+            <div class="image-composition">
+                <div class="bg-shape"></div>
+                
+                <img src="image/image_7.png" class="img-main" alt="Creator">
+                
+                <div class="pin-icon animate-float-slow">
+                    <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" class="w-12 h-12" alt="Location">
+                </div>
+
+                <img src="image/image_2.jpg" class="img-portrait animate-float-slow" style="animation-delay: 1s;" alt="Influencer">
+            </div>
+        </div>
+
+        <div class="w-full lg:w-1/2">
+            <p class="text-gray-500 font-semibold text-sm uppercase tracking-wider mb-4">
+                Powerful Content Marketing, Driven by Creators
+            </p>
+            
+            <h2 class="text-5xl font-extrabold text-gray-900 leading-[1.15] mb-6">
+                One Platform Every <br> Brand Needs for Seamless <br>
+                <span class="text-[#7c3aed] font-serif-italic">Creator Collaborations</span>
+            </h2>
+
+            <p class="text-gray-500 text-lg leading-relaxed mb-8">
+                Empowering brands with a seamless platform to execute creative collaborations with top influencers. From strategy to execution, we simplify influencer marketing for impactful, data-driven brand success.
+            </p>
+
+            <ul class="space-y-5 mb-10">
+                <li class="flex items-start gap-4">
+                    <span class="text-[#7c3aed] bg-[#f3f0ff] rounded-full w-6 h-6 flex items-center justify-center text-xs flex-shrink-0 mt-1">✓</span>
+                    <span class="text-gray-600">Connecting brands with the right influencers for authentic engagement and lasting impact</span>
+                </li>
+                <li class="flex items-start gap-4">
+                    <span class="text-[#7c3aed] bg-[#f3f0ff] rounded-full w-6 h-6 flex items-center justify-center text-xs flex-shrink-0 mt-1">✓</span>
+                    <span class="text-gray-600">Crafting compelling stories that resonate with audiences and drive brand awareness</span>
+                </li>
+                <li class="flex items-start gap-4">
+                    <span class="text-[#7c3aed] bg-[#f3f0ff] rounded-full w-6 h-6 flex items-center justify-center text-xs flex-shrink-0 mt-1">✓</span>
+                    <span class="text-gray-600">Tracking performance and optimising campaigns for maximum reach and ROI</span>
+                </li>
+            </ul>
+
+            <button class="bg-[#7c3aed] hover:bg-[#6d28d9] text-white px-10 py-4 rounded-xl font-bold text-lg transition-all flex items-center gap-3 shadow-lg shadow-purple-200">
+                Let's Create The Magic 
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</section>
+<!-- Unlock brand success with powerful -->
+<section class="grid-bg py-24 px-6 md:px-16 bg-white border-t border-gray-100">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <p class="text-sm font-bold text-gray-900 mb-4 tracking-tight">Create Amazing Campaigns</p>
+            <h2 class="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+                Unlock brand success with powerful <br>
+                <span class="text-purple-600 serif-italic">creator collaborations</span>
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+            
+            <div class="bg-white p-12 rounded-[30px] shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-xl transition-all">
+                <span class="absolute top-8 right-8 text-8xl font-black text-gray-50 opacity-100 group-hover:text-purple-50">01</span>
+                <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6 border border-purple-200">
+                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Influencer Partnerships</h3>
+                <p class="text-gray-500 leading-relaxed max-w-xs">Connect with top creators to amplify your brand's reach and impact</p>
+            </div>
+
+            <div class="bg-white p-12 rounded-[30px] shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-xl transition-all">
+                <span class="absolute top-8 right-8 text-8xl font-black text-gray-50 opacity-100">02</span>
+                <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6 border border-purple-200">
+                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Podcast Spotlights</h3>
+                <p class="text-gray-500 leading-relaxed max-w-xs">Get featured on leading podcasts to enhance brand credibility and engagement</p>
+            </div>
+
+            <div class="bg-white p-12 rounded-[30px] shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-xl transition-all">
+                <span class="absolute top-8 right-8 text-8xl font-black text-gray-50 opacity-100">03</span>
+                <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6 border border-purple-200">
+                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">UGC & High-Impact Video Production</h3>
+                <p class="text-gray-500 leading-relaxed max-w-xs">Create authentic, high-quality content that resonates with your audience</p>
+            </div>
+
+            <div class="bg-white p-12 rounded-[30px] shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-xl transition-all">
+                <span class="absolute top-8 right-8 text-8xl font-black text-gray-50 opacity-100">04</span>
+                <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6 border border-purple-200">
+                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Celebrity Brand Endorsements</h3>
+                <p class="text-gray-500 leading-relaxed max-w-xs">Leverage star power to elevate brand awareness and consumer trust</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- From Connections to Conversions -Roadmap to Success in 4 Steps -->
+<section class="py-24 px-6 bg-white overflow-hidden font-sans">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-24">
+            <p class="font-bold text-xs uppercase tracking-[0.3em] text-gray-900 mb-4">Working Process</p>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
+                From Connections to Conversions - <br>
+                Roadmap to Success <span class="text-[#7c3aed] italic serif-italic" style="font-family: 'Playfair Display', serif;">in 4 Steps</span>
+            </h2>
+        </div>
+
+        <div class="relative">
+            <div class="absolute w-[2px] h-full bg-gray-100 left-1/2 -translate-x-1/2 top-0 hidden md:block"></div>
+
+            <div class="relative flex flex-col md:flex-row items-center mb-16 group">
+                <div class="w-full md:w-1/2 flex justify-end pr-0 md:pr-16">
+                    <div class="bg-[#f5f3ff] p-8 rounded-[24px] border border-purple-50 w-full md:max-w-[400px] relative shadow-sm hover:shadow-md transition-shadow">
+                        <div class="bg-[#7c3aed] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm mb-4">1</div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2">Discovery & Strategy</h4>
+                        <p class="text-gray-500 text-sm leading-relaxed">Define goals, find the right influencers, and plan your campaign</p>
+                        <div class="hidden md:block absolute top-1/2 -right-4 -translate-y-1/2 text-gray-200">
+                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2"></div>
+            </div>
+
+            <div class="relative flex flex-col md:flex-row items-center mb-16">
+                <div class="hidden md:block w-1/2"></div>
+                <div class="w-full md:w-1/2 flex justify-start pl-0 md:pl-16">
+                    <div class="bg-[#f5f3ff] p-8 rounded-[24px] border border-purple-50 w-full md:max-w-[400px] relative shadow-sm hover:shadow-md transition-shadow">
+                        <div class="bg-[#7c3aed] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm mb-4">2</div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2">Collaboration & Content Creation</h4>
+                        <p class="text-gray-500 text-sm leading-relaxed">Partner with creators to craft engaging, brand-aligned content</p>
+                        <div class="hidden md:block absolute top-1/2 -left-4 -translate-y-1/2 text-gray-200 rotate-180">
+                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative flex flex-col md:flex-row items-center mb-16">
+                <div class="w-full md:w-1/2 flex justify-end pr-0 md:pr-16">
+                    <div class="bg-[#f5f3ff] p-8 rounded-[24px] border border-purple-50 w-full md:max-w-[400px] relative shadow-sm hover:shadow-md transition-shadow">
+                        <div class="bg-[#7c3aed] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm mb-4">3</div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2">Execution & Promotion</h4>
+                        <p class="text-gray-500 text-sm leading-relaxed">Launch, amplify reach, and maximize engagement across platforms</p>
+                        <div class="hidden md:block absolute top-1/2 -right-4 -translate-y-1/2 text-gray-200">
+                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2"></div>
+            </div>
+
+            <div class="relative flex flex-col md:flex-row items-center">
+                <div class="hidden md:block w-1/2"></div>
+                <div class="w-full md:w-1/2 flex justify-start pl-0 md:pl-16">
+                    <div class="bg-[#f5f3ff] p-8 rounded-[24px] border border-purple-50 w-full md:max-w-[400px] relative shadow-sm hover:shadow-md transition-shadow">
+                        <div class="bg-[#7c3aed] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm mb-4">4</div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2">Performance Tracking & Optimization</h4>
+                        <p class="text-gray-500 text-sm leading-relaxed">Analyze impact, refine strategy, and drive better results</p>
+                        <div class="hidden md:block absolute top-1/2 -left-4 -translate-y-1/2 text-gray-200 rotate-180">
+                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Collaborate With Top Influencer -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+        
+        <h2 class="text-center text-4xl md:text-5xl font-bold text-gray-900 mb-16">
+            Collaborate With <span class="text-[#7c3aed] serif-italic">Top Influencer</span>
+        </h2>
+
+        <div class="relative group">
+            
+            <button onclick="scrollSlider('left')" class="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/20 backdrop-blur-sm p-2 rounded-full border border-white/50 text-white hover:bg-white hover:text-black transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+
+            <div id="influencer-slider" class="flex gap-6 overflow-x-auto no-scrollbar scroll-smooth px-2">
+                
+                <div class="flex-shrink-0 w-[300px] h-[450px] rounded-[20px] overflow-hidden shadow-md">
+                    <img src="image/image_7.jpg" class="w-full h-full object-cover" alt="Influencer">
+                </div>
+
+                <div class="flex-shrink-0 w-[300px] h-[450px] rounded-[20px] overflow-hidden shadow-md">
+                    <img src="image/image_6.jpg" class="w-full h-full object-cover" alt="Influencer">
+                </div>
+
+                <div class="flex-shrink-0 w-[300px] h-[450px] rounded-[20px] overflow-hidden shadow-md">
+                    <img src="image/image_9.jpg" class="w-full h-full object-cover" alt="Influencer">
+                </div>
+
+                <div class="flex-shrink-0 w-[300px] h-[450px] rounded-[20px] overflow-hidden shadow-md">
+                    <img src="image/image_10.jpg" class="w-full h-full object-cover" alt="Influencer">
+                </div>
+
+                <div class="flex-shrink-0 w-[300px] h-[450px] rounded-[20px] overflow-hidden shadow-md">
+                    <img src="image/image_20.jpg" class="w-full h-full object-cover" alt="Influencer">
+                </div>
+            </div>
+
+            <button onclick="scrollSlider('right')" class="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/20 backdrop-blur-sm p-2 rounded-full border border-white/50 text-white hover:bg-white hover:text-black transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+        </div>
+
+        <div class="flex justify-center gap-2 mt-10">
+            <div class="w-2.5 h-2.5 rounded-full bg-black"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+        </div>
+
+    </div>
+</section>
+<!-- Collab With Top Influencers videos -->
+<section class="py-20 bg-white font-sans">
+    <div class="max-w-7xl mx-auto px-4">
+        
+        <h2 class="text-center text-4xl md:text-5xl font-bold text-gray-900 mb-16">
+            Collab With <span class="text-[#7c3aed] serif-italic">Top Influencers</span>
+        </h2>
+
+        <div class="relative group">
+            
+            <button onclick="scrollVideoSlider('left')" class="absolute left-[-20px] top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg p-3 rounded-full hover:bg-gray-50 transition border border-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+
+            <div id="video-slider" class="flex gap-6 overflow-x-auto no-scrollbar scroll-smooth">
+                
+                <div class="flex-shrink-0 w-[280px] h-[500px] rounded-[20px] overflow-hidden relative shadow-lg group/card">
+                  <video 
+  class="w-full h-full object-cover cursor-pointer video-item"
+  poster="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000"
+  onclick="togglePlay(this)"
+>
+ <iframe
+  class="w-full h-full"
+  src="https://youtube.com/shorts/AuqRuyuDCV0?si=T13JEQ208TcZixjY"
+  frameborder="0"
+  allow="autoplay; fullscreen">
+</iframe>
+</video>
+                    
+                    <div class="absolute top-0 inset-x-0 p-4 flex justify-between items-start bg-gradient-to-b from-black/60 to-transparent">
+                        <span class="text-white text-xs font-bold">Video 24</span>
+                        <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-[10px] text-white">c</div>
+                            <span class="text-white text-[10px] font-bold">creatostudios</span>
+                            <button class="bg-white text-black text-[10px] px-2 py-1 rounded font-bold">Subscribe</button>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-16 h-16 bg-[#ff0000] rounded-full flex items-center justify-center shadow-2xl scale-100 group-hover/card:scale-110 transition-transform">
+                             <svg viewBox="0 0 24 24" class="w-8 h-8 fill-white"><path d="M17.65,11.35l-7-4A1,1,0,0,0,9,8.21v8.13a1,1,0,0,0,1.54.84l7-4.06A1,1,0,0,0,17.65,11.35Z"/></svg>
+                        </div>
+                    </div>
+
+                    <div class="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                        <p class="text-white text-xs leading-relaxed font-medium">Ma'am you should try everteen's menstrual cup.</p>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0 w-[280px] h-[500px] rounded-[20px] overflow-hidden relative shadow-lg group/card">
+                  <video 
+  class="w-full h-full object-cover cursor-pointer video-item"
+  poster="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000"
+  onclick="togglePlay(this)"
+>
+  <source src="videos/sample.mp4" type="video/mp4">
+</video>
+                    <div class="absolute top-0 inset-x-0 p-4 flex justify-between items-start bg-gradient-to-b from-black/60 to-transparent">
+                        <span class="text-white text-xs font-bold">Video 957</span>
+                        <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-[10px] text-white">c</div>
+                            <button class="bg-white text-black text-[10px] px-2 py-1 rounded font-bold">Subscribe</button>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-16 h-16 bg-[#ff0000] rounded-full flex items-center justify-center shadow-2xl">
+                             <svg viewBox="0 0 24 24" class="w-8 h-8 fill-white"><path d="M17.65,11.35l-7-4A1,1,0,0,0,9,8.21v8.13a1,1,0,0,0,1.54.84l7-4.06A1,1,0,0,0,17.65,11.35Z"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0 w-[280px] h-[500px] rounded-[20px] overflow-hidden relative shadow-lg">
+                  <video 
+  class="w-full h-full object-cover cursor-pointer video-item"
+  poster="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000"
+  onclick="togglePlay(this)"
+>
+  <source src="videos/sample.mp4" type="video/mp4">
+</video>
+                    <div class="absolute inset-0 flex items-center justify-center"><div class="w-16 h-16 bg-[#ff0000] rounded-full flex items-center justify-center shadow-2xl"><svg viewBox="0 0 24 24" class="w-8 h-8 fill-white"><path d="M17.65,11.35l-7-4A1,1,0,0,0,9,8.21v8.13a1,1,0,0,0,1.54.84l7-4.06A1,1,0,0,0,17.65,11.35Z"/></svg></div></div>
+                </div>
+
+                <div class="flex-shrink-0 w-[280px] h-[500px] rounded-[20px] overflow-hidden relative shadow-lg">
+                   <video 
+  class="w-full h-full object-cover cursor-pointer video-item"
+  poster="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000"
+  onclick="togglePlay(this)"
+>
+  <source src="videos/sample.mp4" type="video/mp4">
+</video>
+                    <div class="absolute inset-0 flex items-center justify-center"><div class="w-16 h-16 bg-[#ff0000] rounded-full flex items-center justify-center shadow-2xl"><svg viewBox="0 0 24 24" class="w-8 h-8 fill-white"><path d="M17.65,11.35l-7-4A1,1,0,0,0,9,8.21v8.13a1,1,0,0,0,1.54.84l7-4.06A1,1,0,0,0,17.65,11.35Z"/></svg></div></div>
+                </div>
+            </div>
+
+            <button onclick="scrollVideoSlider('right')" class="absolute right-[-20px] top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg p-3 rounded-full hover:bg-gray-50 transition border border-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+        </div>
+
+        <div class="flex justify-center gap-2 mt-12">
+            <div class="w-2.5 h-2.5 rounded-full bg-slate-900"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-slate-200"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-slate-200"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-slate-200"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-slate-200"></div>
+        </div>
+
+    </div>
+</section>
+<!-- Hear Their Stories -->
+<section class="py-24 bg-white font-sans overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 lg:px-20">
+        <div class="flex flex-col lg:flex-row items-center gap-16">
+            
+            <div class="lg:w-1/3">
+                <h2 class="text-5xl font-extrabold text-slate-900 leading-tight mb-4">
+                    Trusted by Brands,<br> Loved by Clients
+                </h2>
+                <h3 class="text-4xl text-[#7c3aed] serif-italic mb-8">
+                    Hear Their Stories
+                </h3>
+                <p class="text-gray-500 text-sm leading-relaxed mb-10 max-w-xs">
+                    Discover how our influencer marketing solutions have transformed brands. See what our happy clients have to say about their success!
+                </p>
+                
+                <div class="flex gap-4">
+                    <button onclick="prevTestimonial()" class="w-12 h-12 rounded-full bg-[#f5f3ff] flex items-center justify-center text-[#7c3aed] hover:bg-[#7c3aed] hover:text-white transition shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <button onclick="nextTestimonial()" class="w-12 h-12 rounded-full bg-[#f5f3ff] flex items-center justify-center text-[#7c3aed] hover:bg-[#7c3aed] hover:text-white transition shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="lg:w-2/3 w-full" id="testimonial-card-container">
+                <div id="testimonial-card" class="bg-white rounded-[20px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] p-12 relative border border-gray-50 fade-in">
+                    
+                    <div class="absolute top-10 right-10 w-16 h-16 bg-[#7c3aed] rounded-full flex items-center justify-center shadow-lg shadow-purple-200">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C20.1216 16 21.017 15.1046 21.017 14V9C21.017 7.89543 20.1216 7 19.017 7H16.017C14.9124 7 14.017 7.89543 14.017 9V14M3 21L3 18C3 16.8954 3.89543 16 5 16H8C9.10457 16 10 15.1046 10 14V9C10 7.89543 9.10457 7 8 7H5C3.89543 7 3 7.89543 3 9V14"/></svg>
+                    </div>
+
+                    <div class="w-20 h-20 rounded-full border-2 border-purple-200 mb-10 overflow-hidden profile-glow">
+                        <img id="client-image" src="image/Aditya.jpg" class="w-full h-full object-cover" alt="Client">
+                    </div>
+
+                    <p id="client-text" class="text-gray-800 text-lg md:text-xl font-medium leading-relaxed mb-10">
+                        "On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the waste moment so blinded by desire cannot"
+                    </p>
+
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                        <div>
+                            <h4 id="client-name" class="text-[#7c3aed] font-bold text-lg mb-1">Aditya Jain</h4>
+                            <p id="client-title" class="text-gray-400 text-sm">Director Contra Packaging</p>
+                        </div>
+                        
+                        <div class="flex gap-1 text-orange-400 text-xl">
+                            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Frequently Asked questions -->
+<section class="py-24 bg-white font-sans">
+    <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="text-center mb-16">
+            <p class="text-sm font-bold text-gray-900 mb-2 uppercase tracking-widest">FAQs</p>
+            <h2 class="text-5xl font-extrabold text-gray-900 leading-tight">
+                Frequently Asked <span class="text-[#7c3aed] serif-italic">questions</span>
+            </h2>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-10 items-stretch">
+            
+            <div class="lg:w-1/2 w-full space-y-4" id="faq-list">
+                
+                <div class="faq-item bg-white text-gray-900 p-6 rounded-[12px] shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all duration-300" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center pointer-events-none">
+                        <h4 class="font-bold text-lg">How do you find the right influencers for my brand?</h4>
+                        <div class="faq-icon transition-transform duration-300">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </div>
+                    </div>
+                    <div class="faq-content">
+                        <p class="text-sm leading-relaxed opacity-90">
+                            We analyze your goals, audience, and niche to match you with influencers who align with your brand's vision and values. We use data-driven tools to ensure authenticity and reach.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item bg-white text-gray-900 p-6 rounded-[12px] shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all duration-300" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center pointer-events-none">
+                        <h4 class="font-bold text-lg">What platforms do you specialize in?</h4>
+                        <div class="faq-icon transition-transform duration-300">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </div>
+                    </div>
+                    <div class="faq-content">
+                        <p class="text-sm leading-relaxed opacity-90">
+                            We specialize in Instagram, YouTube, TikTok, and LinkedIn to ensure maximum engagement for your brand campaigns across the most relevant channels.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item bg-white text-gray-900 p-6 rounded-[12px] shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all duration-300" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center pointer-events-none">
+                        <h4 class="font-bold text-lg">Can I track campaign performance?</h4>
+                        <div class="faq-icon transition-transform duration-300">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </div>
+                    </div>
+                    <div class="faq-content">
+                        <p class="text-sm leading-relaxed opacity-90">
+                            Yes, absolutely. We provide real-time dashboards and detailed post-campaign reports tracking reach, engagement rates, conversions, and ROI.
+                        </p>
+                    </div>
+                </div>
+
+                 <div class="faq-item bg-white text-gray-900 p-6 rounded-[12px] shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all duration-300" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center pointer-events-none">
+                        <h4 class="font-bold text-lg">Do you handle content creation?</h4>
+                        <div class="faq-icon transition-transform duration-300">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </div>
+                    </div>
+                    <div class="faq-content">
+                        <p class="text-sm leading-relaxed opacity-90">
+                            We handle the entire process, from creative ideation and briefing influencers to ensuring high-quality final content delivery that meets brand guidelines.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="lg:w-1/2 w-full">
+                <div class="bg-[#f5f8ff] p-8 rounded-[24px] border border-blue-100 h-full flex items-center justify-center">
+                    <div class="w-full h-full max-h-[500px] rounded-[20px] overflow-hidden shadow-2xl">
+                        <img src="image/image_17.jpg" class="w-full h-full object-cover" alt="Expert">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- footer -->
+<footer class="relative mt-60">
+    
+    <div class="absolute top-0 left-0 right-0 -translate-y-1/2 z-30 px-6">
+        <div class="max-w-6xl mx-auto bg-[#7c3aed] rounded-[45px] p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl relative overflow-hidden">
+            <div class="absolute inset-0 opacity-20" style="background: radial-gradient(circle at center, white 0%, transparent 75%);"></div>
+            
+            <div class="relative z-10">
+                <p class="text-white text-xs font-bold uppercase tracking-[0.3em] mb-4">Join The Revolution</p>
+                <h2 class="text-white text-4xl md:text-5xl font-extrabold leading-[1.1]">
+                    Turn Influencer Power <br> into Your Brand’s <span class="serif-italic">Success!</span>
+                </h2>
+            </div>
+
+            <div class="relative z-10 flex flex-col items-center md:items-end gap-6 text-center md:text-right">
+                <p class="text-white/90 text-sm max-w-[300px] font-medium">
+                    Start your brand's journey with strategic influencer collaborations for maximum impact.
+                </p>
+                <button class="border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-[#7c3aed] transition-all flex items-center gap-2">
+                    Let's Create The Magic <span>→</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-dark-grid pt-64 pb-12 px-6 md:px-20 relative">
+        
+        <div class="absolute left-10 lg:left-24 top-1/2 -translate-y-1/2 hidden md:block animate-star">
+            <img src="https://img.icons8.com/emoji/96/star-emoji.png" class="w-24 h-24" alt="Star">
+        </div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            
+            <div class="flex flex-col md:flex-row justify-between items-center mb-20 gap-8">
+               <div class="relative h-12 w-48 flex items-center">
+        <a href="index.html" class="absolute left-0 top-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity">
+            <img src="image/image.png" alt="Creato Studios Logo" class="h-50 w-auto object-contain max-w-none">
+        </a>
+    </div>
+
+                <div class="flex items-center gap-5">
+                    <span class="text-white font-bold text-sm tracking-wide">1000+ Creators on <span class="italic font-serif opacity-80">board</span></span>
+                    <div class="flex avatar-stack pl-3">
+                        <img src="image/image_17.jpg" class="w-10 h-10 rounded-full" alt="c1">
+                        <img src="image/hero1.jpg" class="w-10 h-10 rounded-full" alt="c2">
+                        <img src="image/hero2.jpg" class="w-10 h-10 rounded-full" alt="c3">
+                        <img src="image/hero3.png" class="w-10 h-10 rounded-full" alt="c4">
+                        <img src="image/image_2.jpg" class="w-10 h-10 rounded-full" alt="c5">
+                        <img src="image/image_10.jpg" class="w-10 h-10 rounded-full" alt="c6">
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mb-24 border-t border-white/5 pt-16">
+                <div>
+                    <h4 class="text-white font-bold text-xl mb-6">About</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
+                        We craft impactful influencer campaigns, UGC, podcasts, and celebrity partnerships to elevate your brand.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold text-xl mb-6">Contact Us</h4>
+                    <ul class="text-gray-400 text-sm space-y-4">
+                        <li class="hover:text-white transition cursor-pointer">+91 7838855855</li>
+                        <li class="hover:text-white transition cursor-pointer">support@creatostudios.com</li>
+                        <li class="leading-relaxed">
+                            A-27D, 5th Floor, Sector 16, Near Sector 16 Metro Station (Exit 4), Noida 201301, U.P.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-[13px] text-gray-500">
+                <p>Copyright @2025, <span class="text-[#7c3aed] font-bold">Creato Studios</span> All Rights Reserved</p>
+                <div class="flex items-center gap-1">
+                    Crafted with <span class="text-red-500">❤️</span> kanishka
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<script>
+    // Collab With Top Influencers
+    function scrollSlider(direction) {
+        const slider = document.getElementById('influencer-slider');
+        const scrollAmount = 324; // Width of card + gap
+        if (direction === 'left') {
+            slider.scrollLeft -= scrollAmount;
+        } else {
+            slider.scrollLeft += scrollAmount;
+        }
+    }
+
+// Collab With Top Influencers
+ function togglePlay(video) {
+    // Pehle sab videos pause karo
+    document.querySelectorAll("video").forEach(v => {
+      if (v !== video) {
+        v.pause();
+      }
+    });
+
+    // Clicked video play / pause
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  }
+// Slider Data
+    const testimonials = [
+        {
+            name: "Aditya Jain",
+            title: "Director Contra Packaging",
+            text: "\"On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the waste moment so blinded by desire cannot\"",
+            image: "image/Aditya.jpg"
+        },
+        {
+            name: "Mrs. Sargun Bedi",
+            title: "Lucidmind",
+            text: "\"Lucid Mind is a psychology and mental wellness platform offering professional counseling, therapy, and emotional well-being support.\"",
+            image: "image/sargun.jpeg"
+        }
+    ];
+
+    let currentIndex = 0;
+
+    function updateCard() {
+        const card = document.getElementById('testimonial-card');
+        const name = document.getElementById('client-name');
+        const title = document.getElementById('client-title');
+        const text = document.getElementById('client-text');
+        const image = document.getElementById('client-image');
+
+        // Reset animation
+        card.classList.remove('fade-in');
+        void card.offsetWidth; // trigger reflow
+        card.classList.add('fade-in');
+
+        // Update content
+        name.innerText = testimonials[currentIndex].name;
+        title.innerText = testimonials[currentIndex].title;
+        text.innerText = testimonials[currentIndex].text;
+        image.src = testimonials[currentIndex].image;
+    }
+
+    function nextTestimonial() {
+        currentIndex = (currentIndex + 1) % testimonials.length;
+        updateCard();
+    }
+
+    function prevTestimonial() {
+        currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+        updateCard();
+    }
+
+
+    function toggleFaq(clickedItem) {
+        // 1. Close all other items first (accordion behavior)
+        const allItems = document.querySelectorAll('#faq-list .faq-item');
+        allItems.forEach(item => {
+            if (item !== clickedItem) {
+                item.classList.remove('active', 'bg-[#7c3aed]', 'text-white', 'shadow-lg');
+                item.classList.add('bg-white', 'text-gray-900', 'shadow-sm', 'border-gray-100');
+                item.querySelector('.faq-content').style.maxHeight = null;
+            }
+        });
+
+        // 2. Toggle the clicked item
+        const content = clickedItem.querySelector('.faq-content');
+        const isActive = clickedItem.classList.contains('active');
+
+        if (isActive) {
+            // Close it
+            clickedItem.classList.remove('active', 'bg-[#7c3aed]', 'text-white', 'shadow-lg');
+            clickedItem.classList.add('bg-white', 'text-gray-900', 'shadow-sm', 'border-gray-100');
+            content.style.maxHeight = null;
+        } else {
+            // Open it (Apply purple styles)
+            clickedItem.classList.add('active', 'bg-[#7c3aed]', 'text-white', 'shadow-lg');
+            clickedItem.classList.remove('bg-white', 'text-gray-900', 'shadow-sm', 'border-gray-100');
+            // KEY FIX: Calculate exact height so text is always visible
+            content.style.maxHeight = content.scrollHeight + 32 + "px"; // adding padding space
+        }
+    }
+    
+    // Optional: Open the first item by default on load properly
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstItem = document.querySelector('#faq-list .faq-item');
+        if(firstItem) toggleFaq(firstItem);
+    });
+
+</script>
+
+
+
+
+
+<!-- <section class="relative bg-[#020205] py-24 px-16 overflow-hidden">
+    <div class="absolute left-0 bottom-0 w-64 h-64 opacity-20" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+    <div class="absolute right-0 top-20 w-96 h-96 bg-yellow-500/10 blur-[120px] rounded-full"></div>
+
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+        
+        <div class="lg:w-1/2 z-10">
+            <div class="flex items-center gap-3 mb-6">
+                <img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" class="w-8 h-8" alt="Star Icon">
+                <span class="font-bold uppercase tracking-[0.3em] text-sm">What We Provide</span>
+            </div>
+
+            <h2 class="text-6xl font-bold leading-tight mb-8">
+                Explore Powerful Social <br> Media Features for <br>
+                <span class="text-purple-500 serif-italic">Creators & Influencers</span>
+            </h2>
+
+            <p class="text-gray-400 text-lg leading-relaxed mb-10 max-w-xl">
+                Discover a world of innovative social media features designed for creators and influencers. 
+                From seamless collaborations to audience engagement tools, elevate your brand like never before. 
+                Your journey starts here!
+            </p>
+
+            <div class="grid grid-cols-2 gap-4 max-w-md">
+                <div class="bg-white text-black py-4 px-8 rounded-2xl flex items-center gap-3 font-bold shadow-lg">
+                    <span class="bg-purple-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px]">✓</span>
+                    Creators
+                </div>
+                <div class="bg-white text-black py-4 px-8 rounded-2xl flex items-center gap-3 font-bold shadow-lg">
+                    <span class="bg-purple-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px]">✓</span>
+                    Artists
+                </div>
+                <div class="bg-white text-black py-4 px-8 rounded-2xl flex items-center gap-3 font-bold shadow-lg">
+                    <span class="bg-purple-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px]">✓</span>
+                    Influencers
+                </div>
+                <div class="bg-white text-black py-4 px-8 rounded-2xl flex items-center gap-3 font-bold shadow-lg">
+                    <span class="bg-purple-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px]">✓</span>
+                    Celebrities
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:w-1/2 relative flex justify-center items-center">
+            <div class="w-[500px] h-[350px] rounded-[40px] overflow-hidden border-4 border-white/10 shadow-2xl relative z-0">
+                <img src="https://images.unsplash.com/photo-1516251193007-45ef944ab0c6?auto=format&fit=crop&q=80" class="w-full h-full object-cover" alt="Social Media Usage">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
+                    <div class="flex gap-2">
+                        <span class="animate-bounce delay-75">❤️</span>
+                        <span class="animate-bounce delay-150">😍</span>
+                        <span class="animate-bounce delay-300">🔥</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute -bottom-16 -left-10 w-64 h-64 rounded-full border-[10px] border-[#020205] overflow-hidden z-20 shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80" class="w-full h-full object-cover" alt="Profile">
+            </div>
+
+            <div class="absolute -right-10 bottom-0 w-32 h-32 opacity-30" style="background-image: radial-gradient(#ffffff 2px, transparent 2px); background-size: 15px 15px;"></div>
+        </div>
+
+    </div>
+</section> -->
+
+
+</body>
+</html>

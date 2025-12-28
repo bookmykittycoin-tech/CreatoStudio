@@ -1,0 +1,272 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Creato Studios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #000; }
+
+    /* Dark Grid Background matching the screenshot */
+    .contact-hero-grid {
+        background-color: #020205;
+        background-image: 
+            linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 45px 45px;
+    }
+
+    /* Exact Multicolor Glows from the image */
+    .glow {
+        position: absolute;
+        filter: blur(100px);
+        border-radius: 50%;
+        opacity: 0.3;
+        z-index: 1;
+        pointer-events: none;
+    }
+    .glow-green { width: 350px; height: 350px; background: radial-gradient(circle, #22c55e, transparent); top: 20%; left: -10%; }
+    .glow-purple { width: 400px; height: 400px; background: radial-gradient(circle, #7c3aed, transparent); top: -15%; right: 15%; }
+    .glow-yellow { width: 300px; height: 300px; background: radial-gradient(circle, #eab308, transparent); bottom: 10%; right: -5%; }
+
+    /* Purple dot at the end of breadcrumb */
+    .crumb-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #7c3aed;
+        border-radius: 50%;
+        display: inline-block;
+        margin-left: 2px;
+        margin-bottom: 2px;
+    }
+
+/* Exact Card Styling from the image */
+    .info-card {
+        background: #ffffff;
+        border-radius: 20px; /* Large rounded corners */
+        padding: 45px 35px;
+        border: 1px solid #f3f4f6; /* Very subtle border */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); /* Soft shadow */
+        transition: all 0.3s ease;
+    }
+
+    /* Purple Icon Container */
+    .icon-box {
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        border: 1.5px solid #ddd6fe; /* Light purple border */
+        background-color: #f5f3ff; /* Lightest purple background */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 25px;
+        color: #7c3aed; /* Primary Purple Icon Color */
+    }
+   /* form  */
+   /* Background Gradient matching the screenshot */
+    .contact-form-section {
+        background: linear-gradient(180deg, #f3f4ff 0%, #e8eaff 100%);
+    }
+
+    /* Input styling */
+    .form-input {
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 14px 18px;
+        width: 100%;
+        color: #4b5563;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #5e5ce6;
+        background-color: #ffffff;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 8px;
+    }
+
+    .required-star {
+        color: #6b7280;
+        margin-left: 2px;
+    }
+
+    /* Purple Button matching image_4bbd3d.png */
+    .btn-submit {
+        background-color: #5e5ce6;
+        color: #ffffff;
+        padding: 16px;
+        border-radius: 12px;
+        font-weight: 600;
+        width: 100%;
+        transition: background-color 0.2s;
+    }
+
+    .btn-submit:hover {
+        background-color: #4e4cb8;
+    }
+    
+    
+    
+</style>
+<!-- hero section -->
+<section class="relative contact-hero-grid pt-10 pb-44 px-6 lg:px-20 overflow-hidden min-h-[600px] flex flex-col">
+    <div class="glow glow-green"></div>
+    <div class="glow glow-purple"></div>
+    <div class="glow glow-yellow"></div>
+
+    <div class="max-w-7xl mx-auto w-full relative z-10 flex-grow flex flex-col">
+        
+        <nav class="flex items-center justify-between mb-36">
+            <div class="text-white">
+                <h3 class="text-3xl font-extrabold tracking-tighter">Creato</h3>
+                <p class="text-[9px] uppercase tracking-[0.4em] opacity-60">Studios</p>
+            </div>
+
+            <ul class="hidden md:flex items-center gap-12 text-white text-sm font-semibold">
+                <li><a href="index.html" class="hover:text-gray-300 transition">Home</a></li>
+                <li><a href="about.html" class="hover:text-gray-300 transition">About Us</a></li>
+                <!--<li class="flex items-center gap-1 cursor-pointer hover:text-gray-300 transition">-->
+                <!--    Become A Partner -->
+                <!--    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>-->
+                <!--</li>-->
+                <li class="relative">
+                    <a href="#" class="pb-1 border-b-2 border-white">Contact</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="text-center mt-auto mb-auto">
+            <h1 class="text-6xl md:text-7xl font-extrabold text-white mb-8 tracking-tight">
+                Contact Us
+            </h1>
+
+            <div class="flex items-center justify-center gap-3 text-sm font-bold">
+                <span class="text-white">Home</span>
+                <span class="text-white/40"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></span>
+                <div class="flex items-center">
+                    <span class="text-[#bef264] border-b-2 border-[#bef264] pb-1 cursor-pointer">Contact Us</span>
+                    <span class="crumb-dot"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<!-- Address -->
+<section class="py-24 px-6 bg-[#fcfcfd]">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            
+            <div class="info-card">
+                <div class="icon-box">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                </div>
+                <h3 class="text-gray-900 font-extrabold text-xl mb-3 tracking-tight">Email Address</h3>
+                <p class="text-gray-500 text-sm font-medium leading-relaxed">support@creatostudios.com</p>
+            </div>
+
+            <div class="info-card">
+                <div class="icon-box">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                </div>
+                <h3 class="text-gray-900 font-extrabold text-xl mb-3 tracking-tight">Make A Call</h3>
+                <p class="text-gray-500 text-sm font-medium leading-relaxed">+917836855855</p>
+            </div>
+
+            <div class="info-card">
+                <div class="icon-box">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </div>
+                <h3 class="text-gray-900 font-extrabold text-xl mb-3 tracking-tight">Office Locations</h3>
+                <p class="text-gray-500 text-sm font-medium leading-relaxed">
+                    A-27D, 5th Floor, Sector 16, Near Sector 16 Metro Station (Exit 4), Noida 201301, U.P.
+                </p>
+            </div>
+
+            <div class="info-card">
+                <div class="icon-box">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h3 class="text-gray-900 font-extrabold text-xl mb-3 tracking-tight">Office Hours</h3>
+                <p class="text-gray-500 text-sm font-medium leading-relaxed">Monday - Saturday 09am - 06 pm</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- form -->
+<section class="contact-form-section py-24 px-6">
+    <div class="max-w-4xl mx-auto">
+        
+        <div class="bg-white rounded-[32px] p-8 md:p-14 shadow-sm">
+            
+            <h2 class="text-3xl font-bold text-[#0f172a] text-center mb-12">Contact Us</h2>
+
+            <form action="#" class="space-y-6">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    
+                    <div>
+                        <label class="form-label">You are representing.... <span class="required-star">*</span></label>
+                        <select class="form-input appearance-none bg-no-repeat bg-right pr-10">
+                            <option>Select an option...</option>
+                            <option>Brand</option>
+                            <option>Influencer</option>
+                            <option>Agency</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Full Name <span class="required-star">*</span></label>
+                        <input type="text" class="form-input" placeholder="Enter full name">
+                    </div>
+
+                    <div>
+                        <label class="form-label">Email Address <span class="required-star">*</span></label>
+                        <div class="relative">
+                            <input type="email" class="form-input" placeholder="Enter email address">
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 text-indigo-900 font-bold opacity-80">t</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Contact Number <span class="required-star">*</span></label>
+                        <input type="tel" class="form-input" placeholder="Enter contact number">
+                    </div>
+
+                </div>
+
+                <div>
+                    <label class="form-label">Tell us more about your requirement... <span class="required-star">*</span></label>
+                    <textarea class="form-input h-28 resize-none" placeholder="Enter tell us more about your requirement..."></textarea>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="btn-submit">
+                        Submit Form
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</section>
+
+</body>
+</html>
