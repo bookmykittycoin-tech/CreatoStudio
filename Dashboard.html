@@ -186,7 +186,6 @@
     const API_BASE = "https://creatostudiosbackend.vercel.app/v1"; // your API base
     const SITE_BASE = "https://lightyellow-butterfly-362806.hostingersite.com/signup.html"; // signup url
     const POLL_INTERVAL_MS = 0;
-
     /** Helpers **/
     function escapeHtml (str) {
       if (str === null || str === undefined) return "";
@@ -357,13 +356,13 @@
         campaigns.forEach(c => {
           // accept both shapes: c.name or c.campaign_name
           const name = escapeHtml(c.name ?? c.campaign_name ?? "Untitled Campaign");
-          const brand = escapeHtml(c.brand ?? c.organizer ?? "—");
+          const brand = escapeHtml(c.brand_name ?? c.organizer ?? "—");
           const status = escapeHtml(c.status ?? "Active");
           const payout = c.payout ? `₹${Number(c.payout).toLocaleString()}` : (escapeHtml(c.payout_text ?? "—"));
           const campaignId = c.id ?? c.campaign_id;
           const joined = !!c.joined; // optional server-provided flag
-
           const tr = document.createElement("tr");
+          campaign_link =  c.campaign_link
           tr.className = "border-b border-white/5 hover:bg-white/[0.02] transition";
 
           tr.innerHTML = `
@@ -492,23 +491,35 @@
         }
 
         // Render joined campaigns
-        tbody.innerHTML = "";
-        list.forEach(c => {
-          const name = escapeHtml(c.campaign_name ?? c.name ?? "Untitled");
-          const status = escapeHtml(c.status ?? "—");
-          const id = escapeHtml(String(c.id ?? c.campaign_id ?? ""));
-          const tr = document.createElement("tr");
-          tr.className = "border-b border-white/5";
-          tr.innerHTML = `
-            <td class="px-6 py-4 font-semibold">${name}</td>
-            <td class="px-6 py-4">${status}</td>
-            <td class="px-6 py-4 font-mono text-xs opacity-50">${id}</td>
-            <td class="px-6 py-4 text-right">
-              <button data-id="${id}" class="view-joined bg-white text-black px-3 py-1 rounded text-xs">View</button>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
+tbody.innerHTML = "";
+
+list.forEach(c => {
+  const name = escapeHtml(c.campaign_name ?? c.name ?? "Untitled");
+  const status = escapeHtml(c.status ?? "—");
+  const id = escapeHtml(String(c.id ?? c.campaign_id ?? ""));
+  const campaign_link = c.campaign_link || "#";
+
+  const tr = document.createElement("tr");
+  tr.className = "border-b border-white/5";
+
+  tr.innerHTML = `
+    <td class="px-6 py-4 font-semibold">${name}</td>
+    <td class="px-6 py-4">${status}</td>
+    <td class="px-6 py-4 font-mono text-xs opacity-50">${id}</td>
+    <td class="px-6 py-4 text-right">
+      <button 
+        class="view-joined bg-white text-black px-3 py-1 rounded text-xs"
+        data-id="${id}"
+        data-link="${campaign_link}"
+      >
+        View
+      </button>
+    </td>
+  `;
+
+  tbody.appendChild(tr);
+});
+
 
         // optional: attach handlers for view buttons
         document.querySelectorAll(".view-joined").forEach(btn => {
@@ -516,8 +527,25 @@
             const id = e.currentTarget.getAttribute("data-id");
             showToast("Open campaign details: " + id);
             // implement modal or route if needed
+            window.location.href = `${campaign_link}`;
+            console.log(campaign_link)
+
           });
         });
+
+        document.addEventListener("click", function (e) {
+  if (e.target.classList.contains("view-joined")) {
+    const campaignLink = e.target.dataset.link;
+
+    if (!campaignLink || campaignLink === "#") {
+      alert("Campaign link not available");
+      return;
+    }
+
+    window.location.href = campaignLink;
+  }
+});
+
 
       } catch (err) {
         console.error("joined campaigns failed", err);
