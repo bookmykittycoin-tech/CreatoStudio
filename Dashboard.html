@@ -398,7 +398,7 @@
           campaigns.forEach(c => {
             // accept both shapes: c.name or c.campaign_name
             const name = escapeHtml(c.campaign_name ?? c.name ?? "Untitled Campaign");
-            const brand = escapeHtml(c.brand_name ?? c.brand ?? c.organizer ?? "—");
+            const brand = escapeHtml(c.brand_name ?? c.brand_name ?? c.organizer ?? "—");
             const status = escapeHtml(c.status ?? "Active");
             const payout = c.payout ? `₹${Number(c.payout).toLocaleString()}` : (escapeHtml(c.payout_text ?? "—"));
             const campaignId = c.id ?? c.campaign_id;
