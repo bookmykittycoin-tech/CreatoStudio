@@ -245,31 +245,6 @@
         window.location.replace("signin.html");
       }
 
-      // Build final campaign link with referral code
-      function buildCampaignLink(rawLink) {
-        const code = currentReferralCode;
-        if (!rawLink) {
-          if (!code) return SITE_BASE;
-          return `${SITE_BASE}?ref=${encodeURIComponent(code)}`;
-        }
-
-        // If placeholder pattern exists, replace it
-        if (rawLink.includes("{CODE}")) {
-          return rawLink.replace(/\{CODE\}/g, encodeURIComponent(code || ""));
-        }
-
-        // If link already contains ref query param, return as-is
-        if (rawLink.includes("ref=")) return rawLink;
-
-        // Append ref param if we have code
-        if (code) {
-          // keep existing query params if present
-          return rawLink.includes("?") ? `${rawLink}&ref=${encodeURIComponent(code)}` : `${rawLink}?ref=${encodeURIComponent(code)}`;
-        }
-
-        return rawLink;
-      }
-
       /** Wire UI buttons **/
       document.getElementById("logoutBtn").addEventListener("click", logout);
       document.getElementById("copyCodeBtn").addEventListener("click", async () => {
@@ -398,16 +373,18 @@
           campaigns.forEach(c => {
             // accept both shapes: c.name or c.campaign_name
             const name = escapeHtml(c.campaign_name ?? c.name ?? "Untitled Campaign");
+            // ensure we pick brand_name field returned by backend
             const brand = escapeHtml(c.brand_name ?? c.brand ?? c.organizer ?? "—");
             const status = escapeHtml(c.status ?? "Active");
-            const payout = c.payout ? `₹${Number(c.payout).toLocaleString()}` : (escapeHtml(c.payout_text ?? "—"));
+            const payout = (c.payout ? `₹${Number(c.payout).toLocaleString()}` : (escapeHtml(c.payout_text ?? "—")));
             const campaignId = c.id ?? c.campaign_id;
-            const joined = !!c.joined; // optional server-provided flag
-            const rawCampaignLink = c.campaign_link ?? c.link ?? null;
 
-            // <-- ONLY CHANGED: use campaign_link or link if present, else fallback to SITE_BASE
-            const finalLink = c.campaign_link ?? c.link ?? SITE_BASE;
+            // strict check — backend returns 1 or 0
+            const joined = Number(c.joined) === 1;
 
+            // IMPORTANT: use raw DB field directly (no build/replace) so links like https://nike.com work as-is.
+            // If you want to substitute {CODE} server-side, do that in backend; frontend will use value as provided.
+            const finalLink = c.campaign_link || c.link || SITE_BASE;
 
             const tr = document.createElement("tr");
             tr.className = "border-b border-white/5 hover:bg-white/[0.02] transition";
@@ -556,10 +533,8 @@
             const name = escapeHtml(c.campaign_name ?? c.name ?? "Untitled");
             const status = escapeHtml(c.status ?? "—");
             const id = escapeHtml(String(c.id ?? c.campaign_id ?? ""));
-            const rawCampaignLink = c.campaign_link ?? c.link ?? null;
-
-            // <-- ONLY CHANGED: use campaign_link or link if present, else fallback to SITE_BASE
-            const finalLink = c.campaign_link ?? c.link ?? SITE_BASE;
+            // use raw campaign_link directly
+            const finalLink = c.campaign_link || c.link || SITE_BASE;
 
             const tr = document.createElement("tr");
             tr.className = "border-b border-white/5";
