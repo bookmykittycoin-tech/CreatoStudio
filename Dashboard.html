@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -15,18 +14,15 @@
       left: 50%;
       transform: translateX(-50%);
       bottom: 24px;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0,0,0,0.85);
       color: #fff;
       padding: 10px 16px;
       border-radius: 8px;
       font-size: 13px;
       z-index: 9999;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
     }
-
-    .muted {
-      color: #9ca3af
-    }
+    .muted { color: #9ca3af }
   </style>
 </head>
 
@@ -66,25 +62,20 @@
           <p class="text-[11px] text-gray-400 uppercase tracking-widest mb-2">Referral Code</p>
 
           <div class="flex items-center gap-2 mb-2">
-            <input id="referralInput" readonly class="bg-[#111] text-white text-sm px-3 py-2 rounded w-full"
-              value="Loading..." />
+            <input id="referralInput" readonly class="bg-[#111] text-white text-sm px-3 py-2 rounded w-full" value="Loading..." />
             <button id="copyCodeBtn" class="bg-white text-black px-3 py-2 rounded text-xs font-bold">Copy</button>
           </div>
 
           <p class="text-[11px] text-gray-400 mt-1 uppercase tracking-widest mb-2">Auto Link</p>
           <div class="flex items-center gap-2 mb-3">
-            <input id="referralLinkInput" readonly class="bg-[#111] text-white text-sm px-3 py-2 rounded w-full"
-              value="Loading..." />
+            <input id="referralLinkInput" readonly class="bg-[#111] text-white text-sm px-3 py-2 rounded w-full" value="Loading..." />
             <button id="copyLinkBtn" class="bg-white text-black px-3 py-2 rounded text-xs font-bold">Link</button>
           </div>
 
           <div class="mt-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <button id="waShareBtn"
-              class="w-full bg-green-500 text-white px-3 py-2 rounded text-xs font-semibold">WhatsApp</button>
-            <button id="fbShareBtn"
-              class="w-full bg-blue-600 text-white px-3 py-2 rounded text-xs font-semibold">Facebook</button>
-            <button id="igShareBtn"
-              class="sm:col-span-2 bg-pink-500 text-white px-3 py-2 rounded text-xs font-semibold">Instagram</button>
+            <button id="waShareBtn" class="w-full bg-green-500 text-white px-3 py-2 rounded text-xs font-semibold">WhatsApp</button>
+            <button id="fbShareBtn" class="w-full bg-blue-600 text-white px-3 py-2 rounded text-xs font-semibold">Facebook</button>
+            <button id="igShareBtn" class="sm:col-span-2 bg-pink-500 text-white px-3 py-2 rounded text-xs font-semibold">Instagram</button>
           </div>
         </div>
       </div>
@@ -130,8 +121,7 @@
         <div>
           <div class="flex justify-between items-end mb-4">
             <h3 class="text-xl font-bold">Joined Campaigns</h3>
-            <a href="#" id="browseDeals" class="text-xs text-gray-500 hover:text-white transition underline">Browse
-              Brand Deals</a>
+            <a href="#" id="browseDeals" class="text-xs text-gray-500 hover:text-white transition underline">Browse Brand Deals</a>
           </div>
 
           <div class="bg-[#111] rounded-2xl border border-white/5 overflow-hidden">
@@ -191,383 +181,362 @@
   </div>
 
   <script>
-    (function () {
-      const STORAGE_KEY = "Bearer";
-      const API_BASE = "https://creatostudiosbackend.vercel.app/v1"; // your API base
-      const SITE_BASE = "https://lightyellow-butterfly-362806.hostingersite.com/signup.html"; // signup url
-      const POLL_INTERVAL_MS = 0;
+  (function () {
+    const STORAGE_KEY = "Bearer";
+    const API_BASE = "https://creatostudiosbackend.vercel.app/v1"; // your API base
+    const SITE_BASE = "https://lightyellow-butterfly-362806.hostingersite.com/signup.html"; // signup url
+    const POLL_INTERVAL_MS = 0;
 
-      // store user/referral globally after profile fetch
-      let currentReferralCode = null;
-      let currentUserId = null;
+    /** Helpers **/
+    function escapeHtml (str) {
+      if (str === null || str === undefined) return "";
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
 
-      /** Helpers **/
-      function escapeHtml(str) {
-        if (str === null || str === undefined) return "";
-        return String(str)
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#039;");
-      }
+    function showToast(msg) {
+      const t = document.createElement("div");
+      t.className = "toast";
+      t.innerText = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2200);
+    }
 
-      function showToast(msg) {
-        const t = document.createElement("div");
-        t.className = "toast";
-        t.innerText = msg;
-        document.body.appendChild(t);
-        setTimeout(() => t.remove(), 2200);
-      }
-
-      async function writeToClipboard(text) {
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(text);
-            return true;
-          } else {
-            const ta = document.createElement("textarea");
-            ta.value = text;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand("copy");
-            ta.remove();
-            return true;
-          }
-        } catch (e) {
-          console.error("copy failed", e);
-          return false;
-        }
-      }
-
-      function logout() {
-        localStorage.removeItem(STORAGE_KEY);
-        window.location.replace("signin.html");
-      }
-
-      /** Wire UI buttons **/
-      document.getElementById("logoutBtn").addEventListener("click", logout);
-      document.getElementById("copyCodeBtn").addEventListener("click", async () => {
-        const code = document.getElementById("referralInput").value;
-        if (!code || code === "N/A") return showToast("No referral");
-        const ok = await writeToClipboard(code);
-        if (ok) showToast("Referral code copied");
-      });
-      document.getElementById("copyLinkBtn").addEventListener("click", async () => {
-        const link = document.getElementById("referralLinkInput").value;
-        if (!link || link === "N/A") return showToast("No link");
-        const ok = await writeToClipboard(link);
-        if (ok) showToast("Referral link copied");
-      });
-      document.getElementById("waShareBtn").addEventListener("click", () => {
-        const link = document.getElementById("referralLinkInput").value;
-        const code = document.getElementById("referralInput").value;
-        const text = link && link !== "N/A" ? `Join using my referral link: ${link}` : `Join using my referral code: ${code}`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
-      });
-      document.getElementById("fbShareBtn").addEventListener("click", () => {
-        const link = document.getElementById("referralLinkInput").value;
-        if (link && link !== "N/A") {
-          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, "_blank");
+    async function writeToClipboard(text) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+          return true;
         } else {
-          const code = document.getElementById("referralInput").value || "";
-          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SITE_BASE)}&quote=${encodeURIComponent("Use my referral: " + code)}`, "_blank");
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+          return true;
         }
-      });
-      document.getElementById("igShareBtn").addEventListener("click", () => {
-        showToast("Instagram: copy & paste the link into stories/DMs/bio.");
-      });
-
-      /** Tabs **/
-      const overviewTab = document.getElementById("overviewTab");
-      const campaignTab = document.getElementById("campaignTab");
-      const overviewSection = document.getElementById("overviewSection");
-      const campaignSection = document.getElementById("campaignSection");
-
-      overviewTab.addEventListener("click", () => {
-        overviewSection.classList.remove("hidden");
-        campaignSection.classList.add("hidden");
-        overviewTab.classList.add("text-white");
-        campaignTab.classList.remove("text-white");
-      });
-
-      campaignTab.addEventListener("click", () => {
-        overviewSection.classList.add("hidden");
-        campaignSection.classList.remove("hidden");
-        campaignTab.classList.add("text-white");
-        overviewTab.classList.remove("text-white");
-        loadCampaigns(); // fetch campaigns on open
-      });
-
-      /** Load profile + summary stats **/
-      async function loadProfileAndStats() {
-        const token = localStorage.getItem(STORAGE_KEY);
-        if (!token) return logout();
-
-        try {
-          const res = await fetch(`${API_BASE}/influencer/dashboard`, {
-            method: "GET",
-            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
-          });
-
-          if (!res.ok) {
-            if (res.status === 401 || res.status === 403) return logout();
-            console.warn("dashboard fetch failed:", res.status);
-            return;
-          }
-
-          const data = await res.json();
-
-          // support flexible shapes
-          currentUserId = data.id ?? data.user?.id ?? null;
-          const email = data.email ?? data.user?.email ?? "";
-          const code = data.referral_code ?? data.referralCode ?? data.user?.referral_code ?? null;
-          const clicks = Number(data.clicks ?? data.total_clicks ?? 0);
-          const conversions = Number(data.conversions ?? data.total_conversions ?? 0);
-
-          currentReferralCode = code && code !== "N/A" ? code : null;
-
-          document.getElementById("userIdBox").innerText = currentUserId ? String(currentUserId) : "--";
-          document.getElementById("profileEmail").innerText = email || "—";
-          document.getElementById("generatedCode").innerText = code ? escapeHtml(code) : "N/A";
-          document.getElementById("referralInput").value = code ? code : "N/A";
-          document.getElementById("referralLinkInput").value = code ? `${SITE_BASE}?ref=${encodeURIComponent(code)}` : "N/A";
-          document.getElementById("clicks").innerText = String(clicks);
-          document.getElementById("conversions").innerText = String(conversions);
-          document.getElementById("earnings").innerText = `₹${(conversions * 100).toLocaleString()}`;
-
-        } catch (err) {
-          console.error("Profile/Dashboard error:", err);
-          // don't auto logout on network failure — keep user on page
-        }
+      } catch (e) {
+        console.error("copy failed", e);
+        return false;
       }
+    }
 
-      /** Load all campaigns (for campaigns tab) **/
-      async function loadCampaigns() {
-        const token = localStorage.getItem(STORAGE_KEY);
-        if (!token) return logout();
+    function logout() {
+      localStorage.removeItem(STORAGE_KEY);
+      window.location.replace("signin.html");
+    }
 
-        const tbody = document.getElementById("campaignList");
-        tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Loading campaigns...</td></tr>`;
+    /** Wire UI buttons **/
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+    document.getElementById("copyCodeBtn").addEventListener("click", async () => {
+      const code = document.getElementById("referralInput").value;
+      if (!code || code === "N/A") return showToast("No referral");
+      const ok = await writeToClipboard(code);
+      if (ok) showToast("Referral code copied");
+    });
+    document.getElementById("copyLinkBtn").addEventListener("click", async () => {
+      const link = document.getElementById("referralLinkInput").value;
+      if (!link || link === "N/A") return showToast("No link");
+      const ok = await writeToClipboard(link);
+      if (ok) showToast("Referral link copied");
+    });
+    document.getElementById("waShareBtn").addEventListener("click", () => {
+      const link = document.getElementById("referralLinkInput").value;
+      const code = document.getElementById("referralInput").value;
+      const text = link && link !== "N/A" ? `Join using my referral link: ${link}` : `Join using my referral code: ${code}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+    });
+    document.getElementById("fbShareBtn").addEventListener("click", () => {
+      const link = document.getElementById("referralLinkInput").value;
+      if (link && link !== "N/A") {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, "_blank");
+      } else {
+        const code = document.getElementById("referralInput").value || "";
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SITE_BASE)}&quote=${encodeURIComponent("Use my referral: " + code)}`, "_blank");
+      }
+    });
+    document.getElementById("igShareBtn").addEventListener("click", () => {
+      showToast("Instagram: copy & paste the link into stories/DMs/bio.");
+    });
 
-        try {
-          const res = await fetch(`${API_BASE}/campaigns/data`, {
-            method: "GET",
-            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
-          });
+    /** Tabs **/
+    const overviewTab = document.getElementById("overviewTab");
+    const campaignTab = document.getElementById("campaignTab");
+    const overviewSection = document.getElementById("overviewSection");
+    const campaignSection = document.getElementById("campaignSection");
 
-          if (!res.ok) {
-            tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Unable to load campaigns (server error).</td></tr>`;
-            return;
-          }
+    overviewTab.addEventListener("click", () => {
+      overviewSection.classList.remove("hidden");
+      campaignSection.classList.add("hidden");
+      overviewTab.classList.add("text-white");
+      campaignTab.classList.remove("text-white");
+    });
 
-          const result = await res.json();
-          const campaigns = result.data ?? result.campaigns ?? [];
+    campaignTab.addEventListener("click", () => {
+      overviewSection.classList.add("hidden");
+      campaignSection.classList.remove("hidden");
+      campaignTab.classList.add("text-white");
+      overviewTab.classList.remove("text-white");
+      loadCampaigns(); // fetch campaigns on open
+    });
 
-          if (!campaigns.length) {
-            tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">No campaigns available.</td></tr>`;
-            return;
-          }
+    /** Load profile + summary stats **/
+    async function loadProfileAndStats() {
+      const token = localStorage.getItem(STORAGE_KEY);
+      if (!token) return logout();
 
-          tbody.innerHTML = "";
-          campaigns.forEach(c => {
-            // accept both shapes: c.name or c.campaign_name
-            const name = escapeHtml(c.campaign_name ?? c.name ?? "Untitled Campaign");
-            // ensure we pick brand_name field returned by backend
-            const brand = escapeHtml(c.brand_name ?? c.brand ?? c.organizer ?? "—");
-            const status = escapeHtml(c.status ?? "Active");
-            const payout = (c.payout ? `₹${Number(c.payout).toLocaleString()}` : (escapeHtml(c.payout_text ?? "—")));
-            const campaignId = c.id ?? c.campaign_id;
+      try {
+        const res = await fetch(`${API_BASE}/influencer/dashboard`, {
+          method: "GET",
+          headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+        });
 
-            // strict check — backend returns 1 or 0
-            const joined = Number(c.joined) === 1;
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) return logout();
+          console.warn("dashboard fetch failed:", res.status);
+          return;
+        }
 
-            // IMPORTANT: use raw DB field directly (no build/replace) so links like https://nike.com work as-is.
-            // If you want to substitute {CODE} server-side, do that in backend; frontend will use value as provided.
-            const finalLink = c.campaign_link || c.link || SITE_BASE;
+        const data = await res.json();
 
-            const tr = document.createElement("tr");
-            tr.className = "border-b border-white/5 hover:bg-white/[0.02] transition";
+        // support flexible shapes
+        const idVal = data.id ?? data.user?.id ?? null;
+        const email = data.email ?? data.user?.email ?? "";
+        const code = data.referral_code ?? data.referralCode ?? data.user?.referral_code ?? null;
+        const clicks = Number(data.clicks ?? data.total_clicks ?? 0);
+        const conversions = Number(data.conversions ?? data.total_conversions ?? 0);
 
-            // If joined -> Visit button linking to campaign
-            const actionHtml = joined
-              ? `<a href="${escapeHtml(finalLink)}" target="_blank" rel="noopener" class="bg-green-600 text-white px-4 py-2 rounded text-xs font-semibold">Visit</a>`
-              : `<button data-id="${campaignId}" class="join-btn bg-white text-black px-4 py-2 rounded text-xs font-bold">Join</button>`;
+        document.getElementById("userIdBox").innerText = idVal ? String(idVal) : "--";
+        document.getElementById("profileEmail").innerText = email || "—";
+        document.getElementById("generatedCode").innerText = code ? escapeHtml(code) : "N/A";
+        document.getElementById("referralInput").value = code ? code : "N/A";
+        document.getElementById("referralLinkInput").value = code ? `${SITE_BASE}?ref=${encodeURIComponent(code)}` : "N/A";
+        document.getElementById("clicks").innerText = String(clicks);
+        document.getElementById("conversions").innerText = String(conversions);
+        document.getElementById("earnings").innerText = `₹${(conversions * 100).toLocaleString()}`;
 
-            tr.innerHTML = `
+      } catch (err) {
+        console.error("Profile/Dashboard error:", err);
+        // don't auto logout on network failure — keep user on page
+      }
+    }
+
+    /** Load all campaigns (for campaigns tab) **/
+    async function loadCampaigns() {
+      const token = localStorage.getItem(STORAGE_KEY);
+      if (!token) return logout();
+
+      const tbody = document.getElementById("campaignList");
+      tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Loading campaigns...</td></tr>`;
+
+      try {
+        const res = await fetch(`${API_BASE}/campaigns/data`, {
+          method: "GET",
+          headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+        });
+
+        if (!res.ok) {
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Unable to load campaigns (server error).</td></tr>`;
+          return;
+        }
+
+        const result = await res.json();
+        const campaigns = result.data ?? result.campaigns ?? [];
+
+        if (!campaigns.length) {
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">No campaigns available.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = "";
+        campaigns.forEach(c => {
+          // accept both shapes: c.name or c.campaign_name
+          const name = escapeHtml(c.name ?? c.campaign_name ?? "Untitled Campaign");
+          const brand = escapeHtml(c.brand ?? c.organizer ?? "—");
+          const status = escapeHtml(c.status ?? "Active");
+          const payout = c.payout ? `₹${Number(c.payout).toLocaleString()}` : (escapeHtml(c.payout_text ?? "—"));
+          const campaignId = c.id ?? c.campaign_id;
+          const joined = !!c.joined; // optional server-provided flag
+
+          const tr = document.createElement("tr");
+          tr.className = "border-b border-white/5 hover:bg-white/[0.02] transition";
+
+          tr.innerHTML = `
             <td class="px-6 py-4 font-semibold">${name}</td>
             <td class="px-6 py-4">${brand}</td>
             <td class="px-6 py-4">${status}</td>
             <td class="px-6 py-4">${payout}</td>
-            <td class="px-6 py-4 text-right">${actionHtml}</td>
+            <td class="px-6 py-4 text-right">
+              ${joined
+                ? '<button class="bg-gray-600 text-white px-4 py-2 rounded text-xs font-semibold" disabled>Joined</button>'
+                : `<button data-id="${campaignId}" class="join-btn bg-white text-black px-4 py-2 rounded text-xs font-bold">Join</button>`
+              }
+            </td>
           `;
 
-            tbody.appendChild(tr);
-          });
+          tbody.appendChild(tr);
+        });
 
-          // attach handlers for join buttons
-          document.querySelectorAll(".join-btn").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-              const id = e.currentTarget.getAttribute("data-id");
-              if (!id) return;
-              joinCampaign(id, e.currentTarget);
-            });
+        // attach handlers for join buttons
+        document.querySelectorAll(".join-btn").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            const id = e.currentTarget.getAttribute("data-id");
+            if (!id) return;
+            joinCampaign(id, e.currentTarget);
           });
+        });
 
-        } catch (err) {
-          console.error("Campaign load failed", err);
-          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Network error loading campaigns.</td></tr>`;
-        }
+      } catch (err) {
+        console.error("Campaign load failed", err);
+        tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Network error loading campaigns.</td></tr>`;
+      }
+    }
+
+    /** Join campaign **/
+    async function joinCampaign(campaignId, buttonEl = null) {
+      const token = localStorage.getItem(STORAGE_KEY);
+      if (!token) return logout();
+
+      if (buttonEl) {
+        buttonEl.disabled = true;
+        buttonEl.innerText = "Joining...";
       }
 
-      /** Join campaign **/
-      async function joinCampaign(campaignId, buttonEl = null) {
-        const token = localStorage.getItem(STORAGE_KEY);
-        if (!token) return logout();
+      try {
+        const res = await fetch(`${API_BASE}/campaigns/join`, {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ campaignId })
+        });
 
+        const result = await res.json();
+
+        if (res.ok && result.success) {
+          showToast("Joined campaign successfully!");
+          // refresh both lists
+          await loadCampaigns();
+          await loadJoinedCampaigns();
+          await loadProfileAndStats();
+          return;
+        } else {
+          const msg = result.message || "Failed to join campaign";
+          showToast(msg);
+        }
+      } catch (err) {
+        console.error("Join error:", err);
+        showToast("Error joining campaign");
+      } finally {
         if (buttonEl) {
-          buttonEl.disabled = true;
-          buttonEl.innerText = "Joining...";
-        }
-
-        try {
-          const res = await fetch(`${API_BASE}/campaigns/join`, {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-            body: JSON.stringify({ campaignId })
-          });
-
-          const result = await res.json();
-
-          if (res.ok && result.success) {
-            showToast("Joined campaign successfully!");
-            // refresh both lists
-            await loadCampaigns();
-            await loadJoinedCampaigns();
-            await loadProfileAndStats();
-            return;
-          } else {
-            const msg = result.message || "Failed to join campaign";
-            showToast(msg);
-          }
-        } catch (err) {
-          console.error("Join error:", err);
-          showToast("Error joining campaign");
-        } finally {
-          if (buttonEl) {
-            buttonEl.disabled = false;
-            buttonEl.innerText = "Join";
-          }
+          buttonEl.disabled = false;
+          buttonEl.innerText = "Join";
         }
       }
+    }
 
-      /**
-       * loadJoinedCampaigns:
-       * 1) GET /v1/influencer/dashboard  -> get campaign_ids []
-       * 2) POST /v1/campaigns/by-ids      -> body { campaign_ids: [...] } -> get campaign details
-       * 3) render those campaigns into Joined Campaigns table
-       */
-      async function loadJoinedCampaigns() {
-        const token = localStorage.getItem(STORAGE_KEY);
-        if (!token) return logout();
+    /**
+     * loadJoinedCampaigns:
+     * 1) GET /v1/influencer/dashboard  -> get campaign_ids []
+     * 2) POST /v1/campaigns/by-ids      -> body { campaign_ids: [...] } -> get campaign details
+     * 3) render those campaigns into Joined Campaigns table
+     */
+    async function loadJoinedCampaigns() {
+      const token = localStorage.getItem(STORAGE_KEY);
+      if (!token) return logout();
 
-        const tbody = document.getElementById("joinedCampaignsTbody");
-        tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">Loading joined campaigns...</td></tr>`;
+      const tbody = document.getElementById("joinedCampaignsTbody");
+      tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">Loading joined campaigns...</td></tr>`;
 
-        try {
-          // Step 1: fetch dashboard to get campaign_ids
-          const dashRes = await fetch(`${API_BASE}/influencer/dashboard`, {
-            method: "GET",
-            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
-          });
+      try {
+        // Step 1: fetch dashboard to get campaign_ids
+        const dashRes = await fetch(`${API_BASE}/influencer/dashboard`, {
+          method: "GET",
+          headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+        });
 
-          if (!dashRes.ok) {
-            tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">Unable to load joined campaigns (dashboard error).</td></tr>`;
-            return;
-          }
+        if (!dashRes.ok) {
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">Unable to load joined campaigns (dashboard error).</td></tr>`;
+          return;
+        }
 
-          const dashData = await dashRes.json();
+        const dashData = await dashRes.json();
+        const ids = dashData.campaign_ids ?? dashData.data?.campaign_ids ?? [];
 
-          // server may return CSV string or array; normalize to array
-          let ids = dashData.campaign_ids ?? dashData.data?.campaign_ids ?? dashData.campaign_ids_csv ?? [];
-          if (typeof ids === "string") {
-            // allow both comma-separated string or JSON string
-            try {
-              const trimmed = ids.trim();
-              if (trimmed === "") ids = [];
-              else if (trimmed.startsWith("[") || trimmed.startsWith("{")) ids = JSON.parse(trimmed);
-              else ids = trimmed.split(",").map(x => x.trim()).filter(Boolean);
-            } catch (e) {
-              ids = ids.split(",").map(x => x.trim()).filter(Boolean);
-            }
-          }
+        if (!Array.isArray(ids) || ids.length === 0) {
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">No joined campaigns yet</td></tr>`;
+          return;
+        }
 
-          if (!Array.isArray(ids) || ids.length === 0) {
-            tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">No joined campaigns yet</td></tr>`;
-            return;
-          }
+        // Step 2: request campaign details for these ids
+        const res = await fetch(`${API_BASE}/campaigns/by-ids`, {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ campaign_ids: ids })
+        });
 
-          // Step 2: request campaign details for these ids
-          const res = await fetch(`${API_BASE}/campaigns/by-ids`, {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-            body: JSON.stringify({ campaign_ids: ids })
-          });
+        if (!res.ok) {
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">Unable to load campaign details.</td></tr>`;
+          return;
+        }
 
-          if (!res.ok) {
-            tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">Unable to load campaign details.</td></tr>`;
-            return;
-          }
+        const result = await res.json();
+        const list = result.data ?? [];
 
-          const result = await res.json();
-          const list = result.data ?? [];
+        if (!Array.isArray(list) || list.length === 0) {
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">No joined campaigns found.</td></tr>`;
+          return;
+        }
 
-          if (!Array.isArray(list) || list.length === 0) {
-            tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">No joined campaigns found.</td></tr>`;
-            return;
-          }
-
-          // Render joined campaigns (with Visit button)
-          tbody.innerHTML = "";
-          list.forEach(c => {
-            const name = escapeHtml(c.campaign_name ?? c.name ?? "Untitled");
-            const status = escapeHtml(c.status ?? "—");
-            const id = escapeHtml(String(c.id ?? c.campaign_id ?? ""));
-            // use raw campaign_link directly
-            const finalLink = c.campaign_link || c.link || SITE_BASE;
-
-            const tr = document.createElement("tr");
-            tr.className = "border-b border-white/5";
-            tr.innerHTML = `
+        // Render joined campaigns
+        tbody.innerHTML = "";
+        list.forEach(c => {
+          const name = escapeHtml(c.campaign_name ?? c.name ?? "Untitled");
+          const status = escapeHtml(c.status ?? "—");
+          const id = escapeHtml(String(c.id ?? c.campaign_id ?? ""));
+          const tr = document.createElement("tr");
+          tr.className = "border-b border-white/5";
+          tr.innerHTML = `
             <td class="px-6 py-4 font-semibold">${name}</td>
             <td class="px-6 py-4">${status}</td>
             <td class="px-6 py-4 font-mono text-xs opacity-50">${id}</td>
             <td class="px-6 py-4 text-right">
-              <a href="${escapeHtml(finalLink)}" target="_blank" rel="noopener" class="bg-green-600 text-white px-3 py-1 rounded text-xs font-semibold">Visit</a>
+              <button data-id="${id}" class="view-joined bg-white text-black px-3 py-1 rounded text-xs">View</button>
             </td>
           `;
-            tbody.appendChild(tr);
+          tbody.appendChild(tr);
+        });
+
+        // optional: attach handlers for view buttons
+        document.querySelectorAll(".view-joined").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            const id = e.currentTarget.getAttribute("data-id");
+            showToast("Open campaign details: " + id);
+            // implement modal or route if needed
           });
+        });
 
-        } catch (err) {
-          console.error("joined campaigns failed", err);
-          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">Error loading joined campaigns.</td></tr>`;
-        }
+      } catch (err) {
+        console.error("joined campaigns failed", err);
+        tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">Error loading joined campaigns.</td></tr>`;
       }
+    }
 
-      /** Init */
-      (function init() {
-        loadProfileAndStats();
-        loadJoinedCampaigns();
-        // start on overview
-        overviewSection.classList.remove("hidden");
-        campaignSection.classList.add("hidden");
-        overviewTab.classList.add("text-white");
-        if (POLL_INTERVAL_MS > 0) setInterval(loadProfileAndStats, POLL_INTERVAL_MS);
-      })();
-
+    /** Init */
+    (function init() {
+      loadProfileAndStats();
+      loadJoinedCampaigns();
+      // start on overview
+      overviewSection.classList.remove("hidden");
+      campaignSection.classList.add("hidden");
+      overviewTab.classList.add("text-white");
+      if (POLL_INTERVAL_MS > 0) setInterval(loadProfileAndStats, POLL_INTERVAL_MS);
     })();
+
+  })();
   </script>
 </body>
-
 </html>
