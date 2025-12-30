@@ -336,176 +336,180 @@
 
 <body>
 
-<header
-  class="fixed top-0 w-full z-[200] px-6 md:px-16 py-5 flex justify-between items-center bg-black/30 backdrop-blur-md">
+    <header
+        class="fixed top-0 w-full z-[200] px-6 md:px-16 py-5 flex justify-between items-center bg-black/30 backdrop-blur-md">
 
-  <!-- LOGO -->
-  <div class="relative h-12 w-48 flex items-center">
-    <a href="index.html"
-      class="absolute left-0 top-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity">
-      <img src="image/image.png" alt="Creato Studios Logo"
-        class="h-12 md:h-16 w-auto object-contain">
-    </a>
-  </div>
-
-  <!-- DESKTOP NAV -->
-  <nav class="hidden md:flex items-center gap-10 font-semibold text-[15px]">
-    <a href="#" class="border-b-2 border-white pb-1 text-white">Home</a>
-    <a href="about.html" class="text-gray-400 hover:text-white transition">About</a>
-    <a href="contact.html" class="text-gray-400 hover:text-white transition">Contact</a>
-  </nav>
-
-  <!-- DESKTOP BUTTONS -->
-  <div class="hidden md:flex items-center gap-6">
-    <a href="signin.html" class="text-white font-semibold hover:opacity-70">
-      Sign In
-    </a>
-
-    <a href="signup.html"
-      class="bg-white text-black px-7 py-2.5 rounded-full font-bold text-[13px] uppercase tracking-wider hover:bg-gray-200 transition">
-      Collab Now »
-    </a>
-  </div>
-
-  <!-- MOBILE TOGGLE BUTTON -->
-  <button id="menuBtn" class="md:hidden text-white text-3xl">
-    ☰
-  </button>
-</header>
-
-<!-- MOBILE MENU -->
-<div id="mobileMenu"
-  class="fixed top-0 right-0 h-full w-[80%] bg-black text-white z-[300] transform translate-x-full transition-transform duration-300">
-
-  <div class="flex justify-between items-center px-6 py-5 border-b border-white/20">
-    <span class="text-lg font-bold">Menu</span>
-    <button id="closeMenu" class="text-3xl">×</button>
-  </div>
-
-  <nav class="flex flex-col gap-6 p-6 text-lg font-medium">
-    <a href="#" class="hover:text-gray-300">Home</a>
-    <a href="about.html" class="hover:text-gray-300">About</a>
-    <a href="contact.html" class="hover:text-gray-300">Contact</a>
-
-    <hr class="border-white/20 my-4">
-
-    <a href="signin.html" class="hover:text-gray-300">Sign In</a>
-
-    <a href="signup.html"
-      class="bg-white text-black text-center py-3 rounded-full font-bold mt-4">
-      Collab Now »
-    </a>
-  </nav>
-</div>
-
-<main class="hero-bg relative flex flex-col md:flex-row items-center px-6 md:px-16 pt-24 md:pt-20">
-  <!-- LEFT: Headline -->
-  <div class="w-full md:w-1/2 z-10 text-center md:text-left">
-    <h1 class="text-4xl md:text-7xl font-bold leading-snug md:leading-tight mb-6 md:mb-8">
-      Your Gateway to <br class="hidden md:block"> Influencer <br>
-      <span class="text-purple-500 serif-italic">Marketing Excellence</span>
-    </h1>
-
-    <div class="flex justify-center md:justify-start">
-      <button
-        class="bg-white text-black px-8 md:px-12 py-3 md:py-4 rounded-xl font-bold text-lg shadow-xl hover:scale-105 transition transform"
-        aria-label="Let's Create The Magic">
-        Let's Create The Magic
-      </button>
-    </div>
-  </div>
-
-  <!-- RIGHT: Visual / Cards -->
-  <div class="w-full md:w-1/2 relative h-[520px] md:h-[700px] mt-8 md:mt-0 flex justify-center items-start">
-    <!-- Desktop/Tablet: absolute floating cards -->
-    <div class="hidden md:block w-full h-full relative">
-
-      <!-- small banner -->
-      <div class="absolute top-[5%] left-[12%] z-50 bg-white p-4 rounded-2xl shadow-2xl text-black w-56 animate-float">
-        <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">Influencer Collaboration</p>
-        <div class="bg-blue-600 text-white py-2 text-center rounded-lg relative">
-          Video Production
+        <!-- LOGO -->
+        <div class="relative h-12 w-48 flex items-center">
+            <a href="index.html" class="absolute left-0 top-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity">
+                <img src="image/image.png" alt="Creato Studios Logo" class="h-12 md:h-16 w-auto object-contain">
+            </a>
         </div>
-      </div>
 
-      <!-- center big glass profile -->
-      <div
-        class="glass-card absolute w-72 h-[400px] left-[30%] top-[25%] z-40 animate-float shadow-2xl border border-white/20"
-        style="animation-delay: 1s;">
-        <div class="p-6">
-          <h3 class="font-bold text-xl">Abhishek Malhan</h3>
-          <div class="w-48 h-48 mx-auto mt-6 rounded-full border-4 border-white overflow-hidden relative">
-            <img src="image/hero3.png" class="w-full h-full object-cover" alt="Abhishek Malhan">
-            <div
-              class="absolute top-1/2 -right-3 bg-blue-700 px-3 py-1 rounded-full border-2 border-white text-[10px] font-bold">
-              3k+ ❤️
-            </div>
-          </div>
-        </div>
-      </div>
+        <!-- DESKTOP NAV -->
+        <nav class="hidden md:flex items-center gap-10 font-semibold text-[15px]">
+            <a href="#" class="border-b-2 border-white pb-1 text-white">Home</a>
+            <a href="about.html" class="text-gray-400 hover:text-white transition">About</a>
+            <a href="contact.html" class="text-gray-400 hover:text-white transition">Contact</a>
+        </nav>
 
-      <!-- right small -->
-      <div class="glass-card absolute w-64 h-80 left-[65%] top-[10%] z-20 animate-float" style="animation-delay: 2s;">
-        <div class="p-5 flex justify-between items-start">
-          <h3 class="font-bold">Ritvi Shah</h3>
-          <div
-            class="bg-red-500 px-3 py-1 rounded-full border-2 border-white text-[10px] font-bold shadow-lg">
-            4m+ ❤️
-          </div>
-        </div>
-        <div class="w-40 h-40 mx-auto rounded-full border-4 border-white/10 overflow-hidden">
-          <img src="image/hero1.jpg" class="w-full h-full object-cover" alt="Ritvi Shah">
-        </div>
-      </div>
+        <!-- DESKTOP BUTTONS -->
+        <div class="hidden md:flex items-center gap-6">
+            <a href="signin.html" class="text-white font-semibold hover:opacity-70">
+                Sign In
+            </a>
 
-      <!-- left lower -->
-      <div class="glass-card absolute w-64 h-80 left-[5%] top-[50%] z-10 animate-float">
-        <div class="p-5">
-          <h3 class="font-bold">Kritika Khurana</h3>
+            <a href="signup.html"
+                class="bg-white text-black px-7 py-2.5 rounded-full font-bold text-[13px] uppercase tracking-wider hover:bg-gray-200 transition">
+                Collab Now »
+            </a>
         </div>
-        <div class="w-40 h-40 mx-auto rounded-full border-4 border-white/10 overflow-hidden">
-          <img src="image/hero2.jpg" class="w-full h-full object-cover" alt="Kritika Khurana">
+
+        <!-- MOBILE TOGGLE BUTTON -->
+        <button id="menuBtn" class="md:hidden text-white text-3xl">
+            ☰
+        </button>
+    </header>
+
+    <!-- MOBILE MENU -->
+    <div id="mobileMenu"
+        class="fixed top-0 right-0 h-full w-[80%] bg-black text-white z-[300] transform translate-x-full transition-transform duration-300">
+
+        <div class="flex justify-between items-center px-6 py-5 border-b border-white/20">
+            <span class="text-lg font-bold">Menu</span>
+            <button id="closeMenu" class="text-3xl">×</button>
         </div>
-      </div>
+
+        <nav class="flex flex-col gap-6 p-6 text-lg font-medium">
+            <a href="#" class="hover:text-gray-300">Home</a>
+            <a href="about.html" class="hover:text-gray-300">About</a>
+            <a href="contact.html" class="hover:text-gray-300">Contact</a>
+
+            <hr class="border-white/20 my-4">
+
+            <a href="signin.html" class="hover:text-gray-300">Sign In</a>
+
+            <a href="signup.html" class="bg-white text-black text-center py-3 rounded-full font-bold mt-4">
+                Collab Now »
+            </a>
+        </nav>
     </div>
 
-    <!-- MOBILE: horizontal scroll card stack (visible only on small screens) -->
-    <div class="md:hidden w-full">
-      <div class="overflow-x-auto no-scrollbar px-2 py-3">
-        <div class="flex gap-4">
-          <!-- card 1 -->
-          <article class="inline-block w-64 shrink-0 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-lg">
-            <p class="text-[10px] font-bold text-gray-300 uppercase mb-2">Influencer Collaboration</p>
-            <div class="bg-blue-600 text-white py-2 text-center rounded-lg">Video Production</div>
-            <h3 class="mt-4 font-bold">Abhishek Malhan</h3>
-            <div class="w-28 h-28 mt-4 rounded-full overflow-hidden border-4 border-white/10 mx-auto">
-              <img src="image/hero3.png" class="w-full h-full object-cover" alt="Abhishek Malhan">
-            </div>
-            <div class="mt-3 text-center text-sm font-bold">3k+ ❤️</div>
-          </article>
+    <main class="hero-bg relative flex flex-col md:flex-row items-center px-6 md:px-16 pt-24 md:pt-20">
+        <!-- LEFT: Headline -->
+        <div class="w-full md:w-1/2 z-10 text-center md:text-left">
+            <h1 class="text-4xl md:text-7xl font-bold leading-snug md:leading-tight mb-6 md:mb-8">
+                Your Gateway to <br class="hidden md:block"> Influencer <br>
+                <span class="text-purple-500 serif-italic">Marketing Excellence</span>
+            </h1>
 
-          <!-- card 2 -->
-          <article class="inline-block w-56 shrink-0 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-lg">
-            <h3 class="font-bold">Ritvi Shah</h3>
-            <div class="w-24 h-24 mt-4 rounded-full overflow-hidden border-4 border-white/10 mx-auto">
-              <img src="image/hero1.jpg" class="w-full h-full object-cover" alt="Ritvi Shah">
+            <div class="flex justify-center md:justify-start">
+                <button
+                    class="bg-white text-black px-8 md:px-12 py-3 md:py-4 rounded-xl font-bold text-lg shadow-xl hover:scale-105 transition transform"
+                    aria-label="Let's Create The Magic">
+                    Let's Create The Magic
+                </button>
             </div>
-            <div class="mt-3 text-center text-sm font-bold">4m+ ❤️</div>
-          </article>
-
-          <!-- card 3 -->
-          <article class="inline-block w-56 shrink-0 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-lg">
-            <h3 class="font-bold">Kritika Khurana</h3>
-            <div class="w-24 h-24 mt-4 rounded-full overflow-hidden border-4 border-white/10 mx-auto">
-              <img src="image/hero2.jpg" class="w-full h-full object-cover" alt="Kritika Khurana">
-            </div>
-          </article>
         </div>
-      </div>
-    </div>
 
-  </div>
-</main>
+        <!-- RIGHT: Visual / Cards -->
+        <div class="w-full md:w-1/2 relative h-[520px] md:h-[700px] mt-8 md:mt-0 flex justify-center items-start">
+            <!-- Desktop/Tablet: absolute floating cards -->
+            <div class="hidden md:block w-full h-full relative">
+
+                <!-- small banner -->
+                <div
+                    class="hidden md:block absolute top-[5%] left-[12%] z-50 bg-white p-4 rounded-2xl shadow-2xl text-black w-56 animate-float">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">
+                        Influencer Collaboration
+                    </p>
+                    <div class="bg-blue-600 text-white py-2 text-center rounded-lg">
+                        Video Production
+                    </div>
+                </div>
+
+
+                <!-- center big glass profile -->
+                <div class="glass-card absolute w-72 h-[400px] left-[30%] top-[25%] z-40 animate-float shadow-2xl border border-white/20"
+                    style="animation-delay: 1s;">
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl">Abhishek Malhan</h3>
+                        <div class="w-48 h-48 mx-auto mt-6 rounded-full border-4 border-white overflow-hidden relative">
+                            <img src="image/hero3.png" class="w-full h-full object-cover" alt="Abhishek Malhan">
+                            <div
+                                class="absolute top-1/2 -right-3 bg-blue-700 px-3 py-1 rounded-full border-2 border-white text-[10px] font-bold">
+                                3k+ ❤️
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- right small -->
+                <div class="glass-card absolute w-64 h-80 left-[65%] top-[10%] z-20 animate-float"
+                    style="animation-delay: 2s;">
+                    <div class="p-5 flex justify-between items-start">
+                        <h3 class="font-bold">Ritvi Shah</h3>
+                        <div
+                            class="bg-red-500 px-3 py-1 rounded-full border-2 border-white text-[10px] font-bold shadow-lg">
+                            4m+ ❤️
+                        </div>
+                    </div>
+                    <div class="w-40 h-40 mx-auto rounded-full border-4 border-white/10 overflow-hidden">
+                        <img src="image/hero1.jpg" class="w-full h-full object-cover" alt="Ritvi Shah">
+                    </div>
+                </div>
+
+                <!-- left lower -->
+                <div class="glass-card absolute w-64 h-80 left-[5%] top-[50%] z-10 animate-float">
+                    <div class="p-5">
+                        <h3 class="font-bold">Kritika Khurana</h3>
+                    </div>
+                    <div class="w-40 h-40 mx-auto rounded-full border-4 border-white/10 overflow-hidden">
+                        <img src="image/hero2.jpg" class="w-full h-full object-cover" alt="Kritika Khurana">
+                    </div>
+                </div>
+            </div>
+
+            <!-- MOBILE: horizontal scroll card stack (visible only on small screens) -->
+            <div class="md:hidden w-full">
+                <div class="overflow-x-auto no-scrollbar px-2 py-3">
+                    <div class="flex gap-4">
+                        <!-- card 1 -->
+                        <article
+                            class="inline-block w-64 shrink-0 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-lg">
+                            <p class="text-[10px] font-bold text-gray-300 uppercase mb-2">Influencer Collaboration</p>
+                            <div class="bg-blue-600 text-white py-2 text-center rounded-lg">Video Production</div>
+                            <h3 class="mt-4 font-bold">Abhishek Malhan</h3>
+                            <div class="w-28 h-28 mt-4 rounded-full overflow-hidden border-4 border-white/10 mx-auto">
+                                <img src="image/hero3.png" class="w-full h-full object-cover" alt="Abhishek Malhan">
+                            </div>
+                            <div class="mt-3 text-center text-sm font-bold">3k+ ❤️</div>
+                        </article>
+
+                        <!-- card 2 -->
+                        <article
+                            class="inline-block w-56 shrink-0 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-lg">
+                            <h3 class="font-bold">Ritvi Shah</h3>
+                            <div class="w-24 h-24 mt-4 rounded-full overflow-hidden border-4 border-white/10 mx-auto">
+                                <img src="image/hero1.jpg" class="w-full h-full object-cover" alt="Ritvi Shah">
+                            </div>
+                            <div class="mt-3 text-center text-sm font-bold">4m+ ❤️</div>
+                        </article>
+
+                        <!-- card 3 -->
+                        <article
+                            class="inline-block w-56 shrink-0 bg-white/10 backdrop-blur-md rounded-2xl p-4 shadow-lg">
+                            <h3 class="font-bold">Kritika Khurana</h3>
+                            <div class="w-24 h-24 mt-4 rounded-full overflow-hidden border-4 border-white/10 mx-auto">
+                                <img src="image/hero2.jpg" class="w-full h-full object-cover" alt="Kritika Khurana">
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
 
 
     <section class="bg-white py-24 text-center">
@@ -713,104 +717,108 @@
         </div>
     </section>
     <!-- Unlock brand success with powerful -->
-<section class="bg-white py-20 px-6 md:px-16 border-t border-gray-100">
-  <div class="max-w-7xl mx-auto">
+    <section class="bg-white py-20 px-6 md:px-16 border-t border-gray-100">
+        <div class="max-w-7xl mx-auto">
 
-    <!-- Heading -->
-    <div class="text-center mb-16">
-      <p class="text-sm font-bold text-gray-900 mb-3 tracking-wide">
-        Create Amazing Campaigns
-      </p>
-      <h2 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
-        Unlock brand success with powerful <br>
-        <span class="text-purple-600 serif-italic">
-          creator collaborations
-        </span>
-      </h2>
-    </div>
+            <!-- Heading -->
+            <div class="text-center mb-16">
+                <p class="text-sm font-bold text-gray-900 mb-3 tracking-wide">
+                    Create Amazing Campaigns
+                </p>
+                <h2 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+                    Unlock brand success with powerful <br>
+                    <span class="text-purple-600 serif-italic">
+                        creator collaborations
+                    </span>
+                </h2>
+            </div>
 
-    <!-- Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <!-- Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
 
-      <!-- Card 1 -->
-      <div class="bg-white p-8 md:p-12 rounded-[28px] border border-gray-100 shadow-sm hover:shadow-xl transition">
-        <span class="absolute top-6 right-6 text-7xl font-black text-gray-100">01</span>
+                <!-- Card 1 -->
+                <div
+                    class="bg-white p-8 md:p-12 rounded-[28px] border border-gray-100 shadow-sm hover:shadow-xl transition">
+                    <span class="absolute top-6 right-6 text-7xl font-black text-gray-100">01</span>
 
-        <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
-          <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0"/>
-          </svg>
+                    <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0" />
+                        </svg>
+                    </div>
+
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+                        Influencer Partnerships
+                    </h3>
+                    <p class="text-gray-500 leading-relaxed">
+                        Connect with top creators to amplify your brand’s reach and engagement.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div
+                    class="bg-white p-8 md:p-12 rounded-[28px] border border-gray-100 shadow-sm hover:shadow-xl transition">
+                    <span class="absolute top-6 right-6 text-7xl font-black text-gray-100">02</span>
+
+                    <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15.232 5.232l3.536 3.536M16.732 3.732L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                    </div>
+
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+                        Podcast Spotlights
+                    </h3>
+                    <p class="text-gray-500 leading-relaxed">
+                        Get featured on leading podcasts to boost brand trust and visibility.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div
+                    class="bg-white p-8 md:p-12 rounded-[28px] border border-gray-100 shadow-sm hover:shadow-xl transition">
+                    <span class="absolute top-6 right-6 text-7xl font-black text-gray-100">03</span>
+
+                    <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 10h18M7 15h1m4 0h1m-7 4h12" />
+                        </svg>
+                    </div>
+
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+                        UGC & Video Production
+                    </h3>
+                    <p class="text-gray-500 leading-relaxed">
+                        High-quality content crafted for engagement, reach, and conversions.
+                    </p>
+                </div>
+
+                <!-- Card 4 -->
+                <div
+                    class="bg-white p-8 md:p-12 rounded-[28px] border border-gray-100 shadow-sm hover:shadow-xl transition">
+                    <span class="absolute top-6 right-6 text-7xl font-black text-gray-100">04</span>
+
+                    <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0..." />
+                        </svg>
+                    </div>
+
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+                        Celebrity Endorsements
+                    </h3>
+                    <p class="text-gray-500 leading-relaxed">
+                        Leverage celebrity influence to build trust and brand recall.
+                    </p>
+                </div>
+
+            </div>
         </div>
-
-        <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-3">
-          Influencer Partnerships
-        </h3>
-        <p class="text-gray-500 leading-relaxed">
-          Connect with top creators to amplify your brand’s reach and engagement.
-        </p>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="bg-white p-8 md:p-12 rounded-[28px] border border-gray-100 shadow-sm hover:shadow-xl transition">
-        <span class="absolute top-6 right-6 text-7xl font-black text-gray-100">02</span>
-
-        <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
-          <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M15.232 5.232l3.536 3.536M16.732 3.732L6.5 21.036H3v-3.572L16.732 3.732z"/>
-          </svg>
-        </div>
-
-        <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-3">
-          Podcast Spotlights
-        </h3>
-        <p class="text-gray-500 leading-relaxed">
-          Get featured on leading podcasts to boost brand trust and visibility.
-        </p>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="bg-white p-8 md:p-12 rounded-[28px] border border-gray-100 shadow-sm hover:shadow-xl transition">
-        <span class="absolute top-6 right-6 text-7xl font-black text-gray-100">03</span>
-
-        <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
-          <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M3 10h18M7 15h1m4 0h1m-7 4h12"/>
-          </svg>
-        </div>
-
-        <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-3">
-          UGC & Video Production
-        </h3>
-        <p class="text-gray-500 leading-relaxed">
-          High-quality content crafted for engagement, reach, and conversions.
-        </p>
-      </div>
-
-      <!-- Card 4 -->
-      <div class="bg-white p-8 md:p-12 rounded-[28px] border border-gray-100 shadow-sm hover:shadow-xl transition">
-        <span class="absolute top-6 right-6 text-7xl font-black text-gray-100">04</span>
-
-        <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
-          <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0..."/>
-          </svg>
-        </div>
-
-        <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-3">
-          Celebrity Endorsements
-        </h3>
-        <p class="text-gray-500 leading-relaxed">
-          Leverage celebrity influence to build trust and brand recall.
-        </p>
-      </div>
-
-    </div>
-  </div>
-</section>
+    </section>
 
     <!-- From Connections to Conversions -Roadmap to Success in 4 Steps -->
     <section class="py-24 px-6 bg-white overflow-hidden font-sans">
@@ -975,46 +983,48 @@
         </div>
     </section>
     <!-- Collab With Top Influencers videos -->
-<!-- -------------------------
+    <!-- -------------------------
   VIDEO GALLERY (dynamic + hover-play)
 -------------------------- -->
-<section id="video-gallery" class="py-20 bg-white font-sans">
-  <div class="max-w-7xl mx-auto px-4">
+    <section id="video-gallery" class="py-20 bg-white font-sans">
+        <div class="max-w-7xl mx-auto px-4">
 
-    <h2 class="text-center text-4xl md:text-5xl font-bold text-gray-900 mb-16">
-      Collab With <span class="text-[#7c3aed] serif-italic">Top Influencers</span>
-    </h2>
+            <h2 class="text-center text-4xl md:text-5xl font-bold text-gray-900 mb-16">
+                Collab With <span class="text-[#7c3aed] serif-italic">Top Influencers</span>
+            </h2>
 
-    <div class="relative group">
+            <div class="relative group">
 
-      <!-- LEFT BUTTON -->
-      <button id="video-left-btn" aria-label="Scroll left"
-        class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg p-3 rounded-full hover:bg-gray-50 transition border border-gray-100">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round"
-            stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-      </button>
+                <!-- LEFT BUTTON -->
+                <button id="video-left-btn" aria-label="Scroll left"
+                    class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg p-3 rounded-full hover:bg-gray-50 transition border border-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
 
-      <!-- SLIDER -->
-      <div id="video-slider" class="flex gap-6 overflow-x-auto no-scrollbar scroll-smooth py-6 px-8">
-        <!-- JS will populate cards here -->
-        <!-- Fallback static card (optional) -->
-      </div>
+                <!-- SLIDER -->
+                <div id="video-slider" class="flex gap-6 overflow-x-auto no-scrollbar scroll-smooth py-6 px-8">
+                    <!-- JS will populate cards here -->
+                    <!-- Fallback static card (optional) -->
+                </div>
 
-      <!-- RIGHT BUTTON -->
-      <button id="video-right-btn" aria-label="Scroll right"
-        class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg p-3 rounded-full hover:bg-gray-50 transition border border-gray-100">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round"
-            stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-      </button>
+                <!-- RIGHT BUTTON -->
+                <button id="video-right-btn" aria-label="Scroll right"
+                    class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg p-3 rounded-full hover:bg-gray-50 transition border border-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
 
-    </div>
+            </div>
 
-    <!-- pagination dots (visual only) -->
-    <div class="flex justify-center gap-2 mt-12" id="video-dots"></div>
-  </div>
-</section>
+            <!-- pagination dots (visual only) -->
+            <div class="flex justify-center gap-2 mt-12" id="video-dots"></div>
+        </div>
+    </section>
     <!-- Hear Their Stories -->
     <section class="py-24 bg-white font-sans overflow-hidden">
         <div class="max-w-7xl mx-auto px-6 lg:px-20">
@@ -1199,119 +1209,118 @@
             </div>
         </div>
     </section>
-<!-- FOOTER -->
-<footer class="relative mt-40">
+    <!-- FOOTER -->
+    <footer class="relative mt-40">
 
-  <!-- CTA Banner -->
-  <div class="absolute top-0 left-0 right-0 -translate-y-1/2 z-30 px-4">
-    <div
-      class="max-w-6xl mx-auto bg-[#7c3aed] rounded-[32px] md:rounded-[45px] p-8 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl relative overflow-hidden">
+        <!-- CTA Banner -->
+        <div class="absolute top-0 left-0 right-0 -translate-y-1/2 z-30 px-4">
+            <div
+                class="max-w-6xl mx-auto bg-[#7c3aed] rounded-[32px] md:rounded-[45px] p-8 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl relative overflow-hidden">
 
-      <div class="absolute inset-0 opacity-20"
-        style="background: radial-gradient(circle at center, white 0%, transparent 75%);"></div>
+                <div class="absolute inset-0 opacity-20"
+                    style="background: radial-gradient(circle at center, white 0%, transparent 75%);"></div>
 
-      <div class="relative z-10 text-center md:text-left">
-        <p class="text-white text-xs font-bold uppercase tracking-[0.3em] mb-3">
-          Join The Revolution
-        </p>
-        <h2 class="text-white text-3xl md:text-5xl font-extrabold leading-tight">
-          Turn Influencer Power <br>
-          into Your Brand’s <span class="serif-italic">Success!</span>
-        </h2>
-      </div>
+                <div class="relative z-10 text-center md:text-left">
+                    <p class="text-white text-xs font-bold uppercase tracking-[0.3em] mb-3">
+                        Join The Revolution
+                    </p>
+                    <h2 class="text-white text-3xl md:text-5xl font-extrabold leading-tight">
+                        Turn Influencer Power <br>
+                        into Your Brand’s <span class="serif-italic">Success!</span>
+                    </h2>
+                </div>
 
-      <div class="relative z-10 flex flex-col items-center md:items-end gap-5 text-center md:text-right">
-        <p class="text-white/90 text-sm max-w-sm">
-          Start your brand's journey with strategic influencer collaborations.
-        </p>
-        <button
-          class="border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-[#7c3aed] transition">
-          Let's Create The Magic →
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer Body -->
-  <div class="pt-64 pb-12 px-6 md:px-20 bg-[#020205]">
-
-    <div class="max-w-7xl mx-auto">
-
-      <!-- Top Row -->
-      <div class="flex flex-col md:flex-row justify-between items-center gap-10 mb-16">
-
-        <!-- Logo -->
-        <div class="flex items-center">
-          <img src="image/image.png"
-               class="h-14 md:h-20 object-contain"
-               alt="Creato Studios">
+                <div class="relative z-10 flex flex-col items-center md:items-end gap-5 text-center md:text-right">
+                    <p class="text-white/90 text-sm max-w-sm">
+                        Start your brand's journey with strategic influencer collaborations.
+                    </p>
+                    <button
+                        class="border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-[#7c3aed] transition">
+                        Let's Create The Magic →
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <!-- Creators -->
-        <div class="flex flex-col items-center md:items-end gap-3">
-          <span class="text-white font-semibold text-sm">
-            1000+ Creators Onboard
-          </span>
-          <div class="flex -space-x-3">
-            <img src="image/image_17.jpg" class="w-9 h-9 rounded-full border-2 border-black">
-            <img src="image/hero1.jpg" class="w-9 h-9 rounded-full border-2 border-black">
-            <img src="image/hero2.jpg" class="w-9 h-9 rounded-full border-2 border-black">
-            <img src="image/hero3.png" class="w-9 h-9 rounded-full border-2 border-black">
-          </div>
+        <!-- Footer Body -->
+        <div class="pt-64 pb-12 px-6 md:px-20 bg-[#020205]">
+
+            <div class="max-w-7xl mx-auto">
+
+                <!-- Top Row -->
+                <div class="flex flex-col md:flex-row justify-between items-center gap-10 mb-16">
+
+                    <!-- Logo -->
+                    <div class="flex items-center">
+                        <img src="image/image.png" class="h-14 md:h-20 object-contain" alt="Creato Studios">
+                    </div>
+
+                    <!-- Creators -->
+                    <div class="flex flex-col items-center md:items-end gap-3">
+                        <span class="text-white font-semibold text-sm">
+                            1000+ Creators Onboard
+                        </span>
+                        <div class="flex -space-x-3">
+                            <img src="image/image_17.jpg" class="w-9 h-9 rounded-full border-2 border-black">
+                            <img src="image/hero1.jpg" class="w-9 h-9 rounded-full border-2 border-black">
+                            <img src="image/hero2.jpg" class="w-9 h-9 rounded-full border-2 border-black">
+                            <img src="image/hero3.png" class="w-9 h-9 rounded-full border-2 border-black">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 border-t border-white/10 pt-12 mb-12">
+
+                    <div>
+                        <h4 class="text-white font-bold text-lg mb-4">About</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed max-w-sm">
+                            We craft high-impact influencer campaigns, UGC, podcasts, and celebrity collaborations to
+                            elevate brands.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4 class="text-white font-bold text-lg mb-4">Contact</h4>
+                        <ul class="text-gray-400 text-sm space-y-3">
+                            <li>📞 +91 7838855855</li>
+                            <li>📧 support@creatostudios.com</li>
+                            <li>📍 A-27D, Sector 16, Noida (Metro Exit 4)</li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!-- Bottom Bar -->
+                <div
+                    class="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+
+                    <p>
+                        © 2025 <span class="text-[#7c3aed] font-bold">Creato Studios</span>. All rights reserved.
+                    </p>
+
+                    <p class="flex items-center gap-1">
+                        Crafted with <span class="text-red-500">❤️</span> by Kanishka
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
-
-      <!-- Middle Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 border-t border-white/10 pt-12 mb-12">
-
-        <div>
-          <h4 class="text-white font-bold text-lg mb-4">About</h4>
-          <p class="text-gray-400 text-sm leading-relaxed max-w-sm">
-            We craft high-impact influencer campaigns, UGC, podcasts, and celebrity collaborations to elevate brands.
-          </p>
-        </div>
-
-        <div>
-          <h4 class="text-white font-bold text-lg mb-4">Contact</h4>
-          <ul class="text-gray-400 text-sm space-y-3">
-            <li>📞 +91 7838855855</li>
-            <li>📧 support@creatostudios.com</li>
-            <li>📍 A-27D, Sector 16, Noida (Metro Exit 4)</li>
-          </ul>
-        </div>
-
-      </div>
-
-      <!-- Bottom Bar -->
-      <div
-        class="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-
-        <p>
-          © 2025 <span class="text-[#7c3aed] font-bold">Creato Studios</span>. All rights reserved.
-        </p>
-
-        <p class="flex items-center gap-1">
-          Crafted with <span class="text-red-500">❤️</span> by Kanishka
-        </p>
-      </div>
-    </div>
-  </div>
-</footer>
+    </footer>
 
 
 
     <script>
-          const menuBtn = document.getElementById("menuBtn");
-  const closeMenu = document.getElementById("closeMenu");
-  const mobileMenu = document.getElementById("mobileMenu");
+        const menuBtn = document.getElementById("menuBtn");
+        const closeMenu = document.getElementById("closeMenu");
+        const mobileMenu = document.getElementById("mobileMenu");
 
-  menuBtn.addEventListener("click", () => {
-    mobileMenu.classList.remove("translate-x-full");
-  });
+        menuBtn.addEventListener("click", () => {
+            mobileMenu.classList.remove("translate-x-full");
+        });
 
-  closeMenu.addEventListener("click", () => {
-    mobileMenu.classList.add("translate-x-full");
-  });
+        closeMenu.addEventListener("click", () => {
+            mobileMenu.classList.add("translate-x-full");
+        });
         // Collab With Top Influencers
         function scrollSlider(direction) {
             const slider = document.getElementById('influencer-slider');
@@ -1426,48 +1435,48 @@
     </script>
 
 
-<!-- -------------------------
+    <!-- -------------------------
   JAVASCRIPT: populate + hover autoplay
 -------------------------- -->
-<script>
-(function () {
+    <script>
+        (function () {
 
-  const images = [
-    "./image/slider/video-1.jpeg",
-    "./image/slider/video-10.jpeg",
-    "./image/slider/video-3.jpeg",
-    "./image/slider/video-4.jpeg",
-    "./image/slider/video-5.jpeg",
-    "./image/slider/video-6.jpeg",
-    "./image/slider/video-7.jpeg",
-    "./image/slider/video-8.jpeg"
-  ];
+            const images = [
+                "./image/slider/video-1.jpeg",
+                "./image/slider/video-10.jpeg",
+                "./image/slider/video-3.jpeg",
+                "./image/slider/video-4.jpeg",
+                "./image/slider/video-5.jpeg",
+                "./image/slider/video-6.jpeg",
+                "./image/slider/video-7.jpeg",
+                "./image/slider/video-8.jpeg"
+            ];
 
-  const videos = [
-    { url: "https://www.youtube.com/shorts/HA_HZZCoBpE" },
-    { url: "https://youtube.com/shorts/ppjlOWmUnuQ" },
-    { url: "https://youtube.com/shorts/INAG68kcOfY" },
-    { url: "https://youtube.com/shorts/xIjl5S9Qhww" },
-    { url: "https://youtube.com/shorts/3n5nzajL2Dk" },
-    { url: "https://youtube.com/shorts/AuqRuyuDCV0" },
-    { url: "https://youtube.com/shorts/Fb6qj57PqgQ" },
-    { url: "https://youtube.com/shorts/lOhK4wvuPZM" }
-  ];
+            const videos = [
+                { url: "https://www.youtube.com/shorts/HA_HZZCoBpE" },
+                { url: "https://youtube.com/shorts/ppjlOWmUnuQ" },
+                { url: "https://youtube.com/shorts/INAG68kcOfY" },
+                { url: "https://youtube.com/shorts/xIjl5S9Qhww" },
+                { url: "https://youtube.com/shorts/3n5nzajL2Dk" },
+                { url: "https://youtube.com/shorts/AuqRuyuDCV0" },
+                { url: "https://youtube.com/shorts/Fb6qj57PqgQ" },
+                { url: "https://youtube.com/shorts/lOhK4wvuPZM" }
+            ];
 
-  const slider = document.getElementById("video-slider");
+            const slider = document.getElementById("video-slider");
 
-  function getYouTubeID(url) {
-    return url.split("/").pop();
-  }
+            function getYouTubeID(url) {
+                return url.split("/").pop();
+            }
 
-  function createCard(video, index) {
-    const ytId = getYouTubeID(video.url);
+            function createCard(video, index) {
+                const ytId = getYouTubeID(video.url);
 
-    const card = document.createElement("div");
-    card.className =
-      "flex-shrink-0 w-[280px] h-[500px] rounded-[20px] overflow-hidden relative shadow-lg bg-black cursor-pointer";
+                const card = document.createElement("div");
+                card.className =
+                    "flex-shrink-0 w-[280px] h-[500px] rounded-[20px] overflow-hidden relative shadow-lg bg-black cursor-pointer";
 
-    card.innerHTML = `
+                card.innerHTML = `
       <div class="poster-wrapper w-full h-full relative">
         <img src="${images[index]}" class="w-full h-full object-cover" />
         
@@ -1483,52 +1492,52 @@
       </div>
     `;
 
-    let iframe = null;
+                let iframe = null;
 
-    function playVideo() {
-      if (iframe) return;
+                function playVideo() {
+                    if (iframe) return;
 
-      iframe = document.createElement("iframe");
-      iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&controls=0&playsinline=1`;
-      iframe.className = "absolute inset-0 w-full h-full";
-      iframe.allow = "autoplay; fullscreen";
-      iframe.frameBorder = "0";
+                    iframe = document.createElement("iframe");
+                    iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&controls=0&playsinline=1`;
+                    iframe.className = "absolute inset-0 w-full h-full";
+                    iframe.allow = "autoplay; fullscreen";
+                    iframe.frameBorder = "0";
 
-      card.appendChild(iframe);
-    }
+                    card.appendChild(iframe);
+                }
 
-    function stopVideo() {
-      if (iframe) {
-        iframe.remove();
-        iframe = null;
-      }
-    }
+                function stopVideo() {
+                    if (iframe) {
+                        iframe.remove();
+                        iframe = null;
+                    }
+                }
 
-    // Desktop hover
-    card.addEventListener("mouseenter", playVideo);
-    card.addEventListener("mouseleave", stopVideo);
+                // Desktop hover
+                card.addEventListener("mouseenter", playVideo);
+                card.addEventListener("mouseleave", stopVideo);
 
-    // Mobile tap
-    card.addEventListener("click", () => {
-      iframe ? stopVideo() : playVideo();
-    });
+                // Mobile tap
+                card.addEventListener("click", () => {
+                    iframe ? stopVideo() : playVideo();
+                });
 
-    return card;
-  }
+                return card;
+            }
 
-  // Build slider
-  videos.forEach((video, i) => {
-    slider.appendChild(createCard(video, i));
-  });
+            // Build slider
+            videos.forEach((video, i) => {
+                slider.appendChild(createCard(video, i));
+            });
 
-})();
-</script>
-
-
+        })();
+    </script>
 
 
 
-   <!-- <section class="relative bg-[#020205] py-20 px-6 md:px-16 overflow-hidden">
+
+
+    <!-- <section class="relative bg-[#020205] py-20 px-6 md:px-16 overflow-hidden">
 
 
   <div class="absolute left-0 bottom-0 w-48 h-48 opacity-20 hidden md:block"
