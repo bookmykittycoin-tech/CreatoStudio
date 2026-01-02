@@ -183,12 +183,10 @@
   <!-- Campaign Description Modal -->
   <div id="descriptionModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60">
     <div id="descriptionModalCard" class="bg-white text-black w-full max-w-lg rounded-xl shadow-xl p-6 relative mx-4">
-      <button id="closeDescriptionBtn" class="absolute top-3 right-3 text-gray-500 hover:text-black text-xl">
-        ✕
-      </button>
+      <button id="closeDescriptionBtn" class="absolute top-3 right-3 text-gray-500 hover:text-black text-xl">✕</button>
 
       <h3 class="text-xl font-bold mb-3">Campaign Details</h3>
-      <div id="campaignDescription" class="text-gray-700 leading-relaxed max-h-[60vh] overflow-auto"></div>
+      <div id="campaignDescription" class="text-gray-700 leading-relaxed whitespace-pre-line max-h-[60vh] overflow-auto"></div>
     </div>
   </div>
 
@@ -198,6 +196,7 @@
     const API_BASE = "https://creatostudiosbackend.vercel.app/v1"; // your API base
     const SITE_BASE = "https://creatostudios.com/signup.html"; // signup url
     const POLL_INTERVAL_MS = 0;
+
     /** Helpers **/
     function escapeHtml (str) {
       if (str === null || str === undefined) return "";
@@ -296,37 +295,29 @@
       loadCampaigns(); // fetch campaigns on open
     });
 
-    /** Modal functions - expose to global for inline handlers */
-    window.showDescription = function (text) {
+    /** Modal functions **/
+    function openDescriptionModal(text) {
       const el = document.getElementById("campaignDescription");
-      el.innerText = text || "No description available.";
+      // show raw text with newlines preserved
+      el.textContent = text || "No description available.";
       const modal = document.getElementById("descriptionModal");
       modal.classList.remove("hidden");
       modal.classList.add("flex");
-    };
+    }
 
-    window.closeDescription = function () {
+    function closeDescriptionModal() {
       const modal = document.getElementById("descriptionModal");
       modal.classList.add("hidden");
       modal.classList.remove("flex");
-    };
+    }
 
-    // close modal on overlay click or escape
+    // modal handlers
+    document.getElementById("closeDescriptionBtn").addEventListener("click", closeDescriptionModal);
     const descriptionModal = document.getElementById("descriptionModal");
-    const descriptionModalCard = document.getElementById("descriptionModalCard");
-    const closeDescriptionBtn = document.getElementById("closeDescriptionBtn");
-
-    closeDescriptionBtn.addEventListener("click", window.closeDescription);
-
     descriptionModal.addEventListener("click", (e) => {
-      if (e.target === descriptionModal) {
-        window.closeDescription();
-      }
+      if (e.target === descriptionModal) closeDescriptionModal();
     });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") window.closeDescription();
-    });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDescriptionModal(); });
 
     /** Load profile + summary stats **/
     async function loadProfileAndStats() {
@@ -365,7 +356,6 @@
 
       } catch (err) {
         console.error("Profile/Dashboard error:", err);
-        // don't auto logout on network failure — keep user on page
       }
     }
 
@@ -396,54 +386,84 @@
           return;
         }
 
+        // Clear and render using DOM APIs (safer for large/unescaped text)
         tbody.innerHTML = "";
         campaigns.forEach(c => {
-          // accept both shapes: c.name or c.campaign_name
-          const name = escapeHtml(c.name ?? c.campaign_name ?? "Untitled Campaign");
-          const brand = escapeHtml(c.brand_name ?? c.organizer ?? "—");
-          const status = escapeHtml(c.status ?? "Active");
-          const payout = c.payout ? `₹${Number(c.payout).toLocaleString()}` : (escapeHtml(c.payout_text ?? "—"));
-          const campaignId = c.id ?? c.campaign_id;
-          const joined = !!c.joined; // optional server-provided flag
-          const tr = document.createElement("tr");
+          const name = c.campaign_name ?? c.name ?? "Untitled Campaign";
+          const brand = c.brand_name ?? c.organizer ?? "—";
+          const status = c.status ?? "Active";
+          const payout = (c.payout !== undefined && c.payout !== null) ? `₹${Number(c.payout).toLocaleString()}` : (c.payout_text ?? "—");
+          const campaignId = c.id ?? c.campaign_id ?? "";
+          const joined = !!c.joined;
           const campaign_link = c.campaign_link || "#";
+          const descriptionRaw = c.description ?? c.campaign_description ?? "No description provided.";
+
+          const tr = document.createElement("tr");
           tr.className = "border-b border-white/5 hover:bg-white/[0.02] transition";
 
-          // prepare a safe description string and inject using JSON.stringify to preserve quotes safely
-          const descriptionRaw = c.description ?? c.campaign_description ?? "No description provided.";
-          const descriptionSafe = escapeHtml(descriptionRaw);
-          const descriptionJsString = JSON.stringify(descriptionSafe); // safe to place in onclick call
-          tr.innerHTML = `
-            <td class="px-6 py-4 font-semibold">${name}</td>
-            <td class="px-6 py-4">${brand}</td>
-            <td class="px-6 py-4">${status}</td>
-            <td class="px-6 py-4">${payout}</td>
-            <td class="px-6 py-4 text-right space-x-2">
-              <button 
-                onclick="showDescription(${descriptionJsString})"
-                class="bg-blue-500 text-white px-3 py-2 rounded text-xs font-semibold mr-2"
-              >
-                View
-              </button>
+          // TD: name
+          const tdName = document.createElement("td");
+          tdName.className = "px-6 py-4 font-semibold";
+          tdName.textContent = name;
+          tr.appendChild(tdName);
 
-              ${
-                joined
-                  ? '<button class="bg-gray-600 text-white px-3 py-2 rounded text-xs" disabled>Joined</button>'
-                  : `<button data-id="${campaignId}" class="join-btn bg-white text-black px-3 py-2 rounded text-xs font-bold">Join</button>`
-              }
-            </td>
-          `;
+          // TD: brand
+          const tdBrand = document.createElement("td");
+          tdBrand.className = "px-6 py-4";
+          tdBrand.textContent = brand;
+          tr.appendChild(tdBrand);
 
-          tbody.appendChild(tr);
-        });
+          // TD: status
+          const tdStatus = document.createElement("td");
+          tdStatus.className = "px-6 py-4";
+          tdStatus.textContent = status;
+          tr.appendChild(tdStatus);
 
-        // attach handlers for join buttons
-        document.querySelectorAll(".join-btn").forEach(btn => {
-          btn.addEventListener("click", (e) => {
-            const id = e.currentTarget.getAttribute("data-id");
-            if (!id) return;
-            joinCampaign(id, e.currentTarget);
+          // TD: payout
+          const tdPayout = document.createElement("td");
+          tdPayout.className = "px-6 py-4";
+          tdPayout.textContent = payout;
+          tr.appendChild(tdPayout);
+
+          // TD: actions
+          const tdAction = document.createElement("td");
+          tdAction.className = "px-6 py-4 text-right space-x-2";
+
+          // View description button
+          const viewBtn = document.createElement("button");
+          viewBtn.className = "view-desc bg-blue-500 text-white px-3 py-2 rounded text-xs font-semibold mr-2";
+          viewBtn.type = "button";
+          viewBtn.textContent = "View";
+          // Store raw description safely on dataset
+          viewBtn.dataset.description = descriptionRaw;
+          viewBtn.addEventListener("click", (e) => {
+            // open modal with description
+            openDescriptionModal(e.currentTarget.dataset.description);
           });
+          tdAction.appendChild(viewBtn);
+
+          if (joined) {
+            const joinedBtn = document.createElement("button");
+            joinedBtn.className = "bg-gray-600 text-white px-3 py-2 rounded text-xs";
+            joinedBtn.disabled = true;
+            joinedBtn.textContent = "Joined";
+            tdAction.appendChild(joinedBtn);
+          } else {
+            const joinBtn = document.createElement("button");
+            joinBtn.className = "join-btn bg-white text-black px-3 py-2 rounded text-xs font-bold";
+            joinBtn.type = "button";
+            joinBtn.dataset.id = campaignId;
+            joinBtn.textContent = "Join";
+            joinBtn.addEventListener("click", (e) => {
+              const id = e.currentTarget.dataset.id;
+              if (!id) return;
+              joinCampaign(id, e.currentTarget);
+            });
+            tdAction.appendChild(joinBtn);
+          }
+
+          tr.appendChild(tdAction);
+          tbody.appendChild(tr);
         });
 
       } catch (err) {
@@ -493,12 +513,7 @@
       }
     }
 
-    /**
-     * loadJoinedCampaigns:
-     * 1) GET /v1/influencer/dashboard  -> get campaign_ids []
-     * 2) POST /v1/campaigns/by-ids      -> body { campaign_ids: [...] } -> get campaign details
-     * 3) render those campaigns into Joined Campaigns table
-     */
+    /** Load Joined Campaigns **/
     async function loadJoinedCampaigns() {
       const token = localStorage.getItem(STORAGE_KEY);
       if (!token) return logout();
@@ -550,43 +565,50 @@
         tbody.innerHTML = "";
 
         list.forEach(c => {
-          const name = escapeHtml(c.campaign_name ?? c.name ?? "Untitled");
-          const status = escapeHtml(c.status ?? "—");
-          const id = escapeHtml(String(c.id ?? c.campaign_id ?? ""));
+          const name = c.campaign_name ?? c.name ?? "Untitled";
+          const status = c.status ?? "—";
+          const id = String(c.id ?? c.campaign_id ?? "");
           const campaign_link = c.campaign_link || "#";
 
           const tr = document.createElement("tr");
           tr.className = "border-b border-white/5";
 
-          tr.innerHTML = `
-            <td class="px-6 py-4 font-semibold">${name}</td>
-            <td class="px-6 py-4">${status}</td>
-            <td class="px-6 py-4 font-mono text-xs opacity-50">${id}</td>
-            <td class="px-6 py-4 text-right">
-              <button 
-                class="view-joined bg-white text-black px-3 py-1 rounded text-xs"
-                data-id="${id}"
-                data-link="${escapeHtml(campaign_link)}"
-              >
-                View
-              </button>
-            </td>
-          `;
+          const tdName = document.createElement("td");
+          tdName.className = "px-6 py-4 font-semibold";
+          tdName.textContent = name;
+          tr.appendChild(tdName);
 
-          tbody.appendChild(tr);
-        });
+          const tdStatus = document.createElement("td");
+          tdStatus.className = "px-6 py-4";
+          tdStatus.textContent = status;
+          tr.appendChild(tdStatus);
 
-        // attach handlers for view buttons
-        document.querySelectorAll(".view-joined").forEach(btn => {
-          btn.addEventListener("click", (e) => {
-            const campaignLink = e.currentTarget.getAttribute("data-link");
-            if (!campaignLink || campaignLink === "#") {
+          const tdId = document.createElement("td");
+          tdId.className = "px-6 py-4 font-mono text-xs opacity-50";
+          tdId.textContent = id;
+          tr.appendChild(tdId);
+
+          const tdAction = document.createElement("td");
+          tdAction.className = "px-6 py-4 text-right";
+
+          const viewBtn = document.createElement("button");
+          viewBtn.className = "view-joined bg-white text-black px-3 py-1 rounded text-xs";
+          viewBtn.type = "button";
+          viewBtn.textContent = "View";
+          // store link on dataset
+          viewBtn.dataset.link = campaign_link;
+          viewBtn.addEventListener("click", (e) => {
+            const link = e.currentTarget.dataset.link;
+            if (!link || link === "#") {
               alert("Campaign link not available");
               return;
             }
-            // navigate to campaign link
-            window.location.href = campaignLink;
+            window.location.href = link;
           });
+
+          tdAction.appendChild(viewBtn);
+          tr.appendChild(tdAction);
+          tbody.appendChild(tr);
         });
 
       } catch (err) {
