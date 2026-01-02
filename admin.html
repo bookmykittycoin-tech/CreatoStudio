@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creator Studios - Professional Admin</title>
+    <style>
+        :root {
+            /* Professional Dark Palette */
+            --bg-body: #09090b;       /* Zinc-950 */
+            --bg-sidebar: #000000;
+            --bg-card: #18181b;       /* Zinc-900 */
+            --bg-input: #27272a;      /* Zinc-800 */
+            
+            --border-subtle: #27272a;
+            --border-focus: #3f3f46;
+
+            --primary: #3b82f6;       /* Blue-500 */
+            --primary-hover: #2563eb;
+            
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+
+            --success-bg: rgba(34, 197, 94, 0.1);
+            --success-text: #4ade80;
+            
+            --warning-bg: rgba(251, 191, 36, 0.1);
+            --warning-text: #fbbf24;
+
+            --danger-bg: rgba(239, 68, 68, 0.1);
+            --danger-text: #f87171;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            flex-shrink: 0;
+        }
+
+        .logo-container {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            text-align: center;
+        }
+
+        .logo-container img {
+            height: 120px;
+            object-fit: contain;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background-color: var(--bg-input);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .nav-icon {
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* --- Professional Table --- */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: rgba(255,255,255,0.02);
+            text-align: left;
+            padding: 16px 24px;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        /* Status Pills */
+        .status-pill {
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .status-pill::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 6px;
+            background-color: currentColor;
+        }
+
+        .status-active { background: var(--success-bg); color: var(--success-text); }
+        .status-paused { background: var(--warning-bg); color: var(--warning-text); }
+        .status-completed { background: var(--bg-input); color: var(--text-muted); }
+
+        /* Edit Button Style */
+        .btn-icon {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-muted);
+            color: var(--text-main);
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* --- Sections --- */
+        .section { display: none; }
+        .section.active { display: block; animation: fadeUp 0.3s ease; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Modal --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-box {
+            background: var(--bg-card);
+            width: 100%;
+            max-width: 420px;
+            padding: 32px;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-main);
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--primary);
+        }
+        
+        /* Fix for dark mode date picker icon */
+        input[type="date"] { color-scheme: dark; }
+
+        .modal-actions {
+            margin-top: 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-ghost:hover { color: var(--text-main); }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar h-32 w-auto object-contain max-w-none">
+        <div class="logo-container">
+            <img src="image/image.png" alt="Creato Studios Logo" class="relative w-full object-contain max-w-none">
+        </div>
+        <nav>
+            <div class="nav-item active" onclick="switchSection('influencers', this)">
+                <span class="nav-icon">👥</span> Influencers
+            </div>
+            <div class="nav-item" onclick="switchSection('campaigns', this)">
+                <span class="nav-icon">📢</span> Campaigns
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+
+        <div id="influencers" class="section active">
+            <div class="header-row">
+                <h1>Influencers</h1>
+                <button class="btn-primary">Sync Data</button>
+            </div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Influencer</th>
+                            <th>Platform</th>
+                            <th>Followers</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Jake Mason</strong></td>
+                            <td>Instagram</td>
+                            <td>850k</td>
+                            <td><span class="status-pill status-active">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tech Daily</strong></td>
+                            <td>YouTube</td>
+                            <td>1.2M</td>
+                            <td><span class="status-pill status-paused">Paused</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="campaigns" class="section">
+            <div class="header-row">
+                <h1>Campaigns</h1>
+                <button class="btn-primary" onclick="openCreateModal()">
+                    <span>+</span> New Campaign
+                </button>
+            </div>
+
+            <div class="card">
+                <table id="campaignTable">
+                    <thead>
+                        <tr>
+                            <th>Campaign Name</th>
+                            <th>Brand</th>
+                            <th>Budget</th>
+                            <th>Start Date</th>
+                            <th>Status</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Summer Launch</td>
+                            <td>Nike</td>
+                            <td data-val="50000">$50,000</td>
+                            <td>2025-06-01</td>
+                            <td><span class="status-pill status-active">Running</span></td>
+                            <td style="text-align: right;">
+                                <button class="btn-icon" onclick="editCampaign(this)">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tech Review</td>
+                            <td>Samsung</td>
+                            <td data-val="22000">$22,000</td>
+                            <td>2025-02-15</td>
+                            <td><span class="status-pill status-paused">Paused</span></td>
+                            <td style="text-align: right;">
+                                <button class="btn-icon" onclick="editCampaign(this)">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="campaignModal">
+        <div class="modal-box">
+            <div class="modal-header" id="modalTitle">New Campaign</div>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Campaign Name</label>
+                    <input type="text" id="cName" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label>Brand</label>
+                    <input type="text" id="cBrand" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Budget ($)</label>
+                    <input type="number" id="cBudget" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" id="cDate" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="cStatus" class="form-select">
+                        <option value="active">Running</option>
+                        <option value="paused">Paused</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+                <button class="btn-primary" onclick="saveCampaign()" id="saveBtn">Create Campaign</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // GLOBAL VARIABLES
+        let currentEditingRow = null;
+        const modal = document.getElementById('campaignModal');
+
+        // --- NAVIGATION ---
+        function switchSection(id, btn) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // --- MODAL CONTROL ---
+        function openCreateModal() {
+            currentEditingRow = null; // Reset edit mode
+            document.getElementById('modalTitle').innerText = "New Campaign";
+            document.getElementById('saveBtn').innerText = "Create Campaign";
+            
+            // Clear inputs
+            document.getElementById('cName').value = "";
+            document.getElementById('cBrand').value = "";
+            document.getElementById('cBudget').value = "";
+            document.getElementById('cDate').value = "";
+            document.getElementById('cStatus').value = "active";
+            
+            modal.style.display = 'flex';
+        }
+
+        function editCampaign(btn) {
+            currentEditingRow = btn.closest('tr'); // Find the row
+            const cells = currentEditingRow.cells;
+
+            // Mode: Edit
+            document.getElementById('modalTitle').innerText = "Edit Campaign";
+            document.getElementById('saveBtn').innerText = "Save Changes";
+
+            // Populate Inputs
+            document.getElementById('cName').value = cells[0].innerText;
+            document.getElementById('cBrand').value = cells[1].innerText;
+            
+            // Get raw budget number from data attribute or clean string
+            const budgetText = cells[2].getAttribute('data-val') || cells[2].innerText.replace(/[^0-9.]/g, '');
+            document.getElementById('cBudget').value = budgetText;
+            
+            document.getElementById('cDate').value = cells[3].innerText;
+            
+            // Determine status based on class
+            const statusSpan = cells[4].querySelector('span');
+            if(statusSpan.classList.contains('status-active')) document.getElementById('cStatus').value = 'active';
+            else if(statusSpan.classList.contains('status-paused')) document.getElementById('cStatus').value = 'paused';
+            else document.getElementById('cStatus').value = 'completed';
+
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // --- SAVE LOGIC ---
+        function saveCampaign() {
+            const name = document.getElementById('cName').value;
+            const Brand = document.getElementById('cBrand').value;
+            const budget = document.getElementById('cBudget').value;
+            const date = document.getElementById('cDate').value;
+            const statusVal = document.getElementById('cStatus').value;
+
+            if(!name || !budget) return alert("Name and Budget are required");
+
+            // Define Status HTML
+            let statusHtml = '';
+            if(statusVal === 'active') statusHtml = '<span class="status-pill status-active">Running</span>';
+            else if(statusVal === 'paused') statusHtml = '<span class="status-pill status-paused">Paused</span>';
+            else statusHtml = '<span class="status-pill status-completed">Completed</span>';
+
+            const budgetDisplay = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(budget);
+
+            if(currentEditingRow) {
+                // UPDATE EXISTING ROW
+                currentEditingRow.cells[0].innerText = name;
+                currentEditingRow.cells[1].innerText = Brand;
+                currentEditingRow.cells[2].innerHTML = budgetDisplay;
+                currentEditingRow.cells[2].setAttribute('data-val', budget); // Store raw number
+                currentEditingRow.cells[3].innerText = date;
+                currentEditingRow.cells[4].innerHTML = statusHtml;
+            } else {
+                // CREATE NEW ROW
+                const tbody = document.querySelector('#campaignTable tbody');
+                const row = tbody.insertRow(0); // Add to top
+                row.innerHTML = `
+                    <td>${name}</td>
+                    <td>${Brand}</td>
+                    <td data-val="${budget}">${budgetDisplay}</td>
+                    <td>${date}</td>
+                    <td>${statusHtml}</td>
+                    <td style="text-align: right;">
+                        <button class="btn-icon" onclick="editCampaign(this)">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </button>
+                    </td>
+                `;
+            }
+
+            closeModal();
+        }
+
+        // Close modal on outside click
+        window.onclick = function(e) {
+            if (e.target == modal) closeModal();
+        }
+    </script>
+</body>
+</html>
