@@ -413,7 +413,7 @@
           const descriptionRaw = c.description ?? c.campaign_description ?? "No description provided.";
           const descriptionSafe = escapeHtml(descriptionRaw);
           const descriptionJsString = JSON.stringify(descriptionSafe); // safe to place in onclick call
-        console.log(descriptionJsString);
+          console.log(description);
           tr.innerHTML = `
             <td class="px-6 py-4 font-semibold">${name}</td>
             <td class="px-6 py-4">${brand}</td>
