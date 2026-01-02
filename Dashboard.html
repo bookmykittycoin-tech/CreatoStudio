@@ -43,6 +43,10 @@
           <span class="w-2 h-2 bg-white rounded-full"></span> Overview
         </button>
 
+        <button id="influencerTab" class="text-gray-400 hover:text-white transition text-left">
+          Influencers
+        </button>
+
         <button id="campaignTab" class="text-gray-400 hover:text-white transition text-left">
           Campaigns
         </button>
@@ -118,36 +122,6 @@
           </div>
         </div>
 
-        <!-- Influencer card & Manager info -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-[#111] p-6 rounded-2xl border border-white/5">
-            <p class="text-gray-500 text-xs uppercase tracking-widest mb-2 font-bold">Influencer</p>
-            <h3 id="influencerName" class="text-lg font-semibold">—</h3>
-            <p id="influencerEmailSmall" class="text-sm text-gray-400 mt-1">—</p>
-            <p class="text-xs text-gray-400 mt-3">Referral Code</p>
-            <p id="influencerRef" class="font-mono text-sm">—</p>
-            <p class="text-xs text-gray-400 mt-3">Phone</p>
-            <p id="influencerPhone" class="text-sm">—</p>
-          </div>
-
-          <div class="bg-[#111] p-6 rounded-2xl border border-white/5">
-            <p class="text-gray-500 text-xs uppercase tracking-widest mb-2 font-bold">Manager (based on referral)</p>
-            <h3 id="managerName" class="text-lg font-semibold">—</h3>
-            <p id="managerContact" class="text-sm text-gray-400 mt-1">—</p>
-            <p class="text-xs text-gray-400 mt-3">Manager Note</p>
-            <p id="managerNote" class="text-sm text-gray-300 mt-1">Manager info is determined by your referral code.</p>
-          </div>
-
-          <div class="bg-[#111] p-6 rounded-2xl border border-white/5">
-            <p class="text-gray-500 text-xs uppercase tracking-widest mb-2 font-bold">Quick Actions</p>
-            <div class="flex flex-col gap-2 mt-2">
-              <button id="editProfileBtn" class="bg-white text-black px-3 py-2 rounded text-sm font-semibold">Edit Profile</button>
-              <button id="viewPaymentsBtn" class="bg-white/5 border border-white/10 text-white px-3 py-2 rounded text-sm">View Payments</button>
-              <button id="contactManagerBtn" class="bg-blue-600 text-white px-3 py-2 rounded text-sm">Contact Manager</button>
-            </div>
-          </div>
-        </div>
-
         <div>
           <div class="flex justify-between items-end mb-4">
             <h3 class="text-xl font-bold">Joined Campaigns</h3>
@@ -176,6 +150,34 @@
               </tbody>
             </table>
           </div>
+        </div>
+      </section>
+
+      <!-- INFLUENCERS SECTION -->
+      <section id="influencerSection" class="hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-bold">My Referred Influencers</h2>
+          <p class="text-sm text-gray-400">People who joined using your referral</p>
+        </div>
+
+        <div class="bg-[#111] rounded-2xl border border-white/5 overflow-hidden">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="text-[10px] uppercase tracking-widest text-gray-500 border-b border-white/5">
+                <th class="px-6 py-4">Name</th>
+                <th class="px-6 py-4">Email</th>
+                <th class="px-6 py-4">Referral Code</th>
+                <th class="px-6 py-4">Clicks</th>
+                <th class="px-6 py-4">Conversions</th>
+                <th class="px-6 py-4">Joined</th>
+              </tr>
+            </thead>
+            <tbody id="influencerList" class="text-sm">
+              <tr class="border-b border-white/5">
+                <td class="px-6 py-4" colspan="6">Loading influencers...</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -309,22 +311,44 @@
 
     /** Tabs **/
     const overviewTab = document.getElementById("overviewTab");
+    const influencerTab = document.getElementById("influencerTab");
     const campaignTab = document.getElementById("campaignTab");
+
     const overviewSection = document.getElementById("overviewSection");
+    const influencerSection = document.getElementById("influencerSection");
     const campaignSection = document.getElementById("campaignSection");
 
     overviewTab.addEventListener("click", () => {
       overviewSection.classList.remove("hidden");
+      influencerSection.classList.add("hidden");
       campaignSection.classList.add("hidden");
+
       overviewTab.classList.add("text-white");
+      influencerTab.classList.remove("text-white");
       campaignTab.classList.remove("text-white");
+    });
+
+    influencerTab.addEventListener("click", () => {
+      overviewSection.classList.add("hidden");
+      influencerSection.classList.remove("hidden");
+      campaignSection.classList.add("hidden");
+
+      overviewTab.classList.remove("text-white");
+      influencerTab.classList.add("text-white");
+      campaignTab.classList.remove("text-white");
+
+      loadInfluencers();
     });
 
     campaignTab.addEventListener("click", () => {
       overviewSection.classList.add("hidden");
+      influencerSection.classList.add("hidden");
       campaignSection.classList.remove("hidden");
-      campaignTab.classList.add("text-white");
+
       overviewTab.classList.remove("text-white");
+      influencerTab.classList.remove("text-white");
+      campaignTab.classList.add("text-white");
+
       loadCampaigns(); // fetch campaigns on open
     });
 
@@ -351,56 +375,6 @@
       if (e.target === descriptionModal) closeDescriptionModal();
     });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDescriptionModal(); });
-
-    /** Fetch manager info by referral code (best-effort) **/
-    async function fetchManagerByReferral(code) {
-      if (!code || code === "N/A") {
-        setManagerUI(null);
-        return;
-      }
-
-      try {
-        // Best-effort: try a GET endpoint with query param. If your backend exposes a different API,
-        // adapt this endpoint accordingly.
-        const res = await fetch(`${API_BASE}/influencer/manager?ref=${encodeURIComponent(code)}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem(STORAGE_KEY)}` }
-        });
-
-        if (!res.ok) {
-          // no manager endpoint or not found -> fallback to N/A
-          setManagerUI(null);
-          return;
-        }
-
-        const payload = await res.json();
-        // payload may be { success:true, data: { manager_name, manager_contact } }
-        const data = payload.data ?? payload.manager ?? payload;
-        const managerName = data.manager_name ?? data.name ?? data.manager ?? null;
-        const managerContact = data.manager_contact ?? data.contact ?? data.phone ?? data.manager_phone ?? null;
-        setManagerUI({ managerName, managerContact });
-      } catch (err) {
-        console.warn("fetchManagerByReferral failed:", err);
-        setManagerUI(null);
-      }
-    }
-
-    function setManagerUI(manager) {
-      const nameEl = document.getElementById("managerName");
-      const contactEl = document.getElementById("managerContact");
-      const noteEl = document.getElementById("managerNote");
-
-      if (!manager || (!manager.managerName && !manager.managerContact)) {
-        nameEl.textContent = "N/A";
-        contactEl.textContent = "N/A";
-        noteEl.textContent = "Manager information not available for this referral code.";
-        return;
-      }
-
-      nameEl.textContent = manager.managerName ?? "—";
-      contactEl.textContent = manager.managerContact ?? "—";
-      noteEl.textContent = "Contact your manager for campaign support.";
-    }
 
     /** Load profile + summary stats **/
     async function loadProfileAndStats() {
@@ -441,17 +415,69 @@
         document.getElementById("conversions").innerText = String(conversions);
         document.getElementById("earnings").innerText = `₹${(conversions * 100).toLocaleString()}`;
 
-        // populate influencer card
-        document.getElementById("influencerName").textContent = name;
-        document.getElementById("influencerEmailSmall").textContent = email || "—";
-        document.getElementById("influencerRef").textContent = code ? code : "N/A";
-        document.getElementById("influencerPhone").textContent = phone || "—";
-
-        // fetch manager info (best-effort)
-        await fetchManagerByReferral(code);
+        // influencer card values (on overview)
+        // reuse small summary fields in overview section if needed:
+        // (we didn't add a big "influencer card" in overview; content is present in influencerSection)
 
       } catch (err) {
         console.error("Profile/Dashboard error:", err);
+      }
+    }
+
+    /** Load referred influencers **/
+    async function loadInfluencers() {
+      const token = localStorage.getItem(STORAGE_KEY);
+      if (!token) return logout();
+
+      const tbody = document.getElementById("influencerList");
+      tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="6">Loading influencers...</td></tr>`;
+
+      try {
+        const res = await fetch(`${API_BASE}/influencer/referrals`, {
+          method: "GET",
+          headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+        });
+
+        if (!res.ok) {
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="6">Unable to load influencers.</td></tr>`;
+          return;
+        }
+
+        const result = await res.json();
+        const list = result.data ?? result.referrals ?? [];
+
+        if (!Array.isArray(list) || list.length === 0) {
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="6">No influencers referred yet</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = "";
+        list.forEach(i => {
+          const tr = document.createElement("tr");
+          tr.className = "border-b border-white/5";
+
+          const name = i.name ?? i.full_name ?? i.user_name ?? "—";
+          const email = i.email ?? i.user?.email ?? "—";
+          const ref = i.referral_code ?? i.referral ?? "—";
+          const clicks = (i.clicks !== undefined && i.clicks !== null) ? i.clicks : (i.total_clicks ?? 0);
+          const conversions = (i.conversions !== undefined && i.conversions !== null) ? i.conversions : (i.total_conversions ?? 0);
+          const joined = i.created_at ? (new Date(i.created_at)).toLocaleDateString() : "—";
+
+          tr.innerHTML = `
+            <td class="px-6 py-4 font-semibold">${escapeHtml(name)}</td>
+            <td class="px-6 py-4">${escapeHtml(email)}</td>
+            <td class="px-6 py-4 font-mono">${escapeHtml(ref)}</td>
+            <td class="px-6 py-4">${Number(clicks)}</td>
+            <td class="px-6 py-4">${Number(conversions)}</td>
+            <td class="px-6 py-4">${joined}</td>
+          `;
+
+          tbody.appendChild(tr);
+        });
+
+      } catch (err) {
+        console.error("Influencer load error:", err);
+        tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="6">Error loading influencers</td></tr>`;
       }
     }
 
@@ -738,6 +764,7 @@
       loadJoinedCampaigns();
       // start on overview
       overviewSection.classList.remove("hidden");
+      influencerSection.classList.add("hidden");
       campaignSection.classList.add("hidden");
       overviewTab.classList.add("text-white");
       if (POLL_INTERVAL_MS > 0) setInterval(loadProfileAndStats, POLL_INTERVAL_MS);
