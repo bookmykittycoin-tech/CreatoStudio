@@ -129,6 +129,7 @@
               <thead>
                 <tr class="text-[10px] uppercase tracking-widest text-gray-500 border-b border-white/5">
                   <th class="px-6 py-4">Campaign Name</th>
+                  <th class="px-6 py-4">Brand</th>
                   <th class="px-6 py-4">Status</th>
                   <th class="px-6 py-4">ID (PK)</th>
                   <th class="px-6 py-4 text-right">Action</th>
@@ -137,6 +138,7 @@
               <tbody id="joinedCampaignsTbody" class="text-sm">
                 <tr class="border-b border-white/5">
                   <td class="px-6 py-4 font-semibold">Loading joined campaigns...</td>
+                  <td class="px-6 py-4 muted">—</td>
                   <td class="px-6 py-4 muted">—</td>
                   <td class="px-6 py-4 font-mono text-xs opacity-50">—</td>
                   <td class="px-6 py-4 text-right"></td>
@@ -180,12 +182,13 @@
     </main>
   </div>
 
-  <!-- Campaign Description Modal -->
+  <!-- Campaign Description Modal (shows name, brand, description) -->
   <div id="descriptionModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60">
     <div id="descriptionModalCard" class="bg-white text-black w-full max-w-lg rounded-xl shadow-xl p-6 relative mx-4">
       <button id="closeDescriptionBtn" class="absolute top-3 right-3 text-gray-500 hover:text-black text-xl">✕</button>
 
-      <h3 class="text-xl font-bold mb-3">Campaign Details</h3>
+      <h3 id="modalCampaignName" class="text-xl font-bold mb-1"></h3>
+      <p id="modalCampaignBrand" class="text-sm text-gray-600 mb-4"></p>
       <div id="campaignDescription" class="text-gray-700 leading-relaxed whitespace-pre-line max-h-[60vh] overflow-auto"></div>
     </div>
   </div>
@@ -296,10 +299,10 @@
     });
 
     /** Modal functions **/
-    function openDescriptionModal(text) {
-      const el = document.getElementById("campaignDescription");
-      // show raw text with newlines preserved
-      el.textContent = text || "No description available.";
+    function openDescriptionModal(name, brand, description) {
+      document.getElementById("modalCampaignName").textContent = name || "Untitled Campaign";
+      document.getElementById("modalCampaignBrand").textContent = brand ? `Brand: ${brand}` : "";
+      document.getElementById("campaignDescription").textContent = description || "No description available.";
       const modal = document.getElementById("descriptionModal");
       modal.classList.remove("hidden");
       modal.classList.add("flex");
@@ -429,18 +432,19 @@
           const tdAction = document.createElement("td");
           tdAction.className = "px-6 py-4 text-right space-x-2";
 
-          // View description button
-          const viewBtn = document.createElement("button");
-          viewBtn.className = "view-desc bg-blue-500 text-white px-3 py-2 rounded text-xs font-semibold mr-2";
-          viewBtn.type = "button";
-          viewBtn.textContent = "View";
-          // Store raw description safely on dataset
-          viewBtn.dataset.description = descriptionRaw;
-          viewBtn.addEventListener("click", (e) => {
-            // open modal with description
-            openDescriptionModal(e.currentTarget.dataset.description);
+          // Details (opens modal)
+          const detailsBtn = document.createElement("button");
+          detailsBtn.className = "view-desc bg-blue-500 text-white px-3 py-2 rounded text-xs font-semibold mr-2";
+          detailsBtn.type = "button";
+          detailsBtn.textContent = "Details";
+          // Store raw values safely on dataset
+          detailsBtn.dataset.name = name;
+          detailsBtn.dataset.brand = brand;
+          detailsBtn.dataset.description = descriptionRaw;
+          detailsBtn.addEventListener("click", (e) => {
+            openDescriptionModal(e.currentTarget.dataset.name, e.currentTarget.dataset.brand, e.currentTarget.dataset.description);
           });
-          tdAction.appendChild(viewBtn);
+          tdAction.appendChild(detailsBtn);
 
           if (joined) {
             const joinedBtn = document.createElement("button");
@@ -519,7 +523,7 @@
       if (!token) return logout();
 
       const tbody = document.getElementById("joinedCampaignsTbody");
-      tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">Loading joined campaigns...</td></tr>`;
+      tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Loading joined campaigns...</td></tr>`;
 
       try {
         // Step 1: fetch dashboard to get campaign_ids
@@ -529,7 +533,7 @@
         });
 
         if (!dashRes.ok) {
-          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">Unable to load joined campaigns (dashboard error).</td></tr>`;
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Unable to load joined campaigns (dashboard error).</td></tr>`;
           return;
         }
 
@@ -537,7 +541,7 @@
         const ids = dashData.campaign_ids ?? dashData.data?.campaign_ids ?? [];
 
         if (!Array.isArray(ids) || ids.length === 0) {
-          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">No joined campaigns yet</td></tr>`;
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">No joined campaigns yet</td></tr>`;
           return;
         }
 
@@ -549,7 +553,7 @@
         });
 
         if (!res.ok) {
-          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">Unable to load campaign details.</td></tr>`;
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Unable to load campaign details.</td></tr>`;
           return;
         }
 
@@ -557,7 +561,7 @@
         const list = result.data ?? [];
 
         if (!Array.isArray(list) || list.length === 0) {
-          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">No joined campaigns found.</td></tr>`;
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">No joined campaigns found.</td></tr>`;
           return;
         }
 
@@ -566,9 +570,11 @@
 
         list.forEach(c => {
           const name = c.campaign_name ?? c.name ?? "Untitled";
+          const brand = c.brand_name ?? c.organizer ?? "—";
           const status = c.status ?? "—";
           const id = String(c.id ?? c.campaign_id ?? "");
           const campaign_link = c.campaign_link || "#";
+          const descriptionRaw = c.description ?? c.campaign_description ?? "No description provided.";
 
           const tr = document.createElement("tr");
           tr.className = "border-b border-white/5";
@@ -577,6 +583,11 @@
           tdName.className = "px-6 py-4 font-semibold";
           tdName.textContent = name;
           tr.appendChild(tdName);
+
+          const tdBrand = document.createElement("td");
+          tdBrand.className = "px-6 py-4";
+          tdBrand.textContent = brand;
+          tr.appendChild(tdBrand);
 
           const tdStatus = document.createElement("td");
           tdStatus.className = "px-6 py-4";
@@ -589,31 +600,42 @@
           tr.appendChild(tdId);
 
           const tdAction = document.createElement("td");
-          tdAction.className = "px-6 py-4 text-right";
+          tdAction.className = "px-6 py-4 text-right space-x-2";
 
-          const viewBtn = document.createElement("button");
-          viewBtn.className = "view-joined bg-white text-black px-3 py-1 rounded text-xs";
-          viewBtn.type = "button";
-          viewBtn.textContent = "View";
-          // store link on dataset
-          viewBtn.dataset.link = campaign_link;
-          viewBtn.addEventListener("click", (e) => {
-            const link = e.currentTarget.dataset.link;
-            if (!link || link === "#") {
+          // Details button (opens modal with description)
+          const detailsBtn = document.createElement("button");
+          detailsBtn.className = "details-joined bg-blue-500 text-white px-3 py-1 rounded text-xs mr-2";
+          detailsBtn.type = "button";
+          detailsBtn.textContent = "Details";
+          detailsBtn.dataset.name = name;
+          detailsBtn.dataset.brand = brand;
+          detailsBtn.dataset.description = descriptionRaw;
+          detailsBtn.addEventListener("click", (e) => {
+            openDescriptionModal(e.currentTarget.dataset.name, e.currentTarget.dataset.brand, e.currentTarget.dataset.description);
+          });
+          tdAction.appendChild(detailsBtn);
+
+          // Open link button (keeps previous behavior)
+          const openBtn = document.createElement("button");
+          openBtn.className = "open-link bg-white text-black px-3 py-1 rounded text-xs";
+          openBtn.type = "button";
+          openBtn.textContent = "Open";
+          openBtn.addEventListener("click", () => {
+            if (!campaign_link || campaign_link === "#") {
               alert("Campaign link not available");
               return;
             }
-            window.location.href = link;
+            window.location.href = campaign_link;
           });
+          tdAction.appendChild(openBtn);
 
-          tdAction.appendChild(viewBtn);
           tr.appendChild(tdAction);
           tbody.appendChild(tr);
         });
 
       } catch (err) {
         console.error("joined campaigns failed", err);
-        tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="4">Error loading joined campaigns.</td></tr>`;
+        tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Error loading joined campaigns.</td></tr>`;
       }
     }
 
