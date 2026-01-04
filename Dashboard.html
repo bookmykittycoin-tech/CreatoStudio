@@ -111,14 +111,17 @@
           <div class="bg-[#111] p-6 rounded-2xl border border-white/5">
             <p class="text-gray-500 text-xs uppercase tracking-widest mb-2 font-bold">Total Earnings</p>
             <h3 id="earnings" class="text-3xl font-black">₹0</h3>
+            <p id="earningsBreakdown" class="text-xs text-gray-400 mt-1">Campaign: ₹0 — Referral: ₹0</p>
           </div>
           <div class="bg-[#111] p-6 rounded-2xl border border-white/5">
             <p class="text-gray-500 text-xs uppercase tracking-widest mb-2 font-bold">Total Clicks</p>
             <h3 id="clicks" class="text-3xl font-black">0</h3>
+            <p id="clicksBreakdown" class="text-xs text-gray-400 mt-1">Campaign: 0 — Referral: 0</p>
           </div>
           <div class="bg-[#111] p-6 rounded-2xl border border-white/5">
             <p class="text-gray-500 text-xs uppercase tracking-widest mb-2 font-bold">Conversions</p>
             <h3 id="conversions" class="text-3xl font-black">0</h3>
+            <p id="conversionsBreakdown" class="text-xs text-gray-400 mt-1">Campaign: 0 — Referral: 0</p>
           </div>
         </div>
 
@@ -393,31 +396,39 @@
           return;
         }
 
-        const data = await res.json();
+        const payload = await res.json();
+        // backend returns: { success: true, data: { ... } }
+        const d = (payload && payload.data) ? payload.data : (payload || {});
 
-        // support flexible shapes
-        const idVal = data.id ?? data.user?.id ?? null;
-        const email = data.email ?? data.user?.email ?? "";
-        const code = data.referral_code ?? data.referralCode ?? data.user?.referral_code ?? null;
-        const clicks = Number(data.clicks ?? data.total_clicks ?? 0);
-        const conversions = Number(data.conversions ?? data.total_conversions ?? 0);
+        const idVal = d.id ?? null;
+        const email = d.email ?? "";
+        const code = d.referral_code ?? null;
 
-        // additional influencer attributes (best-effort)
-        const name = data.name ?? data.user?.name ?? data.full_name ?? "—";
-        const phone = data.phone ?? data.user?.phone ?? data.mobile ?? "—";
+        const campaign_clicks = Number(d.campaign_clicks ?? 0);
+        const campaign_conversions = Number(d.campaign_conversions ?? 0);
+        const campaign_earnings = Number(d.campaign_earnings ?? 0);
+
+        const referral_clicks = Number(d.referral_clicks ?? 0);
+        const referral_conversions = Number(d.referral_conversions ?? 0);
+        const referral_earnings = Number(d.referral_earnings ?? 0);
+
+        const total_earnings = Number(d.total_earnings ?? (campaign_earnings + referral_earnings));
 
         document.getElementById("userIdBox").innerText = idVal ? String(idVal) : "--";
         document.getElementById("profileEmail").innerText = email || "—";
         document.getElementById("generatedCode").innerText = code ? escapeHtml(code) : "N/A";
         document.getElementById("referralInput").value = code ? code : "N/A";
         document.getElementById("referralLinkInput").value = code ? `${SITE_BASE}?ref=${encodeURIComponent(code)}` : "N/A";
-        document.getElementById("clicks").innerText = String(clicks);
-        document.getElementById("conversions").innerText = String(conversions);
-        document.getElementById("earnings").innerText = `₹${(conversions * 100).toLocaleString()}`;
 
-        // influencer card values (on overview)
-        // reuse small summary fields in overview section if needed:
-        // (we didn't add a big "influencer card" in overview; content is present in influencerSection)
+        // totals (display)
+        document.getElementById("clicks").innerText = String(campaign_clicks + referral_clicks);
+        document.getElementById("clicksBreakdown").innerText = `Campaign: ${campaign_clicks} — Referral: ${referral_clicks}`;
+
+        document.getElementById("conversions").innerText = String(campaign_conversions + referral_conversions);
+        document.getElementById("conversionsBreakdown").innerText = `Campaign: ${campaign_conversions} — Referral: ${referral_conversions}`;
+
+        document.getElementById("earnings").innerText = `₹${Number(total_earnings).toLocaleString()}`;
+        document.getElementById("earningsBreakdown").innerText = `Campaign: ₹${Number(campaign_earnings).toLocaleString()} — Referral: ₹${Number(referral_earnings).toLocaleString()}`;
 
       } catch (err) {
         console.error("Profile/Dashboard error:", err);
@@ -444,7 +455,7 @@
         }
 
         const result = await res.json();
-        const list = result.data ?? result.referrals ?? [];
+        const list = result.data ?? [];
 
         if (!Array.isArray(list) || list.length === 0) {
           tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="6">No influencers referred yet</td></tr>`;
@@ -456,11 +467,11 @@
           const tr = document.createElement("tr");
           tr.className = "border-b border-white/5";
 
-          const name = i.name ?? i.full_name ?? i.user_name ?? "—";
-          const email = i.email ?? i.user?.email ?? "—";
-          const ref = i.referral_code ?? i.referral ?? "—";
-          const clicks = (i.clicks !== undefined && i.clicks !== null) ? i.clicks : (i.total_clicks ?? 0);
-          const conversions = (i.conversions !== undefined && i.conversions !== null) ? i.conversions : (i.total_conversions ?? 0);
+          const name = i.name ?? "—";
+          const email = i.email ?? "—";
+          const ref = i.referral_code ?? "—";
+          const clicks = (i.campaign_clicks ?? i.clicks ?? 0) + 0;
+          const conversions = (i.campaign_conversions ?? i.conversions ?? 0) + 0;
           const joined = i.created_at ? (new Date(i.created_at)).toLocaleDateString() : "—";
 
           tr.innerHTML = `
@@ -501,19 +512,18 @@
         }
 
         const result = await res.json();
-        const campaigns = result.data ?? result.campaigns ?? [];
+        const campaigns = result.data ?? [];
 
         if (!campaigns.length) {
           tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">No campaigns available.</td></tr>`;
           return;
         }
 
-        // Clear and render using DOM APIs (safer for large/unescaped text)
         tbody.innerHTML = "";
         campaigns.forEach(c => {
           const name = c.campaign_name ?? c.name ?? "Untitled Campaign";
           const brand = c.brand_name ?? c.organizer ?? "—";
-          const status = c.status ?? "Active";
+          const status = (c.status ?? "Active");
           const payout = (c.payout !== undefined && c.payout !== null) ? `₹${Number(c.payout).toLocaleString()}` : (c.payout_text ?? "—");
           const campaignId = c.id ?? c.campaign_id ?? "";
           const joined = !!c.joined;
@@ -523,40 +533,34 @@
           const tr = document.createElement("tr");
           tr.className = "border-b border-white/5 hover:bg-white/[0.02] transition";
 
-          // TD: name
+          // TDs
           const tdName = document.createElement("td");
           tdName.className = "px-6 py-4 font-semibold";
           tdName.textContent = name;
           tr.appendChild(tdName);
 
-          // TD: brand
           const tdBrand = document.createElement("td");
           tdBrand.className = "px-6 py-4";
           tdBrand.textContent = brand;
           tr.appendChild(tdBrand);
 
-          // TD: status
           const tdStatus = document.createElement("td");
           tdStatus.className = "px-6 py-4";
           tdStatus.textContent = status;
           tr.appendChild(tdStatus);
 
-          // TD: payout
           const tdPayout = document.createElement("td");
           tdPayout.className = "px-6 py-4";
           tdPayout.textContent = payout;
           tr.appendChild(tdPayout);
 
-          // TD: actions
           const tdAction = document.createElement("td");
           tdAction.className = "px-6 py-4 text-right space-x-2";
 
-          // Details (opens modal)
           const detailsBtn = document.createElement("button");
           detailsBtn.className = "view-desc bg-blue-500 text-white px-3 py-2 rounded text-xs font-semibold mr-2";
           detailsBtn.type = "button";
           detailsBtn.textContent = "Details";
-          // Store raw values safely on dataset
           detailsBtn.dataset.name = name;
           detailsBtn.dataset.brand = brand;
           detailsBtn.dataset.description = descriptionRaw;
@@ -616,7 +620,7 @@
 
         if (res.ok && result.success) {
           showToast("Joined campaign successfully!");
-          // refresh both lists
+          // refresh lists
           await loadCampaigns();
           await loadJoinedCampaigns();
           await loadProfileAndStats();
@@ -636,7 +640,7 @@
       }
     }
 
-    /** Load Joined Campaigns **/
+    /** Load Joined Campaigns (uses /campaigns/data and filters joined) **/
     async function loadJoinedCampaigns() {
       const token = localStorage.getItem(STORAGE_KEY);
       if (!token) return logout();
@@ -645,49 +649,29 @@
       tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Loading joined campaigns...</td></tr>`;
 
       try {
-        // Step 1: fetch dashboard to get campaign_ids
-        const dashRes = await fetch(`${API_BASE}/influencer/dashboard`, {
+        const res = await fetch(`${API_BASE}/campaigns/data`, {
           method: "GET",
           headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
         });
 
-        if (!dashRes.ok) {
-          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Unable to load joined campaigns (dashboard error).</td></tr>`;
-          return;
-        }
-
-        const dashData = await dashRes.json();
-        const ids = dashData.campaign_ids ?? dashData.data?.campaign_ids ?? [];
-
-        if (!Array.isArray(ids) || ids.length === 0) {
-          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">No joined campaigns yet</td></tr>`;
-          return;
-        }
-
-        // Step 2: request campaign details for these ids
-        const res = await fetch(`${API_BASE}/campaigns/by-ids`, {
-          method: "POST",
-          headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ campaign_ids: ids })
-        });
-
         if (!res.ok) {
-          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Unable to load campaign details.</td></tr>`;
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">Unable to load joined campaigns.</td></tr>`;
           return;
         }
 
         const result = await res.json();
-        const list = result.data ?? [];
+        const campaigns = result.data ?? [];
 
-        if (!Array.isArray(list) || list.length === 0) {
-          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">No joined campaigns found.</td></tr>`;
+        const joined = campaigns.filter(c => !!c.joined);
+
+        if (!joined.length) {
+          tbody.innerHTML = `<tr class="border-b border-white/5"><td class="px-6 py-4" colspan="5">No joined campaigns yet</td></tr>`;
           return;
         }
 
-        // Render joined campaigns
         tbody.innerHTML = "";
 
-        list.forEach(c => {
+        joined.forEach(c => {
           const name = c.campaign_name ?? c.name ?? "Untitled";
           const brand = c.brand_name ?? c.organizer ?? "—";
           const status = c.status ?? "—";
@@ -721,7 +705,6 @@
           const tdAction = document.createElement("td");
           tdAction.className = "px-6 py-4 text-right space-x-2";
 
-          // Details button (opens modal with description)
           const detailsBtn = document.createElement("button");
           detailsBtn.className = "details-joined bg-blue-500 text-white px-3 py-1 rounded text-xs mr-2";
           detailsBtn.type = "button";
@@ -734,7 +717,6 @@
           });
           tdAction.appendChild(detailsBtn);
 
-          // Open link button (keeps previous behavior)
           const openBtn = document.createElement("button");
           openBtn.className = "open-link bg-white text-black px-3 py-1 rounded text-xs";
           openBtn.type = "button";
