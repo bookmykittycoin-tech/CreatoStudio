@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard - Creato Studios</title>
+  <title>Dashboard - Book My Kitty (Influencer)</title>
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -117,19 +117,21 @@
       <section id="overviewSection" class="space-y-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="bg-[#111] p-6 rounded-2xl border border-white/5">
-            <p class="text-gray-500 text-xs uppercase tracking-widest mb-2 font-bold">Total Earnings</p>
-            <h3 id="earnings" class="text-3xl font-black">₹0</h3>
-            <p id="earningsBreakdown" class="text-xs text-gray-400 mt-1">Campaign: ₹0 — Referral: ₹0</p>
+            <p class="text-gray-500 text-xs uppercase tracking-widest mb-2 font-bold">Campaign Money</p>
+            <h3 id="campaignMoney" class="text-3xl font-black">₹0</h3>
+            <p id="campaignDetails" class="text-xs text-gray-400 mt-1">Conversions: 0 — Clicks: 0</p>
           </div>
+
           <div class="bg-[#111] p-6 rounded-2xl border border-white/5">
-            <p class="text-gray-500 text-xs uppercase tracking-widest mb-2 font-bold">Total Clicks</p>
-            <h3 id="clicks" class="text-3xl font-black">0</h3>
-            <p id="clicksBreakdown" class="text-xs text-gray-400 mt-1">Campaign: 0 — Referral: 0</p>
+            <p class="text-gray-500 text-xs uppercase tracking-widest mb-2 font-bold">Referral Money</p>
+            <h3 id="referralMoney" class="text-3xl font-black">₹0</h3>
+            <p id="referralDetails" class="text-xs text-gray-400 mt-1">Referrals: 0 — Clicks: 0</p>
           </div>
+
           <div class="bg-[#111] p-6 rounded-2xl border border-white/5">
-            <p class="text-gray-500 text-xs uppercase tracking-widest mb-2 font-bold">Conversions</p>
-            <h3 id="conversions" class="text-3xl font-black">0</h3>
-            <p id="conversionsBreakdown" class="text-xs text-gray-400 mt-1">Campaign: 0 — Referral: 0</p>
+            <p class="text-gray-500 text-xs uppercase tracking-widest mb-2 font-bold">Total Money</p>
+            <h3 id="totalMoney" class="text-3xl font-black">₹0</h3>
+            <p id="totalDetails" class="text-xs text-gray-400 mt-1">Campaign + Referral</p>
           </div>
         </div>
 
@@ -240,8 +242,8 @@
   <script>
   (function () {
     const STORAGE_KEY = "Bearer";
-    const API_BASE = "https://creatostudiosbackend.vercel.app/v1"; // your API base
-    const SITE_BASE = "https://creatostudios.com/signup.html"; // signup url
+    const API_BASE = "https://creatostudiosbackend.vercel.app/v1"; // update to your API base
+    const SITE_BASE = "https://creatostudios.com/signup.html"; // signup url used for referral link
     const POLL_INTERVAL_MS = 0;
 
     /** Helpers **/
@@ -408,31 +410,38 @@
         const payload = await res.json();
         const d = (payload && payload.data) ? payload.data : (payload || {});
 
+        // Basic identity
         const idVal = d.id ?? null;
         const email = d.email ?? "";
         const code = d.referral_code ?? null;
 
-        const campaign_clicks = Number(d.campaign_clicks ?? 0);
+        // Campaign metrics (backend must return these fields)
         const campaign_conversions = Number(d.campaign_conversions ?? 0);
+        const campaign_clicks = Number(d.campaign_clicks ?? 0);
         const campaign_earnings = Number(d.campaign_earnings ?? 0);
 
-        const referral_clicks = Number(d.referral_clicks ?? 0);
+        // Referral metrics (backend must return these fields)
         const referral_conversions = Number(d.referral_conversions ?? 0);
+        const referral_clicks = Number(d.referral_clicks ?? 0);
         const referral_earnings = Number(d.referral_earnings ?? 0);
 
+        // Totals
         const total_earnings = Number(d.total_earnings ?? (campaign_earnings + referral_earnings));
+        const total_clicks = campaign_clicks + referral_clicks;
+        const total_conversions = campaign_conversions + referral_conversions;
 
-        // manager info (from backend)
+        // Manager info
         const managerName = d.manager_name ?? null;
         const managerEmail = d.manager_email ?? null;
 
+        // Fill UI
         document.getElementById("userIdBox").innerText = idVal ? String(idVal) : "--";
         document.getElementById("profileEmail").innerText = email || "—";
         document.getElementById("generatedCode").innerText = code ? escapeHtml(code) : "N/A";
         document.getElementById("referralInput").value = code ? code : "N/A";
         document.getElementById("referralLinkInput").value = code ? `${SITE_BASE}?ref=${encodeURIComponent(code)}` : "N/A";
 
-        // display manager (if available)
+        // Manager
         if (managerName) {
           document.getElementById("managerBlock").classList.remove("hidden");
           document.getElementById("managerName").innerText = managerName;
@@ -441,15 +450,15 @@
           document.getElementById("managerBlock").classList.add("hidden");
         }
 
-        // totals (display)
-        document.getElementById("clicks").innerText = String(campaign_clicks + referral_clicks);
-        document.getElementById("clicksBreakdown").innerText = `Campaign: ${campaign_clicks} — Referral: ${referral_clicks}`;
+        // Overview boxes
+        document.getElementById("campaignMoney").innerText = `₹${Number(campaign_earnings).toLocaleString()}`;
+        document.getElementById("campaignDetails").innerText = `Conversions: ${campaign_conversions} — Clicks: ${campaign_clicks}`;
 
-        document.getElementById("conversions").innerText = String(campaign_conversions + referral_conversions);
-        document.getElementById("conversionsBreakdown").innerText = `Campaign: ${campaign_conversions} — Referral: ${referral_conversions}`;
+        document.getElementById("referralMoney").innerText = `₹${Number(referral_earnings).toLocaleString()}`;
+        document.getElementById("referralDetails").innerText = `Referrals: ${referral_conversions} — Clicks: ${referral_clicks}`;
 
-        document.getElementById("earnings").innerText = `₹${Number(total_earnings).toLocaleString()}`;
-        document.getElementById("earningsBreakdown").innerText = `Campaign: ₹${Number(campaign_earnings).toLocaleString()} — Referral: ₹${Number(referral_earnings).toLocaleString()}`;
+        document.getElementById("totalMoney").innerText = `₹${Number(total_earnings).toLocaleString()}`;
+        document.getElementById("totalDetails").innerText = `Conversions: ${total_conversions} — Clicks: ${total_clicks}`;
 
       } catch (err) {
         console.error("Profile/Dashboard error:", err);
@@ -491,12 +500,12 @@
           const name = i.name ?? "—";
           const email = i.email ?? "—";
           const ref = i.referral_code ?? "—";
-          const clicks = (i.campaign_clicks ?? i.clicks ?? 0) + 0;
-          const conversions = (i.campaign_conversions ?? i.conversions ?? 0) + 0;
+          const clicks = Number(i.campaign_clicks ?? i.clicks ?? 0) + Number(i.referral_clicks ?? 0);
+          const conversions = Number(i.campaign_conversions ?? i.conversions ?? 0) + Number(i.referral_conversions ?? 0);
           const joined = i.created_at ? (new Date(i.created_at)).toLocaleDateString() : "—";
 
           const managerName = i.manager_name ?? i.manager ?? "—";
-          const managerEmail = i.manager_email ?? i.manager_email ?? "";
+          const managerEmail = i.manager_email ?? "";
 
           tr.innerHTML = `
             <td class="px-6 py-4 font-semibold">${escapeHtml(name)}</td>
