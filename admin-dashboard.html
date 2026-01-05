@@ -280,9 +280,7 @@
       let json = {};
       try { json = text ? JSON.parse(text) : {}; } catch(e) { console.warn('Invalid JSON from', url, text); throw { status: r.status, body: text }; }
       if (!r.ok) throw { status: r.status, body: json };
-      // backend sometimes returns {success:true, data:...}
       if (json && json.success === false) throw { status: r.status, body: json };
-      // return json.data if present
       return (json && 'data' in json) ? json.data : json;
     }
 
@@ -292,9 +290,9 @@
       return await fetchJson(url, { method: 'GET' });
     }
 
-    // Load influencer summary (includes manager/upline)
+    // Load influencer summary (includes manager/upline) - request large pageSize to get all
     async function loadInfluencerSummary() {
-      const url = ADMIN_BASE + '/dashboard/influencers';
+      const url = ADMIN_BASE + '/dashboard/influencers?page=1&pageSize=1000';
       return await fetchJson(url, { method: 'GET' });
     }
 
@@ -316,77 +314,20 @@
       return await fetchJson(url, { method: 'DELETE' });
     }
 
-    // Build influencer grouping from flattened rows
-    function groupRowsByInfluencer(rows) {
+    // Group flattened rows by influencer id (for campaign_breakdown)
+    function groupEarningsByInfluencer(rows) {
       const map = new Map();
-      for (const r of rows) {
-        // normalized fields
-        const infId = r.influencer_id || r.influencerId || r.id;
-        if (!infId) continue;
-        if (!map.has(infId)) {
-          map.set(infId, {
-            influencer_id: infId,
-            name: r.influencer_name || r.name || '',
-            email: r.email || '',
-            referral_code: r.referral_code || '',
-            campaign_breakdown: [],
-            campaign_earnings: 0,
-            campaign_clicks: 0,
-            campaign_conversions: 0,
-            referral_earnings: 0,
-            referral_clicks: 0,
-            referral_conversions: 0,
-            total_earnings: 0,
-            last_activity: r.last_activity || r.updated_at || r.created_at || null
-          });
-        }
-        const node = map.get(infId);
-
-        // determine whether row is campaign or referral
-        const payout = Number(r.payout_per_conversion ?? r.payout ?? 0);
-        const conversions = Number(r.conversions ?? 0);
-        const clicks = Number(r.clicks ?? 0);
-
-        if (payout > 0 && r.campaign_id) {
-          const earnings = conversions * payout;
-          node.campaign_breakdown.push({
-            campaign_id: r.campaign_id,
-            campaign_name: r.campaign_name || r.campaign || `#${r.campaign_id}`,
-            brand_name: r.brand_name || r.brand || '',
-            clicks,
-            conversions,
-            payout,
-            earnings
-          });
-          node.campaign_earnings += earnings;
-          node.campaign_clicks += clicks;
-          node.campaign_conversions += conversions;
-        } else {
-          // treat as referral/system row (payout 0 or campaign_id null)
-          const refEarnings = conversions * 50; // ₹50 per referral conversion as you requested
-          node.referral_earnings += refEarnings;
-          node.referral_clicks += clicks;
-          node.referral_conversions += conversions;
-        }
-
-        node.total_earnings = node.campaign_earnings + node.referral_earnings;
-
-        // update last activity if newer
-        const ts = r.last_activity || r.updated_at || r.created_at;
-        if (ts) {
-          const tms = new Date(ts).getTime();
-          if (!node._last_ts || tms > node._last_ts) {
-            node._last_ts = tms;
-            node.last_activity = ts;
-          }
-        }
-      }
-
-      return Array.from(map.values());
+      (rows || []).forEach(r => {
+        const id = r.influencer_id || r.influencerId || r.id;
+        if (!id) return;
+        if (!map.has(id)) map.set(id, []);
+        map.get(id).push(r);
+      });
+      return map;
     }
 
-    // Render influencers into list
-    function renderInfluencers(list, influencerSummaries = {}) {
+    // Render influencers from admin summary + attach breakdown from earningsRows
+    function renderInfluencers(list, earningsMap = new Map()) {
       influencerList.innerHTML = '';
       if (!list || list.length === 0) {
         noInfluencers.classList.remove('hidden');
@@ -401,22 +342,75 @@
 
       // compute global splits
       let gCampaign = 0, gReferral = 0;
-      list.forEach(i => { gCampaign += (i.campaign_earnings || 0); gReferral += (i.referral_earnings || 0); });
+      const enriched = list.map(s => {
+        const id = s.influencer_id || s.id;
+        // take campaign/referral earnings from summary if available
+        const campaign_earnings = Number(s.campaign?.earnings || s.campaign_earnings || 0);
+        const campaign_conversions = Number(s.campaign?.conversions || s.campaign_conversions || 0);
+        const campaign_clicks = Number(s.campaign?.clicks || s.campaign_clicks || 0);
+
+        const referral_earnings = Number(s.referral?.earnings || s.referral_earnings || 0);
+        const referral_conversions = Number(s.referral?.conversions || s.referral_conversions || 0);
+        const referral_clicks = Number(s.referral?.clicks || s.referral_clicks || 0);
+
+        // build campaign_breakdown using earningsMap rows (if any)
+        const rows = earningsMap.get(id) || [];
+        const campaign_breakdown = rows
+          .filter(r => Number(r.payout_per_conversion || r.payout || 0) > 0 && r.campaign_id)
+          .map(r => ({
+            campaign_id: r.campaign_id,
+            campaign_name: r.campaign_name || r.campaign || `#${r.campaign_id}`,
+            brand_name: r.brand_name || '',
+            clicks: Number(r.clicks || 0),
+            conversions: Number(r.conversions || 0),
+            payout: Number(r.payout_per_conversion || r.payout || 0),
+            earnings: Number(r.conversions || 0) * Number(r.payout_per_conversion || r.payout || 0)
+          }));
+
+        // If admin summary didn't provide campaign/referral earnings, compute from rows
+        const computedCampaignEarnings = campaign_breakdown.reduce((acc, x) => acc + (x.earnings || 0), 0);
+        const finalCampaignEarnings = campaign_earnings || computedCampaignEarnings;
+        const finalCampaignConversions = campaign_conversions || campaign_breakdown.reduce((acc,x)=>acc+(x.conversions||0),0);
+        const finalCampaignClicks = campaign_clicks || campaign_breakdown.reduce((acc,x)=>acc+(x.clicks||0),0);
+
+        // Referral rows: earningsMap may produce referral rows with payout_per_conversion===0, treat them as referral. But summary likely has correct referral earnings.
+        const referralRows = rows.filter(r => !r.campaign_id || Number(r.payout_per_conversion || 0) === 0);
+        const computedReferralConversions = referralRows.reduce((acc, x) => acc + (Number(x.conversions || 0)), 0);
+        const finalReferralConversions = referral_conversions || computedReferralConversions;
+        const finalReferralEarnings = referral_earnings || (finalReferralConversions * 50); // ₹50 per referral conv (business rule)
+
+        const total = finalCampaignEarnings + finalReferralEarnings;
+
+        gCampaign += finalCampaignEarnings;
+        gReferral += finalReferralEarnings;
+
+        return {
+          influencer_id: id,
+          name: s.name || s.full_name || '',
+          email: s.email || '',
+          referral_code: s.referral_code || '',
+          manager: s.manager || null,
+          campaign_breakdown,
+          campaign_earnings: finalCampaignEarnings,
+          campaign_clicks: finalCampaignClicks,
+          campaign_conversions: finalCampaignConversions,
+          referral_earnings: finalReferralEarnings,
+          referral_clicks: finalReferralRowsTotalClicks(referralRows, s),
+          referral_conversions: finalReferralConversions,
+          total_earnings: total
+        };
+      });
 
       globalTotal.innerText = toINR(gCampaign + gReferral);
       totalCampaignsEl.innerText = `Campaigns: ${document.querySelectorAll('#campaignsList li').length || 0}`;
-      totalInfEl.innerText = `Influencers: ${list.length}`;
+      totalInfEl.innerText = `Influencers: ${enriched.length}`;
       splitCampaign.innerText = toINR(gCampaign);
       splitReferral.innerText = toINR(gReferral);
 
-      // render each influencer card
-      list.forEach(inf => {
-        // attach manager details if present in influencerSummaries
-        const summary = influencerSummaries[inf.influencer_id] || null;
-        if (summary && summary.manager) {
-          inf.manager = summary.manager;
-        }
+      // sort by total earnings desc
+      enriched.sort((a,b) => (b.total_earnings - a.total_earnings));
 
+      enriched.forEach(inf => {
         const clicksTotal = (inf.campaign_clicks || 0) + (inf.referral_clicks || 0);
         const convTotal = (inf.campaign_conversions || 0) + (inf.referral_conversions || 0);
 
@@ -444,6 +438,13 @@
         const wrapper = el('div', { class: 'flex items-center justify-between' }, card, btns);
         influencerList.appendChild(wrapper);
       });
+    }
+
+    function finalReferralRowsTotalClicks(referralRows, summary) {
+      if (summary && (summary.referral?.clicks || summary.referral_clicks)) {
+        return Number(summary.referral?.clicks || summary.referral_clicks || 0);
+      }
+      return referralRows.reduce((acc,x)=>acc + (Number(x.clicks||0)), 0);
     }
 
     // Open the detailed panel for an influencer
@@ -558,40 +559,23 @@
       }
 
       try {
-        // Load both flattened rows and influencer summary (for manager data)
-        const [rows, summaries, campaigns] = await Promise.all([
-          loadEarningsRows().catch(err => { console.error('earnings rows failed', err); return []; }),
+        // Load influencer summaries (all influencers) and earnings rows (flattened)
+        const [summaries, rows, campaigns] = await Promise.all([
           loadInfluencerSummary().catch(err => { console.error('influencer summary failed', err); return []; }),
+          loadEarningsRows().catch(err => { console.error('earnings rows failed', err); return []; }),
           loadCampaignReport().catch(err => { console.error('campaign report failed', err); return []; })
         ]);
 
-        // build lookup of summary by influencer_id (for manager)
-        const summaryMap = {};
-        if (Array.isArray(summaries)) {
-          summaries.forEach(s => {
-            const id = s.influencer_id || s.id;
-            if (id) summaryMap[id] = s;
-          });
-        }
+        // build earnings map by influencer id
+        const earningsMap = groupEarningsByInfluencer(rows || []);
 
-        // Group flattened rows
-        const grouped = groupRowsByInfluencer(rows || []);
-
-        // Attach manager info from summaries (if present)
-        grouped.forEach(g => {
-          if (summaryMap[g.influencer_id]) {
-            g.manager = summaryMap[g.influencer_id].manager || null;
-            // also attach aggregated campaign_conversions / referral data if available
-            g.campaign_conversions = summaryMap[g.influencer_id].campaign?.conversions ?? g.campaign_conversions;
-            g.referral_conversions = summaryMap[g.influencer_id].referral?.conversions ?? g.referral_conversions;
-          }
-        });
-
-        // sort by total_earnings desc
-        grouped.sort((a,b) => (b.total_earnings - a.total_earnings));
-
+        // render campaigns and influencer list (attach breakdown via earningsMap)
         renderCampaigns(campaigns || []);
-        renderInfluencers(grouped, summaryMap);
+
+        // transform summaries into expected render shape and render
+        // summaries already includes aggregated campaign/referral e.g. campaign.{earnings,conversions}
+        // we'll pass summaries directly and the render will enrich with earningsMap
+        renderInfluencers(summaries || [], earningsMap);
 
       } catch (err) {
         console.error('loadAll failed', err);
