@@ -11,32 +11,32 @@
     .clickable { cursor: pointer; }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen">
+<body class="bg-black text-white min-h-screen">
 
   <div class="max-w-7xl mx-auto p-6">
     <header class="flex items-center justify-between mb-6">
       <div>
         <h1 class="text-2xl font-bold">Admin Dashboard</h1>
-        <p class="text-sm text-gray-600">Influencer earnings, campaign breakdowns & campaign management</p>
+        <p class="text-sm muted">Influencer earnings, campaign breakdowns & campaign management</p>
       </div>
 
       <div class="flex items-center gap-3">
-        <button id="refreshBtn" class="bg-blue-600 text-white px-4 py-2 rounded">Refresh</button>
-        <button id="openAddCampaign" class="bg-green-600 text-white px-4 py-2 rounded">Add Campaign</button>
-        <button id="signoutBtn" class="bg-red-500 text-white px-3 py-2 rounded">Sign out</button>
+        <button id="refreshBtn" class="bg-indigo-600 text-white px-4 py-2 rounded">Refresh</button>
+        <button id="openAddCampaign" class="bg-green-600 text-black px-4 py-2 rounded">Add Campaign</button>
+        <button id="signoutBtn" class="bg-red-600 text-white px-3 py-2 rounded">Sign out</button>
       </div>
     </header>
 
     <!-- Search & summary -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
       <input id="searchInput" type="search" placeholder="Search influencers by name / email / code"
-             class="col-span-2 p-3 border rounded shadow-sm w-full" />
+             class="col-span-2 p-3 border border-white/10 rounded shadow-sm w-full bg-[#0b0b0b] text-white" />
 
-      <div class="p-3 bg-white rounded shadow-sm flex items-center justify-between">
+      <div class="p-3 bg-[#0b0b0b] rounded shadow-sm flex items-center justify-between border border-white/5">
         <div>
-          <div class="text-xs text-gray-500">Total Platform Payout</div>
+          <div class="text-xs muted">Total Platform Payout</div>
           <div id="globalTotal" class="text-xl font-semibold mt-1">₹0</div>
-          <div class="text-xs text-gray-400 mt-1">Campaign + Referral</div>
+          <div class="text-xs muted mt-1">Campaign + Referral</div>
         </div>
         <div class="text-right muted text-sm">
           <div id="totalCampaigns">Campaigns: 0</div>
@@ -50,14 +50,14 @@
 
       <!-- Left: Influencer list -->
       <section class="lg:col-span-2">
-        <div class="bg-white rounded shadow-sm p-4">
+        <div class="bg-[#0b0b0b] rounded shadow-sm p-4 border border-white/5">
           <h2 class="text-lg font-semibold mb-3">Influencers</h2>
 
           <div id="influencerList" class="space-y-3 max-h-[60vh] overflow-auto">
             <!-- influencer cards injected here -->
           </div>
 
-          <div id="noInfluencers" class="hidden p-6 text-center text-gray-500">
+          <div id="noInfluencers" class="hidden p-6 text-center muted">
             No influencers found.
           </div>
         </div>
@@ -65,19 +65,19 @@
 
       <!-- Right: Campaigns & quick stats -->
       <aside>
-        <div class="bg-white rounded shadow-sm p-4 mb-4">
+        <div class="bg-[#0b0b0b] rounded shadow-sm p-4 mb-4 border border-white/5">
           <h3 class="font-semibold mb-3">Campaigns</h3>
           <ul id="campaignsList" class="space-y-2 max-h-56 overflow-auto">
             <!-- campaigns -->
           </ul>
         </div>
 
-        <div class="bg-white rounded shadow-sm p-4">
+        <div class="bg-[#0b0b0b] rounded shadow-sm p-4 border border-white/5">
           <h3 class="font-semibold mb-3">Quick Filters</h3>
           <div class="flex gap-2 mb-2">
-            <button id="filterAll" class="px-3 py-1 bg-gray-100 rounded">All</button>
-            <button id="filterActive" class="px-3 py-1 bg-gray-100 rounded">Active</button>
-            <button id="filterInactive" class="px-3 py-1 bg-gray-100 rounded">Inactive</button>
+            <button id="filterAll" class="px-3 py-1 bg-white/5 rounded">All</button>
+            <button id="filterActive" class="px-3 py-1 bg-white/5 rounded">Active</button>
+            <button id="filterInactive" class="px-3 py-1 bg-white/5 rounded">Inactive</button>
           </div>
           <div class="text-sm muted">Click an influencer to expand full campaign breakdown.</div>
         </div>
@@ -86,9 +86,9 @@
   </div>
 
   <!-- Influencer expanded modal / panel (hidden) -->
-  <div id="influencerPanel" class="fixed inset-0 z-50 hidden items-start justify-center p-6 bg-black/40">
-    <div class="bg-white w-full max-w-4xl rounded shadow-xl overflow-y-auto max-h-[90vh]">
-      <div class="flex items-center justify-between p-4 border-b">
+  <div id="influencerPanel" class="fixed inset-0 z-50 hidden items-start justify-center p-6 bg-black/60">
+    <div class="bg-[#0b0b0b] w-full max-w-4xl rounded shadow-xl overflow-y-auto max-h-[90vh] border border-white/5">
+      <div class="flex items-center justify-between p-4 border-b border-white/6">
         <div>
           <h3 id="panelName" class="font-bold text-lg">Influencer details</h3>
           <div id="panelSub" class="text-sm muted">email • referral code</div>
@@ -98,25 +98,25 @@
             <div class="text-xs muted">Total Earnings</div>
             <div id="panelTotal" class="text-xl font-semibold">₹0</div>
           </div>
-          <button id="closePanel" class="px-3 py-2 bg-gray-200 rounded">Close</button>
+          <button id="closePanel" class="px-3 py-2 bg-white/5 rounded text-sm">Close</button>
         </div>
       </div>
 
       <div class="p-4 space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div class="bg-gray-50 p-3 rounded">
+          <div class="bg-[#080808] p-3 rounded border border-white/5">
             <div class="text-xs muted">Campaign Earnings</div>
             <div id="panelCampaignEarnings" class="text-2xl font-bold">₹0</div>
             <div class="text-sm muted">Campaign: <span id="panelCampaignConversions">0</span> conv</div>
           </div>
 
-          <div class="bg-gray-50 p-3 rounded">
+          <div class="bg-[#080808] p-3 rounded border border-white/5">
             <div class="text-xs muted">Referral Earnings</div>
             <div id="panelReferralEarnings" class="text-2xl font-bold">₹0</div>
             <div class="text-sm muted">Referral: <span id="panelReferralConversions">0</span> conv</div>
           </div>
 
-          <div class="bg-gray-50 p-3 rounded">
+          <div class="bg-[#080808] p-3 rounded border border-white/5">
             <div class="text-xs muted">Manager / Upline</div>
             <div id="panelManager" class="text-sm font-semibold">—</div>
             <div class="text-xs muted" id="panelManagerEmail"></div>
@@ -127,7 +127,7 @@
           <h4 class="font-semibold mb-2">Campaign-wise breakdown</h4>
           <div class="overflow-x-auto">
             <table class="w-full table-fixed text-sm">
-              <thead class="bg-gray-100 text-left">
+              <thead class="bg-white/3 text-left">
                 <tr>
                   <th class="px-3 py-2 w-1/3">Campaign</th>
                   <th class="px-3 py-2 w-1/6">Clicks</th>
@@ -144,47 +144,50 @@
         </div>
 
         <div class="flex justify-end gap-2">
-          <button id="panelExportCsv" class="px-4 py-2 bg-gray-100 rounded">Export CSV</button>
+          <button id="panelExportCsv" class="px-4 py-2 bg-white/5 rounded">Export CSV</button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Add Campaign Modal -->
-  <div id="addCampaignModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-6">
-    <form id="addCampaignForm" class="bg-white w-full max-w-2xl rounded shadow-lg p-6 space-y-4">
+  <div id="addCampaignModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 p-6">
+    <form id="addCampaignForm" class="bg-[#0b0b0b] w-full max-w-2xl rounded shadow-lg p-6 space-y-4 border border-white/5">
       <div class="flex justify-between items-center">
         <h3 class="text-lg font-semibold">Add Campaign</h3>
-        <button type="button" id="closeAddCampaign" class="text-gray-500">✕</button>
+        <button type="button" id="closeAddCampaign" class="text-gray-300">✕</button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <input id="camp_name" placeholder="Campaign name" class="border p-2 rounded w-full" required />
-        <input id="camp_brand" placeholder="Brand name" class="border p-2 rounded w-full" required />
-        <input id="camp_payout" type="number" placeholder="Payout (₹ per conversion)" class="border p-2 rounded w-full" required />
-        <select id="camp_status" class="border p-2 rounded w-full">
+        <input id="camp_name" placeholder="Campaign name" class="border border-white/6 p-2 rounded w-full bg-black/80 text-white" required />
+        <input id="camp_brand" placeholder="Brand name" class="border border-white/6 p-2 rounded w-full bg-black/80 text-white" required />
+        <input id="camp_payout" type="number" placeholder="Payout (₹ per conversion)" class="border border-white/6 p-2 rounded w-full bg-black/80 text-white" required />
+        <select id="camp_status" class="border border-white/6 p-2 rounded w-full bg-black/80 text-white">
           <option value="active">active</option>
           <option value="inactive">inactive</option>
         </select>
       </div>
 
       <div>
-        <input id="camp_link" placeholder="Campaign link (optional)" class="border p-2 rounded w-full" />
+        <input id="camp_link" placeholder="Campaign link (optional)" class="border border-white/6 p-2 rounded w-full bg-black/80 text-white" />
       </div>
       <div>
-        <textarea id="camp_desc" placeholder="Short description" class="border p-2 rounded w-full" rows="4"></textarea>
+        <textarea id="camp_desc" placeholder="Short description" class="border border-white/6 p-2 rounded w-full bg-black/80 text-white" rows="4"></textarea>
       </div>
 
       <div class="flex justify-end gap-2">
-        <button type="button" id="cancelAddCampaign" class="px-4 py-2 rounded bg-gray-100">Cancel</button>
-        <button type="submit" class="px-4 py-2 rounded bg-green-600 text-white">Create Campaign</button>
+        <button type="button" id="cancelAddCampaign" class="px-4 py-2 rounded bg-white/5">Cancel</button>
+        <button type="submit" class="px-4 py-2 rounded bg-green-500 text-black">Create Campaign</button>
       </div>
     </form>
   </div>
 
   <script>
     (function () {
-      const API_BASE = '/v1'; // adjust if your API base differs
+
+      // If your backend is hosted on another origin change this to full URL like:
+      // const API_BASE = 'https://creatostudiosbackend.vercel.app/v1';
+      const API_BASE = '/v1';
       const token = () => localStorage.getItem('AdminToken') || '';
 
       function authHeaders() {
@@ -238,7 +241,7 @@
       // events: signout, refresh
       document.getElementById('signoutBtn').addEventListener('click', () => {
         localStorage.removeItem('AdminToken');
-        window.location.href = '/admin-signin.html' // change as needed
+        window.location.href = '/admin-signin.html';
       });
       document.getElementById('refreshBtn').addEventListener('click', () => {
         loadAll();
@@ -270,28 +273,99 @@
         return json;
       }
 
-      // MAIN: load influencers with campaign breakdown
+      // ---- CORE: load and group admin earnings rows ----
       async function loadInfluencers() {
         try {
-          const resp = await fetchJSON(API_BASE + '/admin/dashboard/influencers', { method: 'GET' });
-          const list = resp.data || [];
+          // The backend returns rows (flattened). We'll group by influencer_id here.
+          const resp = await fetchJSON(API_BASE + '/admin/earnings', { method: 'GET' });
+          const rows = resp.data || [];
+
+          // Group rows by influencer_id
+          const map = new Map();
+          for (const r of rows) {
+            const id = r.influencer_id || r.influencerId || r.id || r.influencer_id;
+            if (!id) continue;
+
+            if (!map.has(id)) {
+              map.set(id, {
+                influencer_id: id,
+                name: r.influencer_name || r.name || r.full_name || '',
+                email: r.email || r.influencer_email || '',
+                referral_code: r.referral_code || r.referralCode || '',
+                manager: r.manager || null, // if backend returns manager info
+                campaign_breakdown: [],
+                campaign_earnings: 0,
+                campaign_clicks: 0,
+                campaign_conversions: 0,
+                referral_earnings: 0,
+                referral_clicks: 0,
+                referral_conversions: 0,
+                total_earnings: 0,
+                last_activity: r.last_activity || r.updated_at || null
+              });
+            }
+
+            const entry = map.get(id);
+
+            // Normalize per-row campaign fields
+            const campaignId = r.campaign_id || r.campaignId || r.campaign_id;
+            const campaignName = r.campaign_name || r.campaignName || r.campaign || 'System';
+            const payout = parseFloat(r.payout_per_conversion ?? r.payout ?? r.payout_per_conversion ?? 0) || 0;
+            const conversions = Number(r.conversions ?? r.conversion ?? 0);
+            const clicks = Number(r.clicks ?? 0);
+
+            // If payout > 0 => treat as campaign earnings
+            if (payout > 0) {
+              const earnings = conversions * payout;
+              entry.campaign_breakdown.push({
+                campaign_id: campaignId,
+                campaign_name: campaignName,
+                clicks,
+                conversions,
+                payout,
+                earnings
+              });
+              entry.campaign_earnings += earnings;
+              entry.campaign_clicks += clicks;
+              entry.campaign_conversions += conversions;
+            } else {
+              // payout == 0 => treat as referral/system conversions
+              // We compute referral earnings as ₹50 per conversion (as requested)
+              const refEarn = conversions * 50;
+              entry.referral_earnings += refEarn;
+              entry.referral_clicks += clicks;
+              entry.referral_conversions += conversions;
+            }
+
+            entry.total_earnings = entry.campaign_earnings + entry.referral_earnings;
+            // update last activity if row has newer timestamp
+            if (r.last_activity || r.updated_at || r.created_at) {
+              const ts = new Date(r.last_activity || r.updated_at || r.created_at).getTime();
+              if (!entry._last_ts || ts > entry._last_ts) {
+                entry._last_ts = ts;
+                entry.last_activity = r.last_activity || r.updated_at || r.created_at;
+              }
+            }
+          }
+
+          const list = Array.from(map.values()).sort((a,b) => (b.total_earnings - a.total_earnings));
           renderInfluencers(list);
         } catch (err) {
           console.error('Load influencers error', err);
-          influencerList.innerHTML = '<div class="p-4 text-red-500">Unable to fetch influencers.</div>'
+          influencerList.innerHTML = '<div class="p-4 text-red-400">Unable to fetch influencers.</div>';
         }
       }
 
-      // load campaigns for management
+      // load campaigns for management (calls existing controller /v1/campaigns/data)
       let campaignsCache = [];
       async function loadCampaigns() {
         try {
-          const resp = await fetchJSON(API_BASE + '/admin/dashboard/campaigns', { method: 'GET' });
-          campaignsCache = resp.data || [];
+          const resp = await fetchJSON(API_BASE + '/campaigns/data', { method: 'GET' });
+          campaignsCache = resp.data || resp || [];
           renderCampaigns(campaignsCache);
         } catch (err) {
           console.error('Load campaigns error', err);
-          campaignsList.innerHTML = '<div class="p-2 text-red-500">Unable to fetch campaigns.</div>';
+          campaignsList.innerHTML = '<div class="p-2 text-red-400">Unable to fetch campaigns.</div>';
         }
       }
 
@@ -320,17 +394,13 @@
         totalInfEl.innerText = `Influencers: ${list.length}`;
 
         list.forEach(inf => {
-          // prepare display values
           const total = Number(inf.total_earnings || (Number(inf.campaign_earnings||0) + Number(inf.referral_earnings||0)));
-          const campaignE = Number(inf.campaign_earnings||0);
-          const referralE = Number(inf.referral_earnings||0);
           const clicksTotal = (inf.campaign_clicks || 0) + (inf.referral_clicks || 0);
           const convTotal = (inf.campaign_conversions || 0) + (inf.referral_conversions || 0);
 
-          // data-inf-filter used for search
-          const card = el('div', { class: 'p-3 bg-white rounded shadow-sm flex items-center justify-between gap-3', 'data-inf-filter': `${inf.name||''} ${inf.email||''} ${inf.referral_code||''}` },
+          const card = el('div', { class: 'p-3 bg-[#070707] rounded border border-white/6 flex items-center justify-between gap-3', 'data-inf-filter': `${(inf.name||'') .toLowerCase()} ${(inf.email||'') .toLowerCase()} ${(inf.referral_code||'') .toLowerCase()}` },
             el('div', { class: 'flex items-center gap-3' },
-              el('div', { class: 'w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center font-semibold' }, String(inf.influencer_id || inf.id || '').slice(-4)),
+              el('div', { class: 'w-12 h-12 rounded-full bg-indigo-900 flex items-center justify-center font-semibold' }, String(inf.influencer_id || inf.id || '').slice(-4)),
               el('div', {},
                 el('div', { class: 'font-semibold' }, inf.name || inf.email),
                 el('div', { class: 'text-xs muted' }, inf.email || '—'),
@@ -344,10 +414,9 @@
             )
           );
 
-          // expand button
           const btns = el('div', { class: 'flex items-center gap-2 ml-3' },
             el('button', { class: 'px-3 py-1 bg-indigo-600 text-white rounded text-sm clickable', onClick: () => openPanel(inf) }, 'Details'),
-            el('button', { class: 'px-3 py-1 bg-gray-100 text-sm rounded clickable', onClick: () => showPayoutHistory(inf) }, 'Payouts')
+            el('button', { class: 'px-3 py-1 bg-white/5 text-sm rounded clickable', onClick: () => showPayoutHistory(inf) }, 'Payouts')
           );
 
           const wrapper = el('div', { class: 'flex items-center justify-between' }, card, btns);
@@ -402,18 +471,18 @@
           return;
         }
         list.forEach(c => {
-          const li = el('li', { class: 'flex items-center justify-between p-2 border rounded' },
-            el('div', {}, el('div', { class: 'font-semibold' }, c.campaign_name || c.name), el('div', { class: 'text-xs muted' }, c.brand_name || c.brand || '—')),
+          const li = el('li', { class: 'flex items-center justify-between p-2 border rounded border-white/6' },
+            el('div', {}, el('div', { class: 'font-semibold' }, c.campaign_name || c.campaignName || c.name), el('div', { class: 'text-xs muted' }, c.brand_name || c.brand || '—')),
             el('div', {},
-              el('span', { class: 'text-sm muted mr-3' }, c.status || c.state || '—'),
-              el('button', { class: 'px-2 py-1 bg-red-500 text-white rounded text-sm', onClick: () => deleteCampaign(c.id) }, 'Delete')
+              el('span', { class: 'text-sm muted mr-3' }, (c.status || c.state || '—')),
+              el('button', { class: 'px-2 py-1 bg-red-600 text-white rounded text-sm', onClick: () => deleteCampaign(c.id) }, 'Delete')
             )
           );
           campaignsList.appendChild(li);
         });
       }
 
-      // create campaign (POST)
+      // create campaign (POST to /v1/campaigns/create)
       addCampaignForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         const payload = {
@@ -434,7 +503,6 @@
             const json = await res.json().catch(()=>({}));
             throw new Error(json.message || 'Create failed');
           }
-          // success -> reload campaigns & close modal
           await loadCampaigns();
           addCampaignModal.classList.add('hidden');
           addCampaignForm.reset();
@@ -444,7 +512,7 @@
         }
       });
 
-      // delete campaign (DELETE)
+      // delete campaign
       async function deleteCampaign(id) {
         if (!confirm('Delete campaign #' + id + '? This action cannot be undone.')) return;
         try {
@@ -456,7 +524,6 @@
             const json = await res.json().catch(()=>({}));
             throw new Error(json.message || 'Delete failed');
           }
-          // reload campaigns and influencers
           await loadCampaigns();
           await loadInfluencers();
         } catch (err) {
@@ -507,6 +574,7 @@
       window.adminDashboard = {
         loadAll, loadInfluencers, loadCampaigns
       };
+
     })();
   </script>
 </body>
