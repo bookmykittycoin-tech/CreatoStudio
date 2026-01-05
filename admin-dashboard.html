@@ -22,15 +22,15 @@
 
       <div class="flex items-center gap-3">
         <button id="refreshBtn" class="bg-indigo-600 text-white px-4 py-2 rounded">Refresh</button>
-        <button id="openAddCampaign" class="bg-green-600 text-black px-4 py-2 rounded">Add Campaign</button>
+        <button id="openAddCampaign" class="bg-green-500 text-black px-4 py-2 rounded">Add Campaign</button>
         <button id="signoutBtn" class="bg-red-600 text-white px-3 py-2 rounded">Sign out</button>
       </div>
     </header>
 
     <!-- Search & summary -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
       <input id="searchInput" type="search" placeholder="Search influencers by name / email / code"
-             class="col-span-2 p-3 border border-white/10 rounded shadow-sm w-full bg-[#0b0b0b] text-white" />
+             class="md:col-span-2 p-3 border border-white/10 rounded shadow-sm w-full bg-[#0b0b0b] text-white" />
 
       <div class="p-3 bg-[#0b0b0b] rounded shadow-sm flex items-center justify-between border border-white/5">
         <div>
@@ -41,6 +41,21 @@
         <div class="text-right muted text-sm">
           <div id="totalCampaigns">Campaigns: 0</div>
           <div id="totalInfluencers">Influencers: 0</div>
+        </div>
+      </div>
+
+      <!-- Quick splits -->
+      <div class="p-3 bg-[#0b0b0b] rounded shadow-sm border border-white/5">
+        <div class="text-xs muted mb-2">Breakdown</div>
+        <div class="flex gap-2">
+          <div class="flex-1 bg-[#070707] p-3 rounded text-center">
+            <div class="text-xs muted">Campaign</div>
+            <div id="splitCampaign" class="text-lg font-bold">₹0</div>
+          </div>
+          <div class="flex-1 bg-[#070707] p-3 rounded text-center">
+            <div class="text-xs muted">Referral</div>
+            <div id="splitReferral" class="text-lg font-bold">₹0</div>
+          </div>
         </div>
       </div>
     </div>
@@ -183,399 +198,435 @@
   </div>
 
   <script>
-    (function () {
+  (function () {
+    // NOTE: change API_ROOT if your backend runs on different origin
+    const API_ROOT = 'https://creatostudiosbackend.vercel.app/v1';
+    const ADMIN_BASE = API_ROOT + '/admin';
+    const tokenKey = 'AdminToken';
 
-      // If your backend is hosted on another origin change this to full URL like:
-      // const API_BASE = 'https://creatostudiosbackend.vercel.app/v1';
-      const API_BASE = 'https://creatostudiosbackend.vercel.app/v1';
-      const token = () => localStorage.getItem('AdminToken') || '';
+    function getToken() { return localStorage.getItem(tokenKey) || ''; }
+    function authHeaders() {
+      const t = getToken();
+      return t ? { 'Authorization': 'Bearer ' + t, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' };
+    }
 
-      function authHeaders() {
-        const t = token();
-        return t ? { 'Authorization': 'Bearer ' + t, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' };
-      }
-
-      // helpers
-      function toINR(n){ return '₹' + Number(n || 0).toLocaleString(); }
-      function el(tag, props = {}, ...children){
-        const node = document.createElement(tag);
-        Object.entries(props).forEach(([k,v]) => {
-          if (k === 'class') node.className = v;
-          else if (k.startsWith('on') && typeof v === 'function') node.addEventListener(k.slice(2).toLowerCase(), v);
-          else node.setAttribute(k, v);
-        });
-        children.flat().forEach(c => {
-          node.append(typeof c === 'string' ? document.createTextNode(c) : c);
-        });
-        return node;
-      }
-
-      // UI refs
-      const influencerList = document.getElementById('influencerList');
-      const noInfluencers = document.getElementById('noInfluencers');
-      const campaignsList = document.getElementById('campaignsList');
-      const globalTotal = document.getElementById('globalTotal');
-      const totalCampaignsEl = document.getElementById('totalCampaigns');
-      const totalInfEl = document.getElementById('totalInfluencers');
-
-      // panel refs
-      const influencerPanel = document.getElementById('influencerPanel');
-      const panelName = document.getElementById('panelName');
-      const panelSub = document.getElementById('panelSub');
-      const panelCampaignTable = document.getElementById('panelCampaignTable');
-      const panelTotal = document.getElementById('panelTotal');
-      const panelCampaignEarnings = document.getElementById('panelCampaignEarnings');
-      const panelReferralEarnings = document.getElementById('panelReferralEarnings');
-      const panelManager = document.getElementById('panelManager');
-      const panelManagerEmail = document.getElementById('panelManagerEmail');
-      const panelReferralConversions = document.getElementById('panelReferralConversions');
-      const panelCampaignConversions = document.getElementById('panelCampaignConversions');
-
-      // Add campaign modal
-      const addCampaignModal = document.getElementById('addCampaignModal');
-      const openAddCampaign = document.getElementById('openAddCampaign');
-      const closeAddCampaign = document.getElementById('closeAddCampaign');
-      const cancelAddCampaign = document.getElementById('cancelAddCampaign');
-      const addCampaignForm = document.getElementById('addCampaignForm');
-
-      // events: signout, refresh
-      document.getElementById('signoutBtn').addEventListener('click', () => {
-        localStorage.removeItem('AdminToken');
-        window.location.href = '/admin-signin.html';
+    function toINR(n) { return '₹' + (Number(n || 0)).toLocaleString(); }
+    function el(tag, props={}, ...children) {
+      const node = document.createElement(tag);
+      Object.entries(props).forEach(([k,v])=>{
+        if (k === 'class') node.className = v;
+        else if (k.startsWith('on') && typeof v === 'function') node.addEventListener(k.slice(2).toLowerCase(), v);
+        else node.setAttribute(k, v);
       });
-      document.getElementById('refreshBtn').addEventListener('click', () => {
-        loadAll();
+      children.flat().forEach(c => node.append(typeof c === 'string' ? document.createTextNode(c) : c));
+      return node;
+    }
+
+    // refs
+    const influencerList = document.getElementById('influencerList');
+    const noInfluencers = document.getElementById('noInfluencers');
+    const campaignsList = document.getElementById('campaignsList');
+    const globalTotal = document.getElementById('globalTotal');
+    const totalCampaignsEl = document.getElementById('totalCampaigns');
+    const totalInfEl = document.getElementById('totalInfluencers');
+    const splitCampaign = document.getElementById('splitCampaign');
+    const splitReferral = document.getElementById('splitReferral');
+
+    // panel refs
+    const influencerPanel = document.getElementById('influencerPanel');
+    const panelName = document.getElementById('panelName');
+    const panelSub = document.getElementById('panelSub');
+    const panelCampaignTable = document.getElementById('panelCampaignTable');
+    const panelTotal = document.getElementById('panelTotal');
+    const panelCampaignEarnings = document.getElementById('panelCampaignEarnings');
+    const panelReferralEarnings = document.getElementById('panelReferralEarnings');
+    const panelManager = document.getElementById('panelManager');
+    const panelManagerEmail = document.getElementById('panelManagerEmail');
+    const panelReferralConversions = document.getElementById('panelReferralConversions');
+    const panelCampaignConversions = document.getElementById('panelCampaignConversions');
+
+    // add campaign modal refs
+    const addCampaignModal = document.getElementById('addCampaignModal');
+    const openAddCampaign = document.getElementById('openAddCampaign');
+    const closeAddCampaign = document.getElementById('closeAddCampaign');
+    const cancelAddCampaign = document.getElementById('cancelAddCampaign');
+    const addCampaignForm = document.getElementById('addCampaignForm');
+
+    // events
+    document.getElementById('signoutBtn').addEventListener('click', () => {
+      localStorage.removeItem(tokenKey);
+      window.location.href = '/admin-signin.html';
+    });
+    document.getElementById('refreshBtn').addEventListener('click', () => loadAll());
+    openAddCampaign.addEventListener('click', () => addCampaignModal.classList.remove('hidden'));
+    closeAddCampaign.addEventListener('click', () => addCampaignModal.classList.add('hidden'));
+    cancelAddCampaign.addEventListener('click', (e)=>{ e.preventDefault(); addCampaignModal.classList.add('hidden'); });
+    document.getElementById('closePanel').addEventListener('click', ()=> influencerPanel.classList.add('hidden'));
+
+    // search
+    document.getElementById('searchInput').addEventListener('input', function(){
+      const q = this.value.trim().toLowerCase();
+      document.querySelectorAll('[data-inf-filter]').forEach(card=>{
+        const txt = card.getAttribute('data-inf-filter');
+        card.style.display = (!q || txt.includes(q)) ? '' : 'none';
       });
+    });
 
-      // open/close add campaign
-      openAddCampaign.addEventListener('click', () => addCampaignModal.classList.remove('hidden'));
-      closeAddCampaign.addEventListener('click', () => addCampaignModal.classList.add('hidden'));
-      cancelAddCampaign.addEventListener('click', (e) => { e.preventDefault(); addCampaignModal.classList.add('hidden'); });
+    // fetch helper
+    async function fetchJson(url, opts = {}) {
+      const headers = Object.assign({}, authHeaders(), opts.headers || {});
+      const r = await fetch(url, Object.assign({}, opts, { headers }));
+      const text = await r.text();
+      let json = {};
+      try { json = text ? JSON.parse(text) : {}; } catch(e) { console.warn('Invalid JSON from', url, text); throw { status: r.status, body: text }; }
+      if (!r.ok) throw { status: r.status, body: json };
+      // backend sometimes returns {success:true, data:...}
+      if (json && json.success === false) throw { status: r.status, body: json };
+      // return json.data if present
+      return (json && 'data' in json) ? json.data : json;
+    }
 
-      // close influencer panel
-      document.getElementById('closePanel').addEventListener('click', () => influencerPanel.classList.add('hidden'));
+    // Load flattened earning rows (one row per influencer x campaign + referral rows)
+    async function loadEarningsRows() {
+      const url = ADMIN_BASE + '/earnings';
+      return await fetchJson(url, { method: 'GET' });
+    }
 
-      // search filter
-      document.getElementById('searchInput').addEventListener('input', function(){
-        const q = this.value.trim().toLowerCase();
-        document.querySelectorAll('[data-inf-filter]').forEach(card => {
-          const txt = card.getAttribute('data-inf-filter');
-          card.style.display = (!q || txt.includes(q)) ? '' : 'none';
-        });
-      });
+    // Load influencer summary (includes manager/upline)
+    async function loadInfluencerSummary() {
+      const url = ADMIN_BASE + '/dashboard/influencers';
+      return await fetchJson(url, { method: 'GET' });
+    }
 
-      // fetch wrappers
-      async function fetchJSON(url, opts = {}) {
-        const h = Object.assign({}, authHeaders(), opts.headers || {});
-        const res = await fetch(url, Object.assign({}, opts, { headers: h }));
-        const json = await res.json().catch(()=>({}));
-        if (!res.ok) throw { status: res.status, body: json };
-        return json;
-      }
+    // Load campaign report
+    async function loadCampaignReport() {
+      const url = ADMIN_BASE + '/dashboard/campaigns';
+      return await fetchJson(url, { method: 'GET' });
+    }
 
-      // ---- CORE: load and group admin earnings rows ----
-      async function loadInfluencers() {
-        try {
-          // The backend returns rows (flattened). We'll group by influencer_id here.
-          const resp = await fetchJSON(API_BASE + '/admin/earnings', { method: 'GET' });
-          const rows = resp.data || [];
+    // Create campaign (admin creates via regular campaigns endpoint)
+    async function createCampaign(payload) {
+      const url = API_ROOT + '/campaigns/create';
+      return await fetchJson(url, { method: 'POST', body: JSON.stringify(payload) });
+    }
 
-          // Group rows by influencer_id
-          const map = new Map();
-          for (const r of rows) {
-            const id = r.influencer_id || r.influencerId || r.id || r.influencer_id;
-            if (!id) continue;
+    // Delete campaign
+    async function deleteCampaignApi(id) {
+      const url = API_ROOT + '/campaigns/' + encodeURIComponent(id);
+      return await fetchJson(url, { method: 'DELETE' });
+    }
 
-            if (!map.has(id)) {
-              map.set(id, {
-                influencer_id: id,
-                name: r.influencer_name || r.name || r.full_name || '',
-                email: r.email || r.influencer_email || '',
-                referral_code: r.referral_code || r.referralCode || '',
-                manager: r.manager || null, // if backend returns manager info
-                campaign_breakdown: [],
-                campaign_earnings: 0,
-                campaign_clicks: 0,
-                campaign_conversions: 0,
-                referral_earnings: 0,
-                referral_clicks: 0,
-                referral_conversions: 0,
-                total_earnings: 0,
-                last_activity: r.last_activity || r.updated_at || null
-              });
-            }
-
-            const entry = map.get(id);
-
-            // Normalize per-row campaign fields
-            const campaignId = r.campaign_id || r.campaignId || r.campaign_id;
-            const campaignName = r.campaign_name || r.campaignName || r.campaign || 'System';
-            const payout = parseFloat(r.payout_per_conversion ?? r.payout ?? r.payout_per_conversion ?? 0) || 0;
-            const conversions = Number(r.conversions ?? r.conversion ?? 0);
-            const clicks = Number(r.clicks ?? 0);
-
-            // If payout > 0 => treat as campaign earnings
-            if (payout > 0) {
-              const earnings = conversions * payout;
-              entry.campaign_breakdown.push({
-                campaign_id: campaignId,
-                campaign_name: campaignName,
-                clicks,
-                conversions,
-                payout,
-                earnings
-              });
-              entry.campaign_earnings += earnings;
-              entry.campaign_clicks += clicks;
-              entry.campaign_conversions += conversions;
-            } else {
-              // payout == 0 => treat as referral/system conversions
-              // We compute referral earnings as ₹50 per conversion (as requested)
-              const refEarn = conversions * 50;
-              entry.referral_earnings += refEarn;
-              entry.referral_clicks += clicks;
-              entry.referral_conversions += conversions;
-            }
-
-            entry.total_earnings = entry.campaign_earnings + entry.referral_earnings;
-            // update last activity if row has newer timestamp
-            if (r.last_activity || r.updated_at || r.created_at) {
-              const ts = new Date(r.last_activity || r.updated_at || r.created_at).getTime();
-              if (!entry._last_ts || ts > entry._last_ts) {
-                entry._last_ts = ts;
-                entry.last_activity = r.last_activity || r.updated_at || r.created_at;
-              }
-            }
-          }
-
-          const list = Array.from(map.values()).sort((a,b) => (b.total_earnings - a.total_earnings));
-          renderInfluencers(list);
-        } catch (err) {
-          console.error('Load influencers error', err);
-          influencerList.innerHTML = '<div class="p-4 text-red-400">Unable to fetch influencers.</div>';
+    // Build influencer grouping from flattened rows
+    function groupRowsByInfluencer(rows) {
+      const map = new Map();
+      for (const r of rows) {
+        // normalized fields
+        const infId = r.influencer_id || r.influencerId || r.id;
+        if (!infId) continue;
+        if (!map.has(infId)) {
+          map.set(infId, {
+            influencer_id: infId,
+            name: r.influencer_name || r.name || '',
+            email: r.email || '',
+            referral_code: r.referral_code || '',
+            campaign_breakdown: [],
+            campaign_earnings: 0,
+            campaign_clicks: 0,
+            campaign_conversions: 0,
+            referral_earnings: 0,
+            referral_clicks: 0,
+            referral_conversions: 0,
+            total_earnings: 0,
+            last_activity: r.last_activity || r.updated_at || r.created_at || null
+          });
         }
-      }
+        const node = map.get(infId);
 
-      // load campaigns for management (calls existing controller /v1/campaigns/data)
-      let campaignsCache = [];
-      async function loadCampaigns() {
-        try {
-          const resp = await fetchJSON(API_BASE + '/campaigns/data', { method: 'GET' });
-          campaignsCache = resp.data || resp || [];
-          renderCampaigns(campaignsCache);
-        } catch (err) {
-          console.error('Load campaigns error', err);
-          campaignsList.innerHTML = '<div class="p-2 text-red-400">Unable to fetch campaigns.</div>';
-        }
-      }
+        // determine whether row is campaign or referral
+        const payout = Number(r.payout_per_conversion ?? r.payout ?? 0);
+        const conversions = Number(r.conversions ?? 0);
+        const clicks = Number(r.clicks ?? 0);
 
-      // render influencers list
-      function renderInfluencers(list) {
-        influencerList.innerHTML = '';
-        if (!list || list.length === 0) {
-          noInfluencers.classList.remove('hidden');
-          influencerList.innerHTML = '';
-          globalTotal.innerText = '₹0';
-          totalCampaignsEl.innerText = 'Campaigns: 0';
-          totalInfEl.innerText = 'Influencers: 0';
-          return;
-        }
-        noInfluencers.classList.add('hidden');
-
-        // global sums
-        let globalCampaign = 0, globalReferral = 0;
-        list.forEach(inf => {
-          globalCampaign += Number(inf.campaign_earnings || 0);
-          globalReferral += Number(inf.referral_earnings || 0);
-        });
-
-        globalTotal.innerText = toINR(globalCampaign + globalReferral);
-        totalCampaignsEl.innerText = `Campaigns: ${campaignsCache.length || 0}`;
-        totalInfEl.innerText = `Influencers: ${list.length}`;
-
-        list.forEach(inf => {
-          const total = Number(inf.total_earnings || (Number(inf.campaign_earnings||0) + Number(inf.referral_earnings||0)));
-          const clicksTotal = (inf.campaign_clicks || 0) + (inf.referral_clicks || 0);
-          const convTotal = (inf.campaign_conversions || 0) + (inf.referral_conversions || 0);
-
-          const card = el('div', { class: 'p-3 bg-[#070707] rounded border border-white/6 flex items-center justify-between gap-3', 'data-inf-filter': `${(inf.name||'') .toLowerCase()} ${(inf.email||'') .toLowerCase()} ${(inf.referral_code||'') .toLowerCase()}` },
-            el('div', { class: 'flex items-center gap-3' },
-              el('div', { class: 'w-12 h-12 rounded-full bg-indigo-900 flex items-center justify-center font-semibold' }, String(inf.influencer_id || inf.id || '').slice(-4)),
-              el('div', {},
-                el('div', { class: 'font-semibold' }, inf.name || inf.email),
-                el('div', { class: 'text-xs muted' }, inf.email || '—'),
-                el('div', { class: 'text-xs muted' }, 'Code: ' + (inf.referral_code || '—'))
-              )
-            ),
-            el('div', { class: 'text-right space-y-1' },
-              el('div', { class: 'text-sm muted' }, `Clicks: ${clicksTotal}`),
-              el('div', { class: 'text-sm muted' }, `Conversions: ${convTotal}`),
-              el('div', { class: 'text-lg font-semibold' }, toINR(total))
-            )
-          );
-
-          const btns = el('div', { class: 'flex items-center gap-2 ml-3' },
-            el('button', { class: 'px-3 py-1 bg-indigo-600 text-white rounded text-sm clickable', onClick: () => openPanel(inf) }, 'Details'),
-            el('button', { class: 'px-3 py-1 bg-white/5 text-sm rounded clickable', onClick: () => showPayoutHistory(inf) }, 'Payouts')
-          );
-
-          const wrapper = el('div', { class: 'flex items-center justify-between' }, card, btns);
-          influencerList.appendChild(wrapper);
-        });
-      }
-
-      // open influencer detail panel
-      function openPanel(inf) {
-        panelName.innerText = `${inf.name || inf.email} — #${inf.influencer_id || inf.id || ''}`;
-        panelSub.innerText = `${inf.email || '—' } • Code: ${inf.referral_code || '—'}`;
-        panelTotal.innerText = toINR(inf.total_earnings || (Number(inf.campaign_earnings||0)+Number(inf.referral_earnings||0)));
-        panelCampaignEarnings.innerText = toINR(inf.campaign_earnings || 0);
-        panelReferralEarnings.innerText = toINR(inf.referral_earnings || 0);
-        panelReferralConversions.innerText = String(inf.referral_conversions || 0);
-        panelCampaignConversions.innerText = String(inf.campaign_conversions || 0);
-
-        panelManager.innerText = inf.manager && inf.manager.name ? inf.manager.name : '—';
-        panelManagerEmail.innerText = inf.manager && inf.manager.email ? inf.manager.email : '';
-
-        // campaigns table
-        panelCampaignTable.innerHTML = '';
-        const breakdown = Array.isArray(inf.campaign_breakdown) ? inf.campaign_breakdown : [];
-        if (breakdown.length === 0) {
-          panelCampaignTable.innerHTML = '<tr><td class="p-3" colspan="5">No campaign data</td></tr>';
+        if (payout > 0 && r.campaign_id) {
+          const earnings = conversions * payout;
+          node.campaign_breakdown.push({
+            campaign_id: r.campaign_id,
+            campaign_name: r.campaign_name || r.campaign || `#${r.campaign_id}`,
+            brand_name: r.brand_name || r.brand || '',
+            clicks,
+            conversions,
+            payout,
+            earnings
+          });
+          node.campaign_earnings += earnings;
+          node.campaign_clicks += clicks;
+          node.campaign_conversions += conversions;
         } else {
-          breakdown.forEach(row => {
-            const tr = el('tr', {},
-              el('td', { class: 'px-3 py-2' }, row.campaign_name || `#${row.campaign_id}`),
-              el('td', { class: 'px-3 py-2 text-right' }, String(row.clicks || 0)),
-              el('td', { class: 'px-3 py-2 text-right' }, String(row.conversions || 0)),
-              el('td', { class: 'px-3 py-2 text-right' }, toINR(row.payout || 0)),
-              el('td', { class: 'px-3 py-2 text-right' }, toINR(row.earnings || (Number(row.conversions||0) * Number(row.payout||0))))
-            );
-            panelCampaignTable.appendChild(tr);
-          });
+          // treat as referral/system row (payout 0 or campaign_id null)
+          const refEarnings = conversions * 50; // ₹50 per referral conversion as you requested
+          node.referral_earnings += refEarnings;
+          node.referral_clicks += clicks;
+          node.referral_conversions += conversions;
         }
 
-        influencerPanel.classList.remove('hidden');
-      }
+        node.total_earnings = node.campaign_earnings + node.referral_earnings;
 
-      // show payout history placeholder (extend later)
-      function showPayoutHistory(inf) {
-        alert('Payout history feature coming soon for influencer: ' + (inf.email || inf.name));
-      }
-
-      // render campaigns list
-      function renderCampaigns(list) {
-        campaignsList.innerHTML = '';
-        if (!Array.isArray(list) || list.length === 0) {
-          campaignsList.innerHTML = '<li class="p-2 text-sm muted">No campaigns</li>';
-          return;
+        // update last activity if newer
+        const ts = r.last_activity || r.updated_at || r.created_at;
+        if (ts) {
+          const tms = new Date(ts).getTime();
+          if (!node._last_ts || tms > node._last_ts) {
+            node._last_ts = tms;
+            node.last_activity = ts;
+          }
         }
-        list.forEach(c => {
-          const li = el('li', { class: 'flex items-center justify-between p-2 border rounded border-white/6' },
-            el('div', {}, el('div', { class: 'font-semibold' }, c.campaign_name || c.campaignName || c.name), el('div', { class: 'text-xs muted' }, c.brand_name || c.brand || '—')),
+      }
+
+      return Array.from(map.values());
+    }
+
+    // Render influencers into list
+    function renderInfluencers(list, influencerSummaries = {}) {
+      influencerList.innerHTML = '';
+      if (!list || list.length === 0) {
+        noInfluencers.classList.remove('hidden');
+        globalTotal.innerText = '₹0';
+        totalCampaignsEl.innerText = 'Campaigns: 0';
+        totalInfEl.innerText = 'Influencers: 0';
+        splitCampaign.innerText = '₹0';
+        splitReferral.innerText = '₹0';
+        return;
+      }
+      noInfluencers.classList.add('hidden');
+
+      // compute global splits
+      let gCampaign = 0, gReferral = 0;
+      list.forEach(i => { gCampaign += (i.campaign_earnings || 0); gReferral += (i.referral_earnings || 0); });
+
+      globalTotal.innerText = toINR(gCampaign + gReferral);
+      totalCampaignsEl.innerText = `Campaigns: ${document.querySelectorAll('#campaignsList li').length || 0}`;
+      totalInfEl.innerText = `Influencers: ${list.length}`;
+      splitCampaign.innerText = toINR(gCampaign);
+      splitReferral.innerText = toINR(gReferral);
+
+      // render each influencer card
+      list.forEach(inf => {
+        // attach manager details if present in influencerSummaries
+        const summary = influencerSummaries[inf.influencer_id] || null;
+        if (summary && summary.manager) {
+          inf.manager = summary.manager;
+        }
+
+        const clicksTotal = (inf.campaign_clicks || 0) + (inf.referral_clicks || 0);
+        const convTotal = (inf.campaign_conversions || 0) + (inf.referral_conversions || 0);
+
+        const card = el('div', { class: 'p-3 bg-[#070707] rounded border border-white/6 flex items-center justify-between gap-3', 'data-inf-filter': `${(inf.name||'').toLowerCase()} ${(inf.email||'').toLowerCase()} ${(inf.referral_code||'').toLowerCase()}` },
+          el('div', { class: 'flex items-center gap-3' },
+            el('div', { class: 'w-12 h-12 rounded-full bg-indigo-900 flex items-center justify-center font-semibold' }, String(inf.influencer_id || '').slice(-4)),
             el('div', {},
-              el('span', { class: 'text-sm muted mr-3' }, (c.status || c.state || '—')),
-              el('button', { class: 'px-2 py-1 bg-red-600 text-white rounded text-sm', onClick: () => deleteCampaign(c.id) }, 'Delete')
+              el('div', { class: 'font-semibold' }, inf.name || inf.email),
+              el('div', { class: 'text-xs muted' }, inf.email || '—'),
+              el('div', { class: 'text-xs muted' }, 'Code: ' + (inf.referral_code || '—'))
             )
+          ),
+          el('div', { class: 'text-right space-y-1' },
+            el('div', { class: 'text-sm muted' }, `Clicks: ${clicksTotal}`),
+            el('div', { class: 'text-sm muted' }, `Conversions: ${convTotal}`),
+            el('div', { class: 'text-lg font-semibold' }, toINR(inf.total_earnings || 0))
+          )
+        );
+
+        const btns = el('div', { class: 'flex items-center gap-2 ml-3' },
+          el('button', { class: 'px-3 py-1 bg-indigo-600 text-white rounded text-sm clickable', onClick: ()=> openPanel(inf) }, 'Details'),
+          el('button', { class: 'px-3 py-1 bg-white/5 text-sm rounded clickable', onClick: ()=> showPayoutHistory(inf) }, 'Payouts')
+        );
+
+        const wrapper = el('div', { class: 'flex items-center justify-between' }, card, btns);
+        influencerList.appendChild(wrapper);
+      });
+    }
+
+    // Open the detailed panel for an influencer
+    function openPanel(inf) {
+      panelName.innerText = `${inf.name || inf.email} — #${inf.influencer_id || ''}`;
+      panelSub.innerText = `${inf.email || '—'} • Code: ${inf.referral_code || '—'}`;
+      panelTotal.innerText = toINR(inf.total_earnings || 0);
+      panelCampaignEarnings.innerText = toINR(inf.campaign_earnings || 0);
+      panelReferralEarnings.innerText = toINR(inf.referral_earnings || 0);
+      panelReferralConversions.innerText = String(inf.referral_conversions || 0);
+      panelCampaignConversions.innerText = String(inf.campaign_conversions || 0);
+
+      panelManager.innerText = inf.manager && inf.manager.name ? inf.manager.name : '—';
+      panelManagerEmail.innerText = inf.manager && inf.manager.email ? inf.manager.email : '';
+
+      // populate campaign table
+      panelCampaignTable.innerHTML = '';
+      const breakdown = Array.isArray(inf.campaign_breakdown) ? inf.campaign_breakdown : [];
+      if (breakdown.length === 0) {
+        panelCampaignTable.innerHTML = '<tr><td class="p-3" colspan="5">No campaign data</td></tr>';
+      } else {
+        for (const row of breakdown) {
+          const tr = el('tr', {},
+            el('td', { class: 'px-3 py-2' }, row.campaign_name || `#${row.campaign_id}`),
+            el('td', { class: 'px-3 py-2 text-right' }, String(row.clicks || 0)),
+            el('td', { class: 'px-3 py-2 text-right' }, String(row.conversions || 0)),
+            el('td', { class: 'px-3 py-2 text-right' }, toINR(row.payout || 0)),
+            el('td', { class: 'px-3 py-2 text-right' }, toINR(row.earnings || 0))
           );
-          campaignsList.appendChild(li);
-        });
+          panelCampaignTable.appendChild(tr);
+        }
       }
 
-      // create campaign (POST to /v1/campaigns/create)
-      addCampaignForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        const payload = {
-          campaign_name: document.getElementById('camp_name').value.trim(),
-          brand_name: document.getElementById('camp_brand').value.trim(),
-          payout: Number(document.getElementById('camp_payout').value) || 0,
-          campaign_link: document.getElementById('camp_link').value.trim(),
-          description: document.getElementById('camp_desc').value.trim(),
-          status: document.getElementById('camp_status').value
-        };
-        try {
-          const res = await fetch(API_BASE + '/campaigns/create', {
-            method: 'POST',
-            headers: authHeaders(),
-            body: JSON.stringify(payload)
-          });
-          if (!res.ok) {
-            const json = await res.json().catch(()=>({}));
-            throw new Error(json.message || 'Create failed');
-          }
-          await loadCampaigns();
-          addCampaignModal.classList.add('hidden');
-          addCampaignForm.reset();
-        } catch (err) {
-          console.error('Create campaign error', err);
-          alert('Failed to create campaign: ' + (err.message || 'unknown'));
-        }
+      influencerPanel.classList.remove('hidden');
+    }
+
+    function showPayoutHistory(inf) {
+      alert('Payout history coming soon for: ' + (inf.email || inf.name));
+    }
+
+    // Render campaigns
+    function renderCampaigns(list) {
+      campaignsList.innerHTML = '';
+      if (!Array.isArray(list) || list.length === 0) {
+        campaignsList.innerHTML = '<li class="p-2 text-sm muted">No campaigns</li>';
+        return;
+      }
+      list.forEach(c => {
+        const li = el('li', { class: 'flex items-center justify-between p-2 border rounded border-white/6' },
+          el('div', {}, el('div', { class: 'font-semibold' }, c.campaign_name || c.campaignName || c.name), el('div', { class: 'text-xs muted' }, c.brand_name || c.brand || '—')),
+          el('div', {},
+            el('span', { class: 'text-sm muted mr-3' }, (c.status || c.state || '—')),
+            el('button', { class: 'px-2 py-1 bg-red-600 text-white rounded text-sm', onClick: () => confirmAndDeleteCampaign(c.id) }, 'Delete')
+          )
+        );
+        campaignsList.appendChild(li);
       });
+    }
 
-      // delete campaign
-      async function deleteCampaign(id) {
-        if (!confirm('Delete campaign #' + id + '? This action cannot be undone.')) return;
-        try {
-          const res = await fetch(API_BASE + '/campaigns/' + id, {
-            method: 'DELETE',
-            headers: authHeaders()
-          });
-          if (!res.ok) {
-            const json = await res.json().catch(()=>({}));
-            throw new Error(json.message || 'Delete failed');
-          }
-          await loadCampaigns();
-          await loadInfluencers();
-        } catch (err) {
-          console.error('Delete campaign error', err);
-          alert('Failed to delete campaign: ' + (err.message || 'unknown'));
-        }
+    async function confirmAndDeleteCampaign(id) {
+      if (!confirm('Delete campaign #' + id + '?')) return;
+      try {
+        await deleteCampaignApi(id);
+        await loadCampaigns(); // refresh campaigns
+        await loadAll(); // refresh influencers/earnings
+      } catch (err) {
+        console.error('Delete campaign failed', err);
+        alert('Failed to delete campaign');
       }
+    }
 
-      // initial load helper
-      async function loadAll(){
-        await Promise.all([ loadCampaigns(), loadInfluencers() ]);
-      }
-
-      // on mount
-      (async function init() {
-        try {
-          if (!token()) {
-            alert('No admin token found. Redirecting to signin.');
-            window.location.href = '/admin-signin.html';
-            return;
-          }
-          await loadAll();
-        } catch (e) {
-          console.error('Init error', e);
-        }
-      })();
-
-      // export CSV for influencer detail
-      document.getElementById('panelExportCsv').addEventListener('click', () => {
-        const rows = [];
-        const header = ['Campaign', 'Clicks', 'Conversions', 'Payout', 'Earnings'];
-        rows.push(header.join(','));
-        Array.from(panelCampaignTable.querySelectorAll('tr')).forEach(tr => {
-          const cols = Array.from(tr.querySelectorAll('td')).map(td => td.textContent.replace(/,/g, ''));
-          if (cols.length) rows.push(cols.join(','));
-        });
-        const csv = rows.join('\n');
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = (panelName.textContent.replace(/\s+/g,'_') || 'influencer') + '_campaigns.csv';
-        a.click();
-        URL.revokeObjectURL(url);
-      });
-
-      // Expose for debugging
-      window.adminDashboard = {
-        loadAll, loadInfluencers, loadCampaigns
+    // Create campaign
+    addCampaignForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        campaign_name: document.getElementById('camp_name').value.trim(),
+        brand_name: document.getElementById('camp_brand').value.trim(),
+        payout: Number(document.getElementById('camp_payout').value) || 0,
+        campaign_link: document.getElementById('camp_link').value.trim(),
+        description: document.getElementById('camp_desc').value.trim(),
+        status: document.getElementById('camp_status').value
       };
+      try {
+        await createCampaign(payload);
+        addCampaignModal.classList.add('hidden');
+        addCampaignForm.reset();
+        await loadCampaigns();
+        await loadAll();
+      } catch (err) {
+        console.error('Create campaign failed', err);
+        alert('Failed to create campaign');
+      }
+    });
 
+    // load campaigns
+    async function loadCampaigns() {
+      try {
+        const list = await loadCampaignReport();
+        renderCampaigns(list || []);
+      } catch (err) {
+        console.error('Load campaigns failed', err);
+        campaignsList.innerHTML = '<li class="p-2 text-sm muted">Unable to load campaigns</li>';
+      }
+    }
+
+    // load everything and combine data
+    async function loadAll() {
+      if (!getToken()) {
+        alert('No admin token found - please sign in.');
+        window.location.href = '/admin-signin.html';
+        return;
+      }
+
+      try {
+        // Load both flattened rows and influencer summary (for manager data)
+        const [rows, summaries, campaigns] = await Promise.all([
+          loadEarningsRows().catch(err => { console.error('earnings rows failed', err); return []; }),
+          loadInfluencerSummary().catch(err => { console.error('influencer summary failed', err); return []; }),
+          loadCampaignReport().catch(err => { console.error('campaign report failed', err); return []; })
+        ]);
+
+        // build lookup of summary by influencer_id (for manager)
+        const summaryMap = {};
+        if (Array.isArray(summaries)) {
+          summaries.forEach(s => {
+            const id = s.influencer_id || s.id;
+            if (id) summaryMap[id] = s;
+          });
+        }
+
+        // Group flattened rows
+        const grouped = groupRowsByInfluencer(rows || []);
+
+        // Attach manager info from summaries (if present)
+        grouped.forEach(g => {
+          if (summaryMap[g.influencer_id]) {
+            g.manager = summaryMap[g.influencer_id].manager || null;
+            // also attach aggregated campaign_conversions / referral data if available
+            g.campaign_conversions = summaryMap[g.influencer_id].campaign?.conversions ?? g.campaign_conversions;
+            g.referral_conversions = summaryMap[g.influencer_id].referral?.conversions ?? g.referral_conversions;
+          }
+        });
+
+        // sort by total_earnings desc
+        grouped.sort((a,b) => (b.total_earnings - a.total_earnings));
+
+        renderCampaigns(campaigns || []);
+        renderInfluencers(grouped, summaryMap);
+
+      } catch (err) {
+        console.error('loadAll failed', err);
+      }
+    }
+
+    // CSV export
+    document.getElementById('panelExportCsv').addEventListener('click', () => {
+      const rows = [];
+      const header = ['Campaign', 'Clicks', 'Conversions', 'Payout', 'Earnings'];
+      rows.push(header.join(','));
+      Array.from(panelCampaignTable.querySelectorAll('tr')).forEach(tr => {
+        const cols = Array.from(tr.querySelectorAll('td')).map(td => td.textContent.replace(/,/g, ''));
+        if (cols.length) rows.push(cols.join(','));
+      });
+      const csv = rows.join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = (panelName.textContent.replace(/\s+/g,'_') || 'influencer') + '_campaigns.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // init
+    (function init() {
+      loadAll();
+      // optional: refresh every 60s
+      // setInterval(loadAll, 60000);
+      // Expose for debugging
+      window.adminDashboard = { loadAll };
     })();
+
+  })();
   </script>
 </body>
 </html>
