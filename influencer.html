@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Creato Studios — Influencer Partner</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== VARIABLES & RESET ===== */
+    :root{
+      --bg:#0b0b0f;
+      --card:#ffffff;
+      --muted:#8b8fa0;
+      --accent:#7c3aed; /* purple */
+      --accent-2:#ff5252; /* call to action */
+      --glass: rgba(255,255,255,0.06);
+      --radius:14px;
+      --max-width:1200px;
+      --header-height:76px;
+      --container-padding:24px;
+      --text: #0b0b0f;
+    }
+
+    /* light reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background:var(--bg);
+      color: #ffffff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      padding-top:calc(var(--header-height) + 12px); /* space for fixed header */
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    /* ===== LAYOUT / CONTAINERS ===== */
+    .container{max-width:var(--max-width);margin:0 auto;padding:0 var(--container-padding)}
+    .card{background:var(--card);color:var(--text);border-radius:24px;padding:36px;box-shadow:0 18px 50px rgba(2,6,23,0.45)}
+
+    /* ===== HEADER ===== */
+    header{
+      position:fixed;inset:0 0 auto 0;height:var(--header-height);display:flex;align-items:center;justify-content:space-between;padding:0 var(--container-padding);z-index:1200;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));backdrop-filter:blur(8px);
+    }
+
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo img{height:52px;display:block}
+
+    nav{display:flex;align-items:center;gap:28px;font-weight:600}
+    nav a{color:var(--muted);padding:8px 6px;border-radius:8px}
+    nav a:hover, nav a:focus{color:#fff;outline:none}
+    nav a.active{color:#000;border-bottom:2px solid #fff;padding-bottom:6px}
+
+    /* partner dropdown uses details for accessibility */
+    .partner{position:relative}
+    details{position:relative}
+    summary{list-style:none;cursor:pointer;color:var(--muted);padding:8px;border-radius:8px}
+    summary::-webkit-details-marker{display:none}
+    details[open] summary{color:#fff}
+
+    .dropdown{
+      position:absolute;right:0;top:calc(100% + 8px);min-width:220px;background:var(--card);color:var(--text);border-radius:12px;box-shadow:0 18px 40px rgba(2,6,23,0.12);overflow:hidden;padding:8px;transform-origin:top right;z-index:60
+    }
+    .dropdown a{display:block;padding:10px 14px;border-radius:10px;color:var(--text);font-weight:600}
+    .dropdown a:hover{background:#f6f7fb}
+
+    .header-actions{display:flex;gap:14px;align-items:center}
+    .btn-ghost{color:#fff;padding:8px 12px;font-weight:700}
+    .btn-primary{background:var(--card);color:var(--text);padding:10px 18px;border-radius:999px;font-weight:800}
+
+    /* mobile nav toggle */
+    .mobile-toggle{display:none}
+
+    /* ===== HERO ===== */
+    .hero{padding:84px 0 60px;background:linear-gradient(135deg,#2e1550 0%,#401793 100%)}
+    .hero-inner{display:flex;align-items:center;gap:48px}
+    .hero-left{flex:1;max-width:640px}
+    .eyebrow{display:inline-block;background:rgba(255,255,255,0.08);padding:8px 12px;border-radius:999px;font-weight:700;font-size:13px;margin-bottom:18px}
+
+    h1{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,46px);line-height:1.05;font-weight:700;color:#fff;margin-bottom:18px}
+    .lead{font-size:clamp(14px,1.6vw,18px);color:rgba(255,255,255,0.92);margin-bottom:18px}
+
+    .cta-row{display:flex;gap:12px;align-items:center;margin-top:6px}
+    .cta{background:var(--accent-2);border:0;padding:12px 20px;border-radius:12px;color:#fff;font-weight:700;cursor:pointer}
+    .secondary-cta{background:transparent;border:1px solid rgba(255,255,255,0.12);padding:10px 16px;border-radius:10px;color:#fff;font-weight:700}
+
+    .hero-right{flex:0 0 260px}
+    .hero-right img{width:100%;height:auto;border-radius:16px;box-shadow:0 30px 60px rgba(2,6,23,0.6);display:block}
+
+    /* ===== INFLUENCER FORM ===== */
+    section.form-section{padding:48px 0;background:#f5f7fb;color:var(--text)}
+    .form-card{padding:24px;border-radius:16px;max-width:760px;margin:0 auto}
+    .form-title{font-size:22px;font-weight:800;margin-bottom:4px}
+    .form-sub{color:var(--muted);margin-bottom:14px;font-size:14px}
+
+    form .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    form .full{grid-column:1/-1}
+
+    label{display:block;font-weight:600;margin-bottom:6px;font-size:13px}
+    input[type="text"],input[type="email"],input[type="tel"],input[type="number"],select,textarea,input[type="file"]{
+      width:100%;padding:12px 14px;border-radius:12px;border:1px solid #e6e9f0;background:#fff;font-size:14px;color:var(--text);
+      transition:box-shadow .18s ease,border-color .18s ease;
+      height:40px;line-height:1.2
+    }
+    input:focus,select:focus,textarea:focus{outline:none;box-shadow:0 8px 24px rgba(124,58,237,0.08);border-color:var(--accent)}
+
+    .checkbox-row{display:flex;flex-wrap:wrap;gap:8px}
+    .checkbox-row label{display:flex;align-items:center;gap:6px;font-weight:500;background:#fff;padding:8px 10px;border-radius:10px;border:1px solid #eef2ff;font-size:13px}
+
+    .submit-btn{width:100%;padding:12px;border-radius:12px;background:var(--accent);color:#fff;border:0;font-weight:700;font-size:15px}
+    .submit-btn:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(124,58,237,0.16)}
+
+    /* small helper */
+    .muted{color:var(--muted);font-size:13px}
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width:980px){
+      .hero-inner{flex-direction:column-reverse;text-align:center}
+      .hero-right{width:80%}
+      form .grid{grid-template-columns:1fr}
+      nav{display:none}
+      .mobile-toggle{display:block}
+      .header-actions{gap:10px}
+      .btn-primary{padding:8px 12px}
+    }
+
+    @media (max-width:520px){
+      h1{font-size:28px}
+      .hero-right{width:100%}
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="image/image.png" alt="Creato Studios logo">
+    </div>
+
+    <nav aria-label="Main navigation">
+      <a href="./" class="">Home</a>
+      <a href="about.html">About</a>
+
+      <div class="partner">
+        <details>
+          <summary>Become a Partner ▾</summary>
+          <div class="dropdown" role="menu" aria-label="Partner options">
+            <a role="menuitem" href="#">Brand</a>
+            <a role="menuitem" href="#">Agency</a>
+            <a role="menuitem" class="active" href="influencer.html">Influencer</a>
+            <a role="menuitem" href="/signup.html">Join Us</a>
+          </div>
+        </details>
+      </div>
+
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="btn-ghost" href="signin.html">Sign In</a>
+      <a class="btn-primary" href="signup.html">Collab Now »</a>
+      <button class="mobile-toggle" aria-label="Open menu" onclick="document.body.classList.toggle('show-menu')">☰</button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-left">
+        <span class="eyebrow">For Creators</span>
+        <h1>Turn your influence into meaningful opportunity</h1>
+        <p class="lead">You’ve built a community — now turn your content into campaigns that align with your voice, values and long-term goals. We connect creators with brands for paid campaigns, ambassadorships and long-term partnerships.</p>
+
+        <div class="cta-row">
+          <a class="cta" href="#influencer-form">Collab Now »</a>
+          <a class="secondary-cta" href="#">How it works</a>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <img src="image/influencer.png" alt="Creator at work">
+      </div>
+    </div>
+  </section>
+
+  <!-- Influencer Form -->
+  <section id="influencer-form" class="form-section">
+    <div class="container">
+
+      <div class="card form-card">
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:22px">
+          <div class="form-title">Influencer Registration</div>
+          <div class="form-sub">Join Creato Studios — collaborate with brands that match your voice and grow sustainably.</div>
+        </div>
+
+        <form novalidate>
+
+          <div class="grid">
+            <div>
+              <label for="name">Full name *</label>
+              <input id="name" name="name" type="text" placeholder="Your full name" required>
+            </div>
+
+            <div>
+              <label for="email">Email address *</label>
+              <input id="email" name="email" type="email" placeholder="you@example.com" required>
+            </div>
+
+            <div>
+              <label for="gender">Gender *</label>
+              <select id="gender" name="gender" required>
+                <option value="">Select</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+                <option>Prefer not to say</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="location">Location *</label>
+              <input id="location" name="location" type="text" placeholder="City, State" required>
+            </div>
+
+            <div>
+              <label for="pin">Pin code</label>
+              <input id="pin" name="pin" type="text" inputmode="numeric" pattern="[0-9]{4,6}" placeholder="e.g. 560001">
+            </div>
+
+            <div>
+              <label for="phone">Contact number *</label>
+              <input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+91 98765 43210" required>
+            </div>
+
+            <div class="full">
+              <label for="image">Upload your image *</label>
+              <input id="image" name="image" type="file" accept="image/*" required>
+            </div>
+          </div>
+
+          <!-- Niches -->
+          <div style="margin-top:20px">
+            <label>Choose niche(s) *</label>
+            <div class="checkbox-row" role="group" aria-label="Niches">
+              <label><input type="checkbox" name="niche" value="fashion"> Fashion</label>
+              <label><input type="checkbox" name="niche" value="lifestyle"> Lifestyle</label>
+              <label><input type="checkbox" name="niche" value="food"> Food</label>
+              <label><input type="checkbox" name="niche" value="travel"> Travel</label>
+              <label><input type="checkbox" name="niche" value="fitness"> Fitness</label>
+              <label><input type="checkbox" name="niche" value="tech"> Tech</label>
+              <label><input type="checkbox" name="niche" value="beauty"> Beauty</label>
+              <label><input type="checkbox" name="niche" value="other"> Other</label>
+            </div>
+          </div>
+
+          <!-- Business Model -->
+          <div style="margin-top:22px">
+            <label>Business model *</label>
+            <div class="checkbox-row" role="group" aria-label="Business models">
+              <label><input type="checkbox" name="model" value="barter"> Barter</label>
+              <label><input type="checkbox" name="model" value="rev_aff"> Revenue + Affiliate</label>
+              <label><input type="checkbox" name="model" value="paid"> Paid Only</label>
+              <label><input type="checkbox" name="model" value="promo"> Promotional</label>
+            </div>
+          </div>
+
+          <div class="grid" style="margin-top:22px">
+            <div>
+              <label for="dream">Dream brands to work with</label>
+              <input id="dream" name="dream" type="text" placeholder="Brand names (comma separated)">
+            </div>
+
+            <div>
+              <label for="fulltime">Looking for full-time work?</label>
+              <select id="fulltime" name="fulltime">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="meetups">Willing to attend offline meetups?</label>
+              <select id="meetups" name="meetups">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+                <option>Maybe</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="travel">Willingness to travel for work</label>
+              <select id="travel" name="travel">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+                <option>Within City</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="exclusive">Exclusive brand association</label>
+              <input id="exclusive" name="exclusive" type="text" placeholder="Brand/category if any">
+            </div>
+
+            <div>
+              <label for="events">Participate in brand events?</label>
+              <select id="events" name="events">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="mentor">Mentor junior creators?</label>
+              <select id="mentor" name="mentor">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+                <option>Not eligible</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="host">Host / feature in Creato events?</label>
+              <select id="host" name="host">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+                <option>Maybe</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div style="margin-top:26px">
+            <button type="submit" class="submit-btn">Submit Application</button>
+            <p class="muted" style="margin-top:10px">By submitting, you agree to our terms and privacy policy.</p>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    // close open details when clicking outside (small accessibility helper)
+    document.addEventListener('click', function(e){
+      const open = document.querySelector('details[open]');
+      if(!open) return;
+      if(!open.contains(e.target)) open.removeAttribute('open');
+    });
+
+    // Smooth-scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', function(e){
+        const href = this.getAttribute('href');
+        if(href.length>1){
+          const el = document.querySelector(href);
+          if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth',block:'start'}); }
+        }
+      });
+    });
+
+    // simple client-side form validation hint (non-blocking)
+    document.querySelector('form').addEventListener('submit', function(e){
+      const required = Array.from(this.querySelectorAll('[required]'));
+      const invalid = required.filter(i=>!i.value);
+      if(invalid.length){
+        e.preventDefault();
+        invalid[0].focus();
+        invalid[0].style.boxShadow='0 8px 24px rgba(255,82,82,0.12)';
+        alert('Please fill all required fields highlighted.');
+      }
+    });
+  </script>
+</body>
+</html>
