@@ -9,6 +9,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
   <style>
+    .logo {
+  flex: 0 0 auto;
+}
+
+.logo img {
+  display: block;
+  height: 110px;   /* BIGGER logo */
+  width: auto;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .logo img {
+    height: 90px;
+  }
+}
+
+/* Desktop / Large screens */
+@media (min-width: 1280px) {
+  .logo img {
+    height: 110px;
+  }
+}
     /* ===== VARIABLES & RESET ===== */
     :root{
       --bg:#0b0b0f;
@@ -48,8 +71,6 @@
       position:fixed;inset:0 0 auto 0;height:var(--header-height);display:flex;align-items:center;justify-content:space-between;padding:0 var(--container-padding);z-index:1200;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));backdrop-filter:blur(8px);
     }
 
-    .logo{display:flex;align-items:center;gap:12px}
-    .logo img{height:52px;display:block}
 
     nav{display:flex;align-items:center;gap:28px;font-weight:600}
     nav a{color:var(--muted);padding:8px 6px;border-radius:8px}
