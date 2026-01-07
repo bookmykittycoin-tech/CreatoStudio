@@ -172,8 +172,8 @@
         <details>
           <summary>Become a Partner ▾</summary>
           <div class="dropdown" role="menu" aria-label="Partner options">
-            <a role="menuitem" href="#">Brand</a>
-            <a role="menuitem" href="#">Agency</a>
+            <a role="menuitem" href="brand.html">Brand</a>
+            <a role="menuitem" href="agency.html">Agency</a>
             <a role="menuitem" class="active" href="influencer.html">Influencer</a>
             <a role="menuitem" href="/signup.html">Join Us</a>
           </div>
@@ -372,6 +372,187 @@
 
     </div>
   </section>
+<!-- HTML: paste where you want the footer to appear -->
+<footer class="site-footer">
+  <!-- CTA Banner -->
+  <div style="position:relative; margin-top:-3rem; padding:0 1rem;">
+    <div class="footer-cta-wrap" role="region" aria-label="Call to action">
+      <div class="footer-cta-left">
+        <p>Join The Revolution</p>
+        <h2>Turn Influencer Power<br> into Your Brand’s <span style="font-family: 'Playfair Display', serif; font-style: italic;">Success!</span></h2>
+      </div>
+
+      <div class="footer-cta-right">
+        <p>Start your brand's journey with strategic influencer collaborations.</p>
+        <a class="footer-cta-btn" href="#contact">Let's Create The Magic →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Body -->
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-logo">
+        <img src="image/image.png" alt="Creato Studios Logo">
+      </div>
+
+      <div style="display:flex; align-items:center; gap:1rem;">
+        <div class="creators-count">1000+ Creators Onboard</div>
+        <div class="creators-avatars" aria-hidden="true">
+          <img src="image/image_17.jpg" alt="">
+          <img src="image/hero1.jpg" alt="">
+          <img src="image/hero2.jpg" alt="">
+          <img src="image/hero3.png" alt="">
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-cols">
+      <div>
+        <h4>About</h4>
+        <p>We craft high-impact influencer campaigns, UGC, podcasts, and celebrity collaborations to elevate brands.</p>
+      </div>
+
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>📞 +91 7838855855</li>
+          <li>📧 support@creatostudios.com</li>
+          <li>📍 A-27D, Sector 16, Noida (Metro Exit 4)</li>
+        </ul>
+      </div>
+
+      <div>
+        <!-- (optional) add any extra links or social icons here -->
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2025 <strong style="color:#7c3aed">Creato Studios</strong>. All rights reserved.</div>
+      <div>Crafted with <span style="color:#ff5a5a;">❤</span> by Tushar and Kanishka</div>
+    </div>
+  </div>
+</footer>
+<!-- CSS: paste into your stylesheet or page <head> -->
+<style>
+  /* Footer: CTA banner */
+  .footer-cta-wrap {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 28px;
+    background: #7c3aed;
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  }
+  .footer-cta-wrap::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.18;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.9) 0%, transparent 75%);
+    pointer-events: none;
+  }
+  .footer-cta-left { z-index: 1; max-width: 70%; }
+  .footer-cta-left p { margin: 0 0 0.5rem 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(255,255,255,0.95); font-weight: 700; }
+  .footer-cta-left h2 { margin: 0; font-size: 28px; line-height: 1.05; color: #fff; font-weight: 800; font-family: "Playfair Display", serif; font-style: italic; }
+  .footer-cta-right { z-index: 1; text-align: right; max-width: 30%; }
+  .footer-cta-right p { margin: 0 0 0.65rem 0; color: rgba(255,255,255,0.92); font-size: 14px; max-width: 320px; }
+  .footer-cta-btn {
+    display: inline-block;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 999px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  /* Footer body */
+  .site-footer {
+    background: #020205;
+    color: #e6e6e6;
+  }
+  .site-footer .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 5rem 1.25rem 3rem;
+  }
+  .site-footer .footer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .site-footer .footer-logo img {
+    height: 64px;
+    display: block;
+    object-fit: contain;
+  }
+  .creators-count { color: #fff; font-weight: 700; font-size: 13px; }
+  .creators-avatars {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .creators-avatars img {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    object-fit: cover;
+    border: 2px solid #000;
+    margin-left: -10px;
+    background: #fff;
+  }
+
+  /* Footer columns */
+  .footer-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .footer-cols h4 { color: #fff; margin: 0 0 0.5rem 0; font-size: 16px; font-weight: 800; }
+  .footer-cols p, .footer-cols ul { margin: 0; color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.6; }
+  .footer-cols ul { list-style: none; padding: 0; }
+  .footer-cols li { margin-bottom: 0.5rem; }
+
+  /* Bottom bar */
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    flex-wrap: wrap;
+  }
+
+  /* Responsive tweaks */
+  @media (min-width: 900px) {
+    .footer-cols { grid-template-columns: 1fr 1fr 1fr; }
+    .footer-cta-left h2 { font-size: 40px; }
+    .footer-cta-left p { font-size: 13px; }
+  }
+  @media (max-width: 640px) {
+    .footer-cta-wrap { flex-direction: column; text-align: center; gap: 1rem; padding: 1.25rem; }
+    .footer-cta-left, .footer-cta-right { max-width: 100%; }
+    .footer-cta-right { text-align: center; }
+    .site-footer .footer-inner { padding: 3.5rem 1rem 2rem; }
+    .footer-bottom { text-align: center; flex-direction: column; gap: 0.5rem; }
+  }
+</style>
 
   <script>
     // close open details when clicking outside (small accessibility helper)

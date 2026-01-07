@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Creato Studios — Full Page (Header integrated)</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== ROOT VARIABLES / RESET ===== */
+    :root{
+      --bg:#0b0b0f;
+      --card:#ffffff;
+      --muted:#8b8fa0;
+      --accent:#7c3aed;
+      --accent-2:#ff5252;
+      --glass: rgba(255,255,255,0.06);
+      --radius:14px;
+      --max-width:1200px;
+      --header-height:76px;
+      --container-padding:24px;
+      --text: #0b0b0f;
+      --vg-card-w: 280px;
+      --vg-card-h: 500px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background:var(--bg);
+      color: #ffffff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      padding-top:calc(var(--header-height) + 12px); /* space for fixed header */
+    }
+    a{text-decoration:none;color:inherit}
+    img{display:block;max-width:100%}
+
+    /* ===== HEADER (from your file) ===== */
+    .logo { flex: 0 0 auto; }
+    .logo img { display:block; height:110px; width:auto; }
+
+    @media (min-width:768px){ .logo img { height:90px; } }
+    @media (min-width:1280px){ .logo img { height:110px; } }
+
+    header{
+      position:fixed;inset:0 0 auto 0;height:var(--header-height);display:flex;align-items:center;justify-content:space-between;padding:0 var(--container-padding);z-index:1200;
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));backdrop-filter:blur(8px);
+    }
+    nav{display:flex;align-items:center;gap:28px;font-weight:600}
+    nav a{color:var(--muted);padding:8px 6px;border-radius:8px}
+    nav a:hover, nav a:focus{color:#fff;outline:none}
+    nav a.active{color:#000;border-bottom:2px solid #fff;padding-bottom:6px}
+
+    /* partner dropdown uses details for accessibility */
+    .partner{position:relative}
+    details{position:relative}
+    summary{list-style:none;cursor:pointer;color:var(--muted);padding:8px;border-radius:8px}
+    summary::-webkit-details-marker{display:none}
+    details[open] summary{color:#fff}
+    .dropdown{position:absolute;right:0;top:calc(100% + 8px);min-width:220px;background:var(--card);color:var(--text);border-radius:12px;box-shadow:0 18px 40px rgba(2,6,23,0.12);overflow:hidden;padding:8px;transform-origin:top right;z-index:60}
+    .dropdown a{display:block;padding:10px 14px;border-radius:10px;color:var(--text);font-weight:600}
+    .dropdown a:hover{background:#f6f7fb}
+
+    .header-actions{display:flex;gap:14px;align-items:center}
+    .btn-ghost{color:#fff;padding:8px 12px;font-weight:700}
+    .btn-primary{background:var(--card);color:var(--text);padding:10px 18px;border-radius:999px;font-weight:800}
+
+    .mobile-toggle{display:none}
+
+    /* ===== HERO (merged) ===== */
+    .hero{padding:84px 0 60px;background:linear-gradient(135deg,#2e1550 0%,#401793 100%)}
+    .container{max-width:var(--max-width);margin:0 auto;padding:0 var(--container-padding)}
+    .hero-inner{display:flex;align-items:center;gap:48px}
+    .hero-left{flex:1;max-width:640px}
+    .eyebrow{display:inline-block;background:rgba(255,255,255,0.08);padding:8px 12px;border-radius:999px;font-weight:700;font-size:13px;margin-bottom:18px}
+    h1{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,46px);line-height:1.05;font-weight:700;color:#fff;margin-bottom:18px}
+    .lead{font-size:clamp(14px,1.6vw,18px);color:rgba(255,255,255,0.92);margin-bottom:18px}
+    .cta-row{display:flex;gap:12px;align-items:center;margin-top:6px}
+    .cta{background:var(--accent-2);border:0;padding:12px 20px;border-radius:12px;color:#fff;font-weight:700;cursor:pointer}
+    .secondary-cta{background:transparent;border:1px solid rgba(255,255,255,0.12);padding:10px 16px;border-radius:10px;color:#fff;font-weight:700}
+    .hero-right{flex:0 0 260px}
+    .hero-right img{width:100%;height:auto;border-radius:16px;box-shadow:0 30px 60px rgba(2,6,23,0.6);display:block}
+
+    @media (max-width:980px){
+      .hero-inner{flex-direction:column-reverse;text-align:center}
+      .hero-right{width:80%}
+      nav{display:none}
+      .mobile-toggle{display:block}
+      .header-actions{gap:10px}
+      .btn-primary{padding:8px 12px}
+    }
+    @media (max-width:520px){
+      h1{font-size:28px}
+      .hero-right{width:100%}
+    }
+
+    /* ===== WHAT WE DO ===== */
+    .wwd{padding:48px 20px;background:#fff;color:#111827}
+    .wwd-inner{max-width:1200px;margin:0 auto}
+    .wwd-head{margin-bottom:20px}
+    .wwd-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:20px}
+    .tile{position:relative;border-radius:14px;overflow:hidden;min-height:160px;display:flex;align-items:flex-end;color:#fff;cursor:pointer;box-shadow:0 8px 30px rgba(2,6,23,0.06)}
+    .tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.03);transition:transform .6s}
+    .tile-title{position:relative;z-index:2;padding:18px;margin:0;font-weight:800;font-size:20px;text-shadow:0 6px 18px rgba(2,6,23,0.45)}
+    .tile-left{grid-column:1/span 3;grid-row:1/span 2;min-height:360px;border-radius:16px}
+    .tile-mid-top{grid-column:4/span 2;grid-row:1/span 1;min-height:170px;border-radius:12px}
+    .tile-right-top{grid-column:6/span 1;grid-row:1/span 1;min-height:170px;border-radius:12px}
+    .tile-mid-bottom{grid-column:4/span 2;grid-row:2/span 1;min-height:170px;border-radius:12px}
+    .tile-right-bottom{grid-column:6/span 1;grid-row:2/span 1;min-height:170px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#6d28d9,#4c1d95);color:#fff;text-align:left;padding:20px}
+    @media (max-width:900px){
+      .wwd-grid{grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(140px,auto);grid-auto-flow:dense}
+      .tile-left{grid-column:1/span 3}
+      .tile-mid-top{grid-column:1/span 3}
+      .tile-right-top{display:none}
+      .tile-mid-bottom{grid-column:1/span 3}
+      .tile-right-bottom{grid-column:1/span 3}
+    }
+
+    /* ===== VIDEO GALLERY ===== */
+    .vg-gallery{padding:64px 12px;background:#fff;color:#111827}
+    .vg-inner{max-width:1200px;margin:0 auto;padding:0 16px}
+    .vg-title{text-align:center;font-size:32px;font-weight:800;margin:0 0 28px}
+    .vg-title span{color:var(--accent);font-family:"Playfair Display",serif;font-style:italic}
+    .vg-wrapper{position:relative}
+    .vg-slider{display:flex;gap:20px;padding:12px 64px;overflow-x:auto;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+    .vg-slider::-webkit-scrollbar{display:none}
+    .vg-card{flex:0 0 var(--vg-card-w);width:var(--vg-card-w);height:var(--vg-card-h);border-radius:16px;overflow:hidden;position:relative;background:#000;box-shadow:0 12px 36px rgba(2,6,23,0.12);cursor:pointer;transition:transform .22s ease,box-shadow .22s ease}
+    .vg-card:hover{transform:translateY(-6px);box-shadow:0 22px 60px rgba(2,6,23,0.16)}
+    .vg-poster img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.9,.2,1)}
+    .vg-card:hover .vg-poster img{transform:scale(1.06)}
+    .vg-gradient{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,0.66) 0%,rgba(0,0,0,0.12) 40%,transparent 100%);z-index:2}
+    .vg-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3;pointer-events:none}
+    .vg-play .vg-play-circle{width:64px;height:64px;border-radius:999px;background:#ef4444;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(0,0,0,0.45);transform:scale(1);transition:transform .18s ease;color:#fff;font-weight:700}
+    .vg-card:hover .vg-play .vg-play-circle{transform:scale(1.12)}
+    .vg-card iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:5;background:transparent}
+    .vg-btn{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:999px;border:none;background:#fff;color:#111;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.12);cursor:pointer;z-index:10}
+    .vg-left{left:8px} .vg-right{right:8px}
+    .vg-dots{display:flex;gap:8px;justify-content:center;margin-top:20px}
+    .vg-dots .dot{width:10px;height:10px;border-radius:999px;background:#ddd}
+    .vg-dots .dot.active{background:var(--accent);transform:scale(1.15)}
+    @media (max-width:900px){ :root{--vg-card-w:240px;--vg-card-h:420px} .vg-btn{display:none} .vg-slider{padding:12px 12px} }
+
+    /* ===== WHY WORK WITH US ===== */
+    .wwu{padding:48px 20px 80px;background:#fff;color:#111827}
+    .wwu-container{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+    .wwu-heading .wwu-sub{display:inline-block;background:#eef2ff;color:#4f46e5;padding:6px 10px;border-radius:999px;font-weight:700}
+    .wwu-title{margin:12px 0 14px;font-size:28px;font-weight:800}
+    .wwu-left .wwu-features{display:flex;flex-direction:column;gap:16px}
+    .wwu-feature{display:flex;gap:14px;align-items:flex-start;background:#f8fafc;border-radius:10px;padding:12px}
+    .wwu-icon{width:44px;height:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:linear-gradient(180deg,#eef2ff,#e9d5ff);color:#5b21b6;font-weight:800}
+    .wwu-feature h4{margin:0 0 2px;font-size:16px}
+    .wwu-feature p{margin:0;color:#475569;font-size:14px}
+    .wwu-middle{display:flex;flex-direction:column;gap:18px;margin-top:6px}
+    .wwu-stats{display:flex;gap:18px;align-items:center}
+    .wwu-stat h3{margin:0;font-size:26px;color:#0f172a}
+    .wwu-stat p{margin:0;color:#6b7280;font-size:13px}
+    .wwu-progress .progress-item{margin-bottom:10px}
+    .progress-bar{background:#f1f5f9;border-radius:999px;height:14px;overflow:hidden}
+    .progress-bar .fill{height:100%;background:linear-gradient(90deg,#7c3aed,#4c1d95);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-weight:700;font-size:12px}
+    .wwu-video img{width:320px;border-radius:10px}
+
+    @media (max-width:900px){ .wwu-container{grid-template-columns:1fr} .wwu-video img{width:100%;max-width:420px;margin-top:12px} }
+
+    /* ===== INFLUENCER FORM (from your file) ===== */
+    section.form-section{padding:48px 0;background:#f5f7fb;color:var(--text)}
+    .form-card{padding:24px;border-radius:16px;max-width:760px;margin:0 auto;background:#fff}
+    .form-title{font-size:22px;font-weight:800;margin-bottom:4px;color:var(--text)}
+    .form-sub{color:var(--muted);margin-bottom:14px;font-size:14px}
+    form .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    form .full{grid-column:1/-1}
+    label{display:block;font-weight:600;margin-bottom:6px;font-size:13px;color:var(--text)}
+    input[type="text"],input[type="email"],input[type="tel"],input[type="number"],select,textarea,input[type="file"]{
+      width:100%;padding:12px 14px;border-radius:12px;border:1px solid #e6e9f0;background:#fff;font-size:14px;color:var(--text);
+      transition:box-shadow .18s ease,border-color .18s ease;height:40px;line-height:1.2
+    }
+    input:focus,select:focus,textarea:focus{outline:none;box-shadow:0 8px 24px rgba(124,58,237,0.08);border-color:var(--accent)}
+    .checkbox-row{display:flex;flex-wrap:wrap;gap:8px}
+    .checkbox-row label{display:flex;align-items:center;gap:6px;font-weight:500;background:#fff;padding:8px 10px;border-radius:10px;border:1px solid #eef2ff;font-size:13px;color:var(--text)}
+    .submit-btn{width:100%;padding:12px;border-radius:12px;background:var(--accent);color:#fff;border:0;font-weight:700;font-size:15px}
+    .submit-btn:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(124,58,237,0.16)}
+    .muted{color:var(--muted);font-size:13px}
+
+    /* ===== FOOTER (kept from your file) ===== */
+    .footer-cta-wrap{position:relative;max-width:1200px;margin:0 auto;padding:2rem;border-radius:28px;background:#7c3aed;display:flex;gap:1.25rem;align-items:center;justify-content:space-between;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.25)}
+    .footer-cta-wrap::before{content:"";position:absolute;inset:0;opacity:0.18;background:radial-gradient(circle at center, rgba(255,255,255,0.9) 0%, transparent 75%);pointer-events:none}
+    .footer-cta-left{z-index:1;max-width:70%}
+    .footer-cta-left p{margin:0 0 0.5rem 0;font-size:12px;text-transform:uppercase;letter-spacing:0.2em;color:rgba(255,255,255,0.95);font-weight:700}
+    .footer-cta-left h2{margin:0;font-size:28px;line-height:1.05;color:#fff;font-weight:800;font-family:"Playfair Display",serif;font-style:italic}
+    .footer-cta-right{z-index:1;text-align:right;max-width:30%}
+    .footer-cta-right p{margin:0 0 0.65rem 0;color:rgba(255,255,255,0.92);font-size:14px;max-width:320px}
+    .footer-cta-btn{display:inline-block;border:2px solid #ffffff;color:#ffffff;padding:0.6rem 1.2rem;border-radius:999px;font-weight:800;text-decoration:none}
+    .site-footer{background:#020205;color:#e6e6e6;padding:60px 20px}
+    .site-footer .footer-inner{max-width:1200px;margin:0 auto;padding:0}
+    .site-footer .footer-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap}
+    .site-footer .footer-logo img{height:64px;display:block;object-fit:contain}
+    .creators-count{color:#fff;font-weight:700;font-size:13px}
+    .creators-avatars{display:flex;align-items:center;gap:0}
+    .creators-avatars img{width:36px;height:36px;border-radius:999px;object-fit:cover;border:2px solid #000;margin-left:-10px;background:#fff}
+    .footer-cols{display:grid;grid-template-columns:1fr 1fr;gap:2rem;border-top:1px solid rgba(255,255,255,0.08);padding-top:2rem;margin-bottom:1.5rem}
+    .footer-cols h4{color:#fff;margin:0 0 0.5rem 0;font-size:16px;font-weight:800}
+    .footer-cols p,.footer-cols ul{margin:0;color:rgba(255,255,255,0.7);font-size:14px;line-height:1.6}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;color:rgba(255,255,255,0.5);font-size:13px;flex-wrap:wrap}
+
+    @media (min-width:900px){ .footer-cols{grid-template-columns:1fr 1fr 1fr} .footer-cta-left h2{font-size:40px} .footer-cta-left p{font-size:13px} }
+    @media (max-width:640px){ .footer-cta-wrap{flex-direction:column;text-align:center;gap:1rem;padding:1.25rem} .footer-cta-left,.footer-cta-right{max-width:100%} .footer-cta-right{text-align:center} .site-footer .footer-inner{padding:3.5rem 1rem 2rem} .footer-bottom{text-align:center;flex-direction:column;gap:0.5rem} }
+
+    /* small helpers */
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
+</head>
+<body>
+
+  <!-- HEADER (from your provided header file) -->
+  <header>
+    <div class="logo">
+      <!-- swap with your local logo path -->
+      <img src="image/image.png" alt="Creato Studios logo">
+    </div>
+
+    <nav aria-label="Main navigation">
+      <a href="./" class="">Home</a>
+      <a href="about.html">About</a>
+
+      <div class="partner">
+        <details>
+          <summary>Become a Partner ▾</summary>
+          <div class="dropdown" role="menu" aria-label="Partner options">
+            <a role="menuitem" href="brand.html">Brand</a>
+            <a role="menuitem" href="agency.html">Agency</a>
+            <a role="menuitem" class="active" href="influencer.html">Influencer</a>
+            <a role="menuitem" href="/signup.html">Join Us</a>
+          </div>
+        </details>
+      </div>
+
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="btn-ghost" href="signin.html">Sign In</a>
+      <a class="btn-primary" href="signup.html">Collab Now »</a>
+      <button class="mobile-toggle" aria-label="Open menu" onclick="document.body.classList.toggle('show-menu')">☰</button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-left">
+          <span class="eyebrow">For Creators</span>
+          <h1>Turn your influence into meaningful opportunity</h1>
+          <p class="lead">You’ve built a community — now turn your content into campaigns that align with your voice, values and long-term goals. We connect creators with brands for paid campaigns, ambassadorships and long-term partnerships.</p>
+
+          <div class="cta-row">
+            <a class="cta" href="#influencer-form">Collab Now »</a>
+            <a class="secondary-cta" href="#howitworks">How it works</a>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <!-- replace with your influencer image path -->
+          <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800&auto=format&fit=crop" alt="Creator at work">
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT WE DO -->
+    <section class="wwd">
+      <div class="wwd-inner">
+        <div class="wwd-head">
+          <span style="background:#eef2ff;color:#4f46e5;padding:6px 10px;border-radius:999px;font-weight:700;font-size:13px;">What We Do</span>
+          <h2 class="wwd-title">At Creato Studios we design strategies that connect your brand with the right creators and audiences.</h2>
+        </div>
+
+        <div class="wwd-grid" role="list">
+          <article class="tile tile-left" role="listitem" title="Talent Management">
+            <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1400&auto=format&fit=crop" alt="">
+            <h3 class="tile-title">Talent Management</h3>
+          </article>
+
+          <article class="tile tile-mid-top" role="listitem" title="Influencer Marketing">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1400&auto=format&fit=crop" alt="">
+            <h3 class="tile-title">Influencer Marketing</h3>
+          </article>
+
+          <article class="tile tile-right-top" role="listitem" title="Content Strategy">
+            <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1400&auto=format&fit=crop" alt="">
+            <h3 class="tile-title">Content Strategy</h3>
+          </article>
+
+          <article class="tile tile-mid-bottom" role="listitem" title="Brand Partnership">
+            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1400&auto=format&fit=crop" alt="">
+            <h3 class="tile-title">Brand Partnership</h3>
+          </article>
+
+          <article class="tile tile-right-bottom" role="listitem" title="CTA">
+            <div style="padding:18px;">
+              <h3 style="margin:0 0 8px 0;font-size:20px;font-weight:800;">Ready to elevate your brand?<br>Let’s make it happen with us!</h3>
+              <p style="margin:0;color:rgba(255,255,255,0.9)">We craft ideas into experiences that inspire, engage and drive results.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIDEO GALLERY -->
+    <section class="vg-gallery" aria-labelledby="vg-heading">
+      <div class="vg-inner">
+        <h2 id="vg-heading" class="vg-title">Collab With <span>Top Influencers</span></h2>
+
+        <div class="vg-wrapper" data-vg-root>
+          <button class="vg-btn vg-left" aria-label="Scroll left">‹</button>
+
+          <div class="vg-slider" role="list" aria-label="Video gallery slider"></div>
+
+          <button class="vg-btn vg-right" aria-label="Scroll right">›</button>
+        </div>
+
+        <div class="vg-dots" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- WHY WORK WITH US -->
+    <section class="wwu">
+      <div class="wwu-container">
+        <div>
+          <div class="wwu-heading">
+            <span class="wwu-sub"> Why Work with Us</span>
+            <h2 class="wwu-title">Passionate About Growth and <br> Committed to Success</h2>
+          </div>
+
+          <div class="wwu-left">
+            <div class="wwu-features">
+              <div class="wwu-feature">
+                <div class="wwu-icon">👍</div>
+                <div>
+                  <h4>Proven Track Record</h4>
+                  <p>We’ve consistently delivered impactful results, helping brands grow and stand out in competitive markets.</p>
+                </div>
+              </div>
+
+              <div class="wwu-feature">
+                <div class="wwu-icon">🤝</div>
+                <div>
+                  <h4>Industry Connections</h4>
+                  <p>Our strong network of partners and collaborators ensures your brand gains maximum visibility and credibility.</p>
+                </div>
+              </div>
+
+              <div class="wwu-feature">
+                <div class="wwu-icon">📈</div>
+                <div>
+                  <h4>Personalized Growth</h4>
+                  <p>We craft tailored strategies designed to accelerate your success and drive measurable growth.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="wwu-middle">
+            <div class="wwu-stats">
+              <div class="wwu-stat"><h3>98%</h3><p>Satisfaction Rate</p></div>
+              <div class="wwu-stat"><h3>20K+</h3><p>Creative Talents</p></div>
+            </div>
+
+            <div class="wwu-progress">
+              <div class="progress-item">
+                <span>Campaign Success Rate</span>
+                <div class="progress-bar"><div class="fill" style="width:97%"><span class="percent">97%</span></div></div>
+              </div>
+              <div class="progress-item">
+                <span>Social Media Growth Rate</span>
+                <div class="progress-bar"><div class="fill" style="width:92%"><span class="percent">92%</span></div></div>
+              </div>
+              <div class="progress-item">
+                <span>Campaign Engagement Rate</span>
+                <div class="progress-bar"><div class="fill" style="width:95%"><span class="percent">95%</span></div></div>
+              </div>
+            </div>
+
+            <div style="margin-top:18px;">
+              <div class="wwu-video">
+                <img src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=1400&auto=format&fit=crop" alt="Team">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Influencer Form -->
+    <section id="influencer-form" class="form-section">
+      <div class="container">
+        <div class="card form-card">
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:22px">
+            <div class="form-title">Influencer Registration</div>
+            <div class="form-sub">Join Creato Studios — collaborate with brands that match your voice and grow sustainably.</div>
+          </div>
+
+          <form novalidate>
+            <div class="grid">
+              <div>
+                <label for="name">Full name *</label>
+                <input id="name" name="name" type="text" placeholder="Your full name" required>
+              </div>
+
+              <div>
+                <label for="email">Email address *</label>
+                <input id="email" name="email" type="email" placeholder="you@example.com" required>
+              </div>
+
+              <div>
+                <label for="gender">Gender *</label>
+                <select id="gender" name="gender" required>
+                  <option value="">Select</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                  <option>Prefer not to say</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="location">Location *</label>
+                <input id="location" name="location" type="text" placeholder="City, State" required>
+              </div>
+
+              <div>
+                <label for="pin">Pin code</label>
+                <input id="pin" name="pin" type="text" inputmode="numeric" pattern="[0-9]{4,6}" placeholder="e.g. 560001">
+              </div>
+
+              <div>
+                <label for="phone">Contact number *</label>
+                <input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+91 98765 43210" required>
+              </div>
+
+              <div class="full">
+                <label for="image">Upload your image *</label>
+                <input id="image" name="image" type="file" accept="image/*" required>
+              </div>
+            </div>
+
+            <div style="margin-top:20px">
+              <label>Choose niche(s) *</label>
+              <div class="checkbox-row" role="group" aria-label="Niches">
+                <label><input type="checkbox" name="niche" value="fashion"> Fashion</label>
+                <label><input type="checkbox" name="niche" value="lifestyle"> Lifestyle</label>
+                <label><input type="checkbox" name="niche" value="food"> Food</label>
+                <label><input type="checkbox" name="niche" value="travel"> Travel</label>
+                <label><input type="checkbox" name="niche" value="fitness"> Fitness</label>
+                <label><input type="checkbox" name="niche" value="tech"> Tech</label>
+                <label><input type="checkbox" name="niche" value="beauty"> Beauty</label>
+                <label><input type="checkbox" name="niche" value="other"> Other</label>
+              </div>
+            </div>
+
+            <div style="margin-top:22px">
+              <label>Business model *</label>
+              <div class="checkbox-row" role="group" aria-label="Business models">
+                <label><input type="checkbox" name="model" value="barter"> Barter</label>
+                <label><input type="checkbox" name="model" value="rev_aff"> Revenue + Affiliate</label>
+                <label><input type="checkbox" name="model" value="paid"> Paid Only</label>
+                <label><input type="checkbox" name="model" value="promo"> Promotional</label>
+              </div>
+            </div>
+
+            <div class="grid" style="margin-top:22px">
+              <div>
+                <label for="dream">Dream brands to work with</label>
+                <input id="dream" name="dream" type="text" placeholder="Brand names (comma separated)">
+              </div>
+
+              <div>
+                <label for="fulltime">Looking for full-time work?</label>
+                <select id="fulltime" name="fulltime">
+                  <option value="">Select</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="meetups">Willing to attend offline meetups?</label>
+                <select id="meetups" name="meetups">
+                  <option value="">Select</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                  <option>Maybe</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="travel">Willingness to travel for work</label>
+                <select id="travel" name="travel">
+                  <option value="">Select</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                  <option>Within City</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="exclusive">Exclusive brand association</label>
+                <input id="exclusive" name="exclusive" type="text" placeholder="Brand/category if any">
+              </div>
+
+              <div>
+                <label for="events">Participate in brand events?</label>
+                <select id="events" name="events">
+                  <option value="">Select</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="mentor">Mentor junior creators?</label>
+                <select id="mentor" name="mentor">
+                  <option value="">Select</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                  <option>Not eligible</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="host">Host / feature in Creato events?</label>
+                <select id="host" name="host">
+                  <option value="">Select</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                  <option>Maybe</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-top:26px">
+              <button type="submit" class="submit-btn">Submit Application</button>
+              <p class="muted" style="margin-top:10px">By submitting, you agree to our terms and privacy policy.</p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div style="position:relative; margin-top:-3rem; padding:0 1rem;">
+      <div class="footer-cta-wrap" role="region" aria-label="Call to action">
+        <div class="footer-cta-left">
+          <p>Join The Revolution</p>
+          <h2>Turn Influencer Power<br> into Your Brand’s <span style="font-family: 'Playfair Display', serif; font-style: italic;">Success!</span></h2>
+        </div>
+
+        <div class="footer-cta-right">
+          <p>Start your brand's journey with strategic influencer collaborations.</p>
+          <a class="footer-cta-btn" href="#contact">Let's Create The Magic →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-logo">
+          <img src="https://via.placeholder.com/140x44?text=Creato" alt="Creato Studios Logo">
+        </div>
+
+        <div style="display:flex; align-items:center; gap:1rem;">
+          <div class="creators-count">1000+ Creators Onboard</div>
+          <div class="creators-avatars" aria-hidden="true">
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=80&auto=format&fit=crop" alt="">
+            <img src="https://images.unsplash.com/photo-1545996124-0b65a6b8e3a6?q=80&w=80&auto=format&fit=crop" alt="">
+            <img src="https://images.unsplash.com/photo-1519415943484-3f8f43f3b3a1?q=80&w=80&auto=format&fit=crop" alt="">
+            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=80&auto=format&fit=crop" alt="">
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-cols">
+        <div>
+          <h4>About</h4>
+          <p>We craft high-impact influencer campaigns, UGC, podcasts, and celebrity collaborations to elevate brands.</p>
+        </div>
+
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li>📞 +91 7838855855</li>
+            <li>📧 support@creatostudios.com</li>
+            <li>📍 A-27D, Sector 16, Noida (Metro Exit 4)</li>
+          </ul>
+        </div>
+
+        <div>
+          <!-- extra links or socials -->
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2025 <strong style="color:#7c3aed">Creato Studios</strong>. All rights reserved.</div>
+        <div>Crafted with <span style="color:#ff5a5a;">❤</span> by Tushar and Kanishka</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    /* close open details when clicking outside (accessibility helper) */
+    document.addEventListener('click', function(e){
+      const open = document.querySelector('details[open]');
+      if(!open) return;
+      if(!open.contains(e.target)) open.removeAttribute('open');
+    });
+
+    /* Smooth-scroll for anchor links */
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', function(e){
+        const href = this.getAttribute('href');
+        if(href.length>1){
+          const el = document.querySelector(href);
+          if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth',block:'start'}); }
+        }
+      });
+    });
+
+    /* simple client-side form validation hint (non-blocking) */
+    const form = document.querySelector('form');
+    if(form){
+      form.addEventListener('submit', function(e){
+        const required = Array.from(this.querySelectorAll('[required]'));
+        const invalid = required.filter(i=>!i.value);
+        if(invalid.length){
+          e.preventDefault();
+          invalid[0].focus();
+          invalid[0].style.boxShadow='0 8px 24px rgba(255,82,82,0.12)';
+          alert('Please fill all required fields highlighted.');
+        }
+      });
+    }
+
+    /* VIDEO GALLERY SCRIPT (hover-to-play / slider) */
+    (function() {
+      const videos = [
+        { img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1200&auto=format&fit=crop', url: 'https://youtube.com/shorts/HA_HZZCoBpE' },
+        { img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop', url: 'https://youtube.com/shorts/ppjlOWmUnuQ' },
+        { img: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1200&auto=format&fit=crop', url: 'https://youtube.com/shorts/INAG68kcOfY' },
+        { img: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format&fit=crop', url: 'https://youtube.com/shorts/xIjl5S9Qhww' }
+      ];
+
+      function getYTid(url) {
+        if (!url) return null;
+        const patterns = [
+          /youtube\.com\/watch\?v=([^&\s]+)/i,
+          /youtu\.be\/([^?\s]+)/i,
+          /youtube\.com\/shorts\/([^?\s]+)/i,
+          /youtube\.com\/embed\/([^?\s]+)/i
+        ];
+        for (const p of patterns) {
+          const m = url.match(p);
+          if (m && m[1]) return m[1];
+        }
+        try { const u = new URL(url); const parts = u.pathname.split('/').filter(Boolean); return parts.pop() || null; } catch(e){ return null; }
+      }
+
+      const root = document.querySelector('.vg-gallery');
+      if (!root) return;
+      const slider = root.querySelector('.vg-slider');
+      const leftBtn = root.querySelector('.vg-left');
+      const rightBtn = root.querySelector('.vg-right');
+      const dots = root.querySelector('.vg-dots');
+
+      slider.innerHTML = '';
+      dots.innerHTML = '';
+
+      videos.forEach((v, i) => {
+        const card = document.createElement('div');
+        card.className = 'vg-card';
+        card.tabIndex = 0;
+
+        const thumb = v.img || 'https://via.placeholder.com/640x480?text=Video';
+        card.innerHTML = `
+          <div class="vg-poster" aria-hidden="true"><img src="${thumb}" alt=""></div>
+          <div class="vg-gradient" aria-hidden="true"></div>
+          <div class="vg-play" aria-hidden="true"><div class="vg-play-circle">▶</div></div>
+        `;
+
+        let iframe = null;
+        const id = getYTid(v.url);
+
+        function mountIframe() {
+          if (iframe || !id) return;
+          iframe = document.createElement('iframe');
+          iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&mute=1&controls=0&playsinline=1';
+          iframe.allow = 'autoplay; fullscreen';
+          iframe.setAttribute('title','Video player');
+          card.appendChild(iframe);
+        }
+        function removeIframe() {
+          if (!iframe) return;
+          iframe.remove();
+          iframe = null;
+        }
+
+        card.addEventListener('mouseenter', () => mountIframe());
+        card.addEventListener('mouseleave', () => removeIframe());
+        card.addEventListener('click', () => iframe ? removeIframe() : mountIframe());
+        card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); iframe ? removeIframe() : mountIframe(); } });
+
+        slider.appendChild(card);
+
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => { const target = slider.children[i]; if (target) target.scrollIntoView({ behavior:'smooth', inline:'center' }); });
+        dots.appendChild(dot);
+      });
+
+      function scrollAmount() {
+        const cw = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--vg-card-w')) || 280;
+        const gap = 20;
+        return cw + gap;
+      }
+      leftBtn && leftBtn.addEventListener('click', () => slider.scrollBy({ left: -scrollAmount(), behavior:'smooth' }));
+      rightBtn && rightBtn.addEventListener('click', () => slider.scrollBy({ left: scrollAmount(), behavior:'smooth' }));
+
+      slider.addEventListener('scroll', () => {
+        window.requestAnimationFrame(() => {
+          const rect = slider.getBoundingClientRect();
+          const center = rect.left + rect.width/2;
+          let nearest = 0; let min = Infinity;
+          Array.from(slider.children).forEach((el, idx) => {
+            const r = el.getBoundingClientRect();
+            const cx = r.left + r.width/2;
+            const d = Math.abs(center - cx);
+            if (d < min) { min = d; nearest = idx; }
+          });
+          Array.from(dots.children).forEach((dot, i) => dot.classList.toggle('active', i === nearest));
+        });
+      }, { passive:true });
+
+      slider.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') leftBtn && leftBtn.click();
+        if (e.key === 'ArrowRight') rightBtn && rightBtn.click();
+      });
+    })();
+  </script>
+</body>
+</html>
