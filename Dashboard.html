@@ -110,7 +110,7 @@
     <main class="flex-1 p-8">
       <header class="flex justify-between items-center mb-8">
         <div>
-          <h2 class="text-3xl font-bold italic">Performance Report</h2>
+          <h2 class="text-3xl font-bold italic" id="PerformanceReport"></h2>
           <p class="text-gray-500 text-sm">Real-time tracking of your influence.</p>
         </div>
 
@@ -432,6 +432,7 @@ If you’re serious about growing as an influencer and working with a profession
 
           // Basic identity
           const idVal = d.id ?? null;
+          const name = d.name ?? "Unnamed";
           const email = d.email ?? "";
           const code = d.referral_code ?? null;
 
@@ -456,6 +457,7 @@ If you’re serious about growing as an influencer and working with a profession
 
           // Fill UI
           document.getElementById("userIdBox").innerText = idVal ? String(idVal) : "--";
+          document.getElementById("PerformanceReport").innerText = "Welcome, " + (name || "User Name");
           document.getElementById("profileEmail").innerText = email || "—";
           document.getElementById("generatedCode").innerText = code ? escapeHtml(code) : "N/A";
           document.getElementById("referralInput").value = code ? code : "N/A";
